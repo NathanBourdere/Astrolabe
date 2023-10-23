@@ -1,25 +1,29 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Artiste, Categorie, Performance, Scene
+from .models import Artiste, Categorie, Performance, Scene, ConfigurationFestival
 
+class ConfigurationFestivalSerializer(ModelSerializer):
+    class Meta:
+        model = ConfigurationFestival
+        fields = '__all__'
 class ArtisteSerializer(ModelSerializer):
     class Meta:
         model = Artiste
-        fields = ["id", "nom", "description", "site_web", "youtube", "instagram", "facebook", "image"]
+        fields = '__all__'
 
 class CategorieSerializer(ModelSerializer):
     artistes = ArtisteSerializer(many=True)
     class Meta:
         model = Categorie
-        fields = ["id", "intitule", "artistes"]
+        fields = '__all__'
 
 class SceneSerializer(ModelSerializer):
     class Meta:
         model = Scene
-        fields = ["id", "nom", "image"]
+        fields = '__all__'
 
 class PerformanceSerializer(ModelSerializer):
     artistes = ArtisteSerializer(many=True)
     scene = SceneSerializer()
     class Meta:
         model = Performance
-        fields = ["id", "nom", "date", "heure_debut", "heure_fin", "artistes", "scene"]
+        fields = '__all__'

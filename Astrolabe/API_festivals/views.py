@@ -1,5 +1,5 @@
-from .serializers import ArtisteSerializer, CategorieSerializer, PerformanceSerializer, SceneSerializer
-from .models import Artiste, Categorie, Performance, Scene
+from .serializers import ArtisteSerializer, CategorieSerializer, PerformanceSerializer, SceneSerializer, ConfigurationFestivalSerializer
+from .models import Artiste, Categorie, Performance, Scene, ConfigurationFestival
 from rest_framework import viewsets
 
 class ArtisteViewSet(viewsets.ModelViewSet):
@@ -40,4 +40,18 @@ class SceneViewSet(viewsets.ModelViewSet):
         id_scene = self.request.GET.get("id")
         if id_scene is not None:
             queryset = queryset.filter(id=id_scene)
+        return queryset
+
+from rest_framework import viewsets
+from .models import ConfigurationFestival
+from .serializers import ConfigurationFestivalSerializer
+
+class ConfigurationFestivalViewSet(viewsets.ModelViewSet):
+    serializer_class = ConfigurationFestivalSerializer
+
+    def get_queryset(self):
+        queryset = ConfigurationFestival.objects.all()
+        id_festival = self.request.GET.get("id")
+        if id_festival:
+            queryset = queryset.filter(id=id_festival)
         return queryset

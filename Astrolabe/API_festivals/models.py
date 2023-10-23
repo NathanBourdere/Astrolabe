@@ -12,9 +12,30 @@ class Artiste(models.Model):
     def __str__(self):
         return self.nom
 
+class ConfigurationFestival(models.Model):
+    nomFestival = models.CharField(max_length=200,unique=True)
+    logoFestival = models.CharField(max_length=400,unique=True)
+    descriptionFestival = models.TextField(max_length=2500)
+    siteWebFestival = models.URLField(max_length=300,unique=True)
+    youtubeFestival = models.URLField(max_length=300,unique=True)
+    facebookFestival = models.URLField(max_length=300,unique=True)
+    instagramFestival = models.URLField(max_length=300,unique=True)
+    mentionsLegales = models.TextField(max_length=2000)
+    policeEcriture = models.CharField(max_length=200)
+    #RGB
+    couleurPrincipale = models.CharField(max_length=30)
+    couleurSecondaire = models.CharField(max_length=30)
+    couleurBackground = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.nomFestival
+
 class Categorie(models.Model):
     intitule = models.CharField(max_length=200)
     artistes = models.ManyToManyField(Artiste)
+
+    def __str__(self):
+        return self.intitule
 
 class Performance(models.Model):
     nom = models.CharField(max_length=200)
