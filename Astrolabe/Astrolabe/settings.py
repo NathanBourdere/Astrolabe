@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'API_astrolabe',
     'API_festivals',
     'rest_framework',
-]
+]   
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
