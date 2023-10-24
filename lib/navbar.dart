@@ -7,19 +7,20 @@ class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: Colors.black,
       child: ListView(
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-            ),
             child: Image.asset(
               "assets/images/image_festival.png",
               fit: BoxFit.contain,
             ),
           ),
           ListTile(
-            title: const Text("Accueil"),
+            title: const Text(
+              "Accueil",
+              style: TextStyle(color: Colors.white),
+            ),
             onTap: () {
               // vérifie avant si on est déjà sur la page d'accueil, si oui on referme le menu
               if (ModalRoute.of(context)?.settings.name != '/') {
@@ -30,7 +31,10 @@ class NavBar extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text("Artistes"),
+            title: const Text(
+                "Artistes",
+                style: TextStyle(color: Colors.white),
+            ),
             onTap: () {
               Navigator.push(
                 context,
