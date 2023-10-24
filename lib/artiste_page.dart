@@ -1,20 +1,71 @@
+import 'package:festival/models/artiste.dart';
 import 'package:flutter/material.dart';
 
-class ArtistesPage extends StatefulWidget {
-  @override
-  State<ArtistesPage> createState() => _ArtistesPageState();
-}
+class PageArtiste extends StatelessWidget {
+  final Artiste artiste;
 
-class _ArtistesPageState extends State<ArtistesPage> {
+  const PageArtiste({Key? key, required this.artiste}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    // Construisez le contenu de la page "Artistes" ici
     return Scaffold(
       appBar: AppBar(
-        title: Text('Artistes'),
+        title: Text(artiste.nomArtiste),
       ),
-      body: Center(
-        child: Text('Contenu de la page "Artistes"'),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image.network(artiste.imageArtiste),
+            Text(
+              artiste.nomArtiste,
+              style: const TextStyle(fontSize: 20),
+            ),
+            Text(
+              artiste.descriptionArtiste,
+              style: const TextStyle(fontSize: 16),
+            ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.link),
+                  tooltip: 'Site web',
+                ),
+                Text(artiste.siteWebArtiste),
+              ],
+            ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.video_library),
+                  tooltip: 'YouTube',
+                ),
+                Text(artiste.youtubeArtiste),
+              ],
+            ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.person),
+                  tooltip: 'Instagram',
+                ),
+                Text(artiste.instagramArtiste),
+              ],
+            ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.facebook),
+                  tooltip: 'Facebook',
+                ),
+                Text(artiste.facebookArtiste),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

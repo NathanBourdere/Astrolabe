@@ -1,5 +1,6 @@
+import 'package:festival/calendrier.dart';
 import 'package:flutter/material.dart';
-import 'artiste_page.dart';
+import 'artistes_page.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
@@ -32,14 +33,24 @@ class NavBar extends StatelessWidget {
           ),
           ListTile(
             title: const Text(
-                "Artistes",
-                style: TextStyle(color: Colors.white),
+              "Artistes",
+              style: TextStyle(color: Colors.white),
             ),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ArtistesPage()),
               );
+            },
+          ),
+          ListTile(
+            title: const Text(
+              "Calendrier",
+              style: TextStyle(color: Colors.white),
+            ),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CalendarPage()));
             },
           ),
         ],

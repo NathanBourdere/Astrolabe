@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'artiste_page.dart';
+import 'artistes_page.dart';
 import 'home.dart';
 import 'news_page.dart';
 
