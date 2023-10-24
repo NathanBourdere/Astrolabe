@@ -1,21 +1,12 @@
-from rest_framework.serializers import ModelSerializer
-from .models import Artiste, Categorie, Performance, Scene, ConfigurationFestival
-
-class ConfigurationFestivalSerializer(ModelSerializer):
-    pagination_class = SmallResultsSetPagination
-    class Meta:
-        model = ConfigurationFestival
-        fields = '__all__'
+from rest_framework.serializers import ModelSerializer,PrimaryKeyRelatedField
+from .models import Artiste, Performance, Scene, ConfigurationFestival,Modification,Partenaire
 class ArtisteSerializer(ModelSerializer):
+    recommendations = PrimaryKeyRelatedField(many=True, queryset=Artiste.objects.all())
+
     class Meta:
         model = Artiste
         fields = '__all__'
 
-class CategorieSerializer(ModelSerializer):
-    artistes = ArtisteSerializer(many=True)
-    class Meta:
-        model = Categorie
-        fields = '__all__'
 
 class SceneSerializer(ModelSerializer):
     class Meta:
@@ -27,4 +18,20 @@ class PerformanceSerializer(ModelSerializer):
     scene = SceneSerializer()
     class Meta:
         model = Performance
+        fields = '__all__'
+
+class ModificationSerializer(ModelSerializer):
+    class Meta:
+        model = Modification
+        fields = '__all__'
+
+class PartenaireSerializer(ModelSerializer):
+    class Meta:
+        model = Partenaire
+        fields = '__all__'
+
+class ConfigurationFestivalSerializer(ModelSerializer):
+    partenaires = PartenaireSerializer(many=True)
+    class Meta:
+        model = ConfigurationFestival
         fields = '__all__'
