@@ -6,10 +6,11 @@ app_name = 'API_festivals'
 
 routers = routers.SimpleRouter()
 routers.register('artistes', ArtisteViewSet, basename='artistes')
-routers.register('categories', CategorieViewSet, basename='categories')
 routers.register('performances', PerformanceViewSet, basename='performances')
 routers.register('scenes', SceneViewSet, basename='scenes')
 routers.register('festivals', ConfigurationFestivalViewSet, basename='festivals')
+routers.register('partenaires', PartenaireViewSet, basename='partenaires')
+routers.register('modifications', ModificationViewSet, basename='modifications')
 
 urlpatterns = [
     path('v0/', include(routers.urls)),

@@ -1,8 +1,9 @@
-from .serializers import ArtisteSerializer, CategorieSerializer, PerformanceSerializer, SceneSerializer, ConfigurationFestivalSerializer
-from .models import Artiste, Categorie, Performance, Scene, ConfigurationFestival
-from rest_framework import viewsets
+from .serializers import ArtisteSerializer, PerformanceSerializer, SceneSerializer, ConfigurationFestivalSerializer, PartenaireSerializer, ModificationSerializer
+from .models import Artiste, Performance, Scene, ConfigurationFestival, Partenaire,Modification
+from rest_framework import viewsets,decorators
+from django.db import transaction  
 
-class ArtisteViewSet(viewsets.ModelViewSet):
+class ArtisteViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ArtisteSerializer
 
     def get_queryset(self):
@@ -12,17 +13,7 @@ class ArtisteViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(id=id_artiste)
         return queryset
 
-class CategorieViewSet(viewsets.ModelViewSet):
-    serializer_class = CategorieSerializer
-
-    def get_queryset(self):
-        queryset =  Categorie.objects.all()
-        id_categorie = self.request.GET.get("id")
-        if id_categorie is not None:
-            queryset = queryset.filter(id=id_categorie)
-        return queryset
-
-class PerformanceViewSet(viewsets.ModelViewSet):
+class PerformanceViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PerformanceSerializer
 
     def get_queryset(self):
@@ -32,7 +23,7 @@ class PerformanceViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(id=id_performance)
         return queryset
 
-class SceneViewSet(viewsets.ModelViewSet):
+class SceneViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = SceneSerializer
 
     def get_queryset(self):
@@ -42,16 +33,32 @@ class SceneViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(id=id_scene)
         return queryset
 
-from rest_framework import viewsets
-from .models import ConfigurationFestival
-from .serializers import ConfigurationFestivalSerializer
-
-class ConfigurationFestivalViewSet(viewsets.ModelViewSet):
+class ConfigurationFestivalViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ConfigurationFestivalSerializer
 
     def get_queryset(self):
         queryset = ConfigurationFestival.objects.all()
         id_festival = self.request.GET.get("id")
-        if id_festival:
+        if id_festival :
             queryset = queryset.filter(id=id_festival)
+        return queryset
+
+class PartenaireViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = PartenaireSerializer
+
+    def get_queryset(self):
+        queryset = Partenaire.objects.all()
+        id_partenaire = self.request.GET.get("id")
+        if id_partenaire :
+            queryset = queryset.filter(id=id_partenaire)
+        return queryset
+
+class ModificationViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = ModificationSerializer
+
+    def get_queryset(self):
+        queryset = Modification.objects.all()
+        id_modification = self.request.GET.get("id")
+        if id_modification :
+            queryset = queryset.filter(id=id_modification)
         return queryset
