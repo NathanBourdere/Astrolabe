@@ -1,6 +1,7 @@
 from .serializers import ArtisteSerializer, CategorieSerializer, PerformanceSerializer, SceneSerializer, ConfigurationFestivalSerializer
 from .models import Artiste, Categorie, Performance, Scene, ConfigurationFestival
-from rest_framework import viewsets
+from rest_framework import viewsets,decorators
+from django.db import transaction  
 
 class ArtisteViewSet(viewsets.ModelViewSet):
     serializer_class = ArtisteSerializer
@@ -41,10 +42,6 @@ class SceneViewSet(viewsets.ModelViewSet):
         if id_scene is not None:
             queryset = queryset.filter(id=id_scene)
         return queryset
-
-from rest_framework import viewsets
-from .models import ConfigurationFestival
-from .serializers import ConfigurationFestivalSerializer
 
 class ConfigurationFestivalViewSet(viewsets.ModelViewSet):
     serializer_class = ConfigurationFestivalSerializer

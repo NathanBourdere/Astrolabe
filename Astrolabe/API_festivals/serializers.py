@@ -2,6 +2,7 @@ from rest_framework.serializers import ModelSerializer
 from .models import Artiste, Categorie, Performance, Scene, ConfigurationFestival
 
 class ConfigurationFestivalSerializer(ModelSerializer):
+    pagination_class = SmallResultsSetPagination
     class Meta:
         model = ConfigurationFestival
         fields = '__all__'
