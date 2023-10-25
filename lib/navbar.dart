@@ -23,7 +23,6 @@ class NavBar extends StatelessWidget {
               style: TextStyle(color: Colors.white),
             ),
             onTap: () {
-              // vérifie avant si on est déjà sur la page d'accueil, si oui on referme le menu
               if (ModalRoute.of(context)?.settings.name != '/') {
                 Navigator.pushNamed(context, '/');
               } else {
@@ -37,10 +36,11 @@ class NavBar extends StatelessWidget {
               style: TextStyle(color: Colors.white),
             ),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ArtistesPage()),
-              );
+              if (ModalRoute.of(context)?.settings.name != '/artistes') {
+                Navigator.pushNamed(context, '/artistes');
+              } else {
+                Navigator.pop(context);
+              }
             },
           ),
           ListTile(
@@ -49,8 +49,24 @@ class NavBar extends StatelessWidget {
               style: TextStyle(color: Colors.white),
             ),
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CalendarPage()));
+              if (ModalRoute.of(context)?.settings.name != '/calendrier') {
+                Navigator.pushNamed(context, '/calendrier');
+              } else {
+                Navigator.pop(context);
+              }
+            },
+          ),
+          ListTile(
+            title: const Text(
+              "Billetterie",
+              style: TextStyle(color: Colors.white),
+            ),
+            onTap: () {
+              if (ModalRoute.of(context)?.settings.name != '/billetterie') {
+                Navigator.pushNamed(context, '/billetterie');
+              } else {
+                Navigator.pop(context);
+              }
             },
           ),
         ],

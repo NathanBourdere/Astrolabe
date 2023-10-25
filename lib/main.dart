@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'artistes_page.dart';
+import 'billetterie_page.dart';
+import 'calendrier.dart';
 import 'home.dart';
 import 'news_page.dart';
 
@@ -23,6 +25,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/artistes': (context) => ArtistesPage(),
         '/news': (context) => NewsPage(),
+        '/billetterie': (context) => const BilletteriePage(),
+        '/calendrier': (context) => const CalendarApp(),
       },
     );
   }

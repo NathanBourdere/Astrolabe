@@ -11,6 +11,8 @@ class Configuration {
   String couleurPrincipale;
   String couleurSecondaire;
   String couleurBackground;
+  String videoPromotionnelle;
+  String lienBilletterie;
 
   Configuration({
     required this.nomfestival,
@@ -25,6 +27,8 @@ class Configuration {
     required this.couleurPrincipale,
     required this.couleurSecondaire,
     required this.couleurBackground,
+    required this.videoPromotionnelle,
+    required this.lienBilletterie,
   });
 
   String get getNomfestival => nomfestival;
@@ -85,5 +89,15 @@ class Configuration {
   String get getCouleurBackground => couleurBackground;
   set setCouleurBackground(String value) {
     couleurBackground = value;
+  }
+
+  String get getVideoPromotionnelle => videoPromotionnelle;
+  set setVideoPromotionnelle(String value) {
+    videoPromotionnelle = value;
+  }
+
+  String get getLienBilletterie => lienBilletterie;
+  set setLienBilletterie(String value) {
+    lienBilletterie = value;
   }
 }
