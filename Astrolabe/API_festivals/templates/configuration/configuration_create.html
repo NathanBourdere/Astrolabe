@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Créer une configuration{% endblock %}
+{% block content %}
+<form method="POST" action="/festivals/configuration/create">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-12">
+            {{ configuration_form.nomFestival|as_crispy_field }}
+        </div>
+        <div class="col-12">
+            {{ configuration_form.logoFestival|as_crispy_field }}
+        </div>
+        <div class="col-12">
+            {{ configuration_form.descriptionFestival|as_crispy_field }}
+        </div>
+    </div>
+</form>
+{% endblock %}
