@@ -1,5 +1,5 @@
-from .serializers import ArtisteSerializer, PerformanceSerializer, SceneSerializer, ConfigurationFestivalSerializer, PartenaireSerializer, ModificationSerializer
-from .models import Artiste, Performance, Scene, ConfigurationFestival, Partenaire,Modification
+from .serializers import *
+from .models import *
 from rest_framework import viewsets,decorators
 from django.db import transaction  
 
@@ -61,4 +61,14 @@ class ModificationViewSet(viewsets.ReadOnlyModelViewSet):
         id_modification = self.request.GET.get("id")
         if id_modification :
             queryset = queryset.filter(id=id_modification)
+        return queryset
+
+class NewsViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = NewsSerializer
+
+    def get_queryset(self):
+        queryset = News.objects.all()
+        id_news = self.request.GET.get("id")
+        if id_news :
+            queryset = queryset.filter(id=id_news)
         return queryset

@@ -11,6 +11,7 @@ routers.register('scenes', SceneViewSet, basename='scenes')
 routers.register('festivals', ConfigurationFestivalViewSet, basename='festivals')
 routers.register('partenaires', PartenaireViewSet, basename='partenaires')
 routers.register('modifications', ModificationViewSet, basename='modifications')
+routers.register('news',NewsViewSet,basename="news")
 
 urlpatterns = [
     path('v0/', include(routers.urls)),
