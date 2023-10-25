@@ -65,6 +65,7 @@ class Modification(models.Model):
     date_modif_scene = models.DateField()
     date_modif_config = models.DateField()
     date_modif_partenaire = models.DateField()
+    date_modif_news = models.DateField()
 
     def __str__(self) -> str:
         return self.date_modif_artiste
