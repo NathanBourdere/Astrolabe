@@ -37,6 +37,7 @@ class ConfigurationFestival(models.Model):
     couleurBackground = models.CharField(max_length=30)
     video_promo = models.URLField(max_length=254,null=True,blank=True)
     partenaires = models.ManyToManyField(Partenaire)
+    mode = models.CharField(max_length=30,null=True,blank=True)
 
     def __str__(self):
         return self.nomFestival
