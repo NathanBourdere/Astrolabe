@@ -1,3 +1,4 @@
+import 'package:festival/tests.dart';
 import 'package:flutter/material.dart';
 import 'artistes_page.dart';
 import 'billetterie_page.dart';
@@ -23,7 +24,9 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'Astrolabe'),
       routes: {
-        '/artistes': (context) => ArtistesPage(),
+        '/artistes': (context) => ArtistesPage(
+              artistes: getTestArtistes(),
+            ),
         '/news': (context) => NewsPage(),
         '/billetterie': (context) => const BilletteriePage(),
         '/calendrier': (context) => const CalendarApp(),

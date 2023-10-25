@@ -1,16 +1,30 @@
 import 'package:festival/models/artiste.dart';
+import 'package:festival/models/performance.dart';
+import 'package:festival/performance.dart';
 import 'package:flutter/material.dart';
 
 class PageArtiste extends StatelessWidget {
   final Artiste artiste;
+  final List<Performance> performances;
 
-  const PageArtiste({Key? key, required this.artiste}) : super(key: key);
+  const PageArtiste(
+      {Key? key, required this.artiste, required this.performances})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(artiste.nomArtiste),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              // Navigate to the home page
+              Navigator.pushNamed(context, '/');
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -63,6 +77,27 @@ class PageArtiste extends StatelessWidget {
                 ),
                 Text(artiste.facebookArtiste),
               ],
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: performances.length,
+              itemBuilder: (context, index) {
+                final performance = performances[index];
+                return ListTile(
+                  title: Text(performance.nomPerformance),
+                  onTap: () {
+                    // Afficher la page de la performance
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            PerformanceDetailsPage(performance: performance),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           ],
         ),

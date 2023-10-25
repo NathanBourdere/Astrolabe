@@ -1,4 +1,7 @@
 import 'package:festival/calendrier.dart';
+import 'package:festival/performances.dart';
+import 'package:festival/scenes_page.dart';
+import 'package:festival/tests.dart';
 import 'package:flutter/material.dart';
 import 'artistes_page.dart';
 
@@ -37,7 +40,13 @@ class NavBar extends StatelessWidget {
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != '/artistes') {
-                Navigator.pushNamed(context, '/artistes');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ArtistesPage(
+                            artistes: getTestArtistes(),
+                          )),
+                );
               } else {
                 Navigator.pop(context);
               }
@@ -69,6 +78,36 @@ class NavBar extends StatelessWidget {
               }
             },
           ),
+          ListTile(
+            title: const Text(
+              "Performances",
+              style: TextStyle(color: Colors.white),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PerformancesPage(
+                          performances: getPerformancesTest(),
+                        )),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text(
+              "Scenes",
+              style: TextStyle(color: Colors.white),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ScenesPage(
+                          scenes: getTestScenes(),
+                        )),
+              );
+            },
+          )
         ],
       ),
     );
