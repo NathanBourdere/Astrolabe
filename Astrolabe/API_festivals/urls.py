@@ -38,4 +38,9 @@ urlpatterns = [
     path('scenes/update/<int:id>', scene_update, name='scene_update'),
     path('scenes/delete/<int:id>', scene_delete, name='scene_delete'),
     path('scenes/create/', scene_create, name='scene_create'),
+    path('news/', news, name='news'),
+    path('news/<int:id>/', scene_detail, name='news_detail'),
+    path('news/update/<int:id>', news_update, name='news_update'),
+    path('news/delete/<int:id>', news_delete, name='news_delete'),
+    path('news/create/', news_create, name='news_create'),
 ]
