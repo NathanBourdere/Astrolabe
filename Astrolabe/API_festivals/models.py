@@ -66,6 +66,15 @@ class Modification(models.Model):
     date_modif_scene = models.DateField()
     date_modif_config = models.DateField()
     date_modif_partenaire = models.DateField()
+    date_modif_news = models.DateField()
 
     def __str__(self) -> str:
-        return ""
+        return self.date_modif_artiste
+
+class News(models.Model):
+    titre = models.CharField(max_length=254)
+    corps = models.CharField(max_length=254)
+    image = models.CharField(max_length=254)
+
+    def __str__(self):
+        return self.titre

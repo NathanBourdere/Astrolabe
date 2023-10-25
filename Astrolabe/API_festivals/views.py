@@ -114,6 +114,17 @@ class ModificationViewSet(viewsets.ReadOnlyModelViewSet):
         if id_modification :
             queryset = queryset.filter(id=id_modification)
         return queryset
+      
+class NewsViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = NewsSerializer
+
+    def get_queryset(self):
+        queryset = News.objects.all()
+        id_news = self.request.GET.get("id")
+        if id_news :
+            queryset = queryset.filter(id=id_news)
+        return queryset
+
         
 @configuration_required
 def accueil(request):
@@ -460,3 +471,4 @@ def news_create(request):
     else:
         news_form = NewsForm()
     return render(request, 'news/news_create.html', {'form': news_form})
+
