@@ -37,7 +37,7 @@ class PerformanceDetailsPage extends StatelessWidget {
               style: const TextStyle(fontSize: 14),
             ),
             // Show the scene and make a link to it
-            InkWell(
+            ListTile(
               onTap: () {
                 Navigator.push(
                   context,
@@ -49,7 +49,7 @@ class PerformanceDetailsPage extends StatelessWidget {
                   ),
                 );
               },
-              child: Text(
+              title: Text(
                 performance.scene.nomScene,
                 style: const TextStyle(fontSize: 14, color: Colors.blue),
               ),
@@ -65,20 +65,21 @@ class PerformanceDetailsPage extends StatelessWidget {
               itemCount: performance.artistes.length,
               itemBuilder: (context, index) {
                 final artiste = performance.artistes[index];
-                return InkWell(
+                return ListTile(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => PageArtiste(
-                            artiste: artiste,
-                            performances: getPerformancesByArtiste(artiste)),
+                          artiste: artiste,
+                          performances: getPerformancesByArtiste(artiste),
+                        ),
                       ),
                     );
                   },
-                  child: Text(
+                  title: Text(
                     artiste.nomArtiste,
-                    style: const TextStyle(fontSize: 14, color: Colors.blue),
+                    style: const TextStyle(fontSize: 14),
                   ),
                 );
               },
