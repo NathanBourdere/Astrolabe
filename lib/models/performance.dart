@@ -49,28 +49,26 @@ class Performance {
   List<Artiste> get getArtistes => artistes;
 
   Scene get getScene => scene;
-}
 
-List<Performance> getPerformancesByScene(Scene scene) {
-  List<Performance> performances = getPerformancesTest();
-  List<Performance> performancesInscene = [];
-  for (Performance performance in performances) {
-    if (performance.getScene.getIdScene == scene.getIdScene) {
-      performancesInscene.add(performance);
-    }
+  factory Performance.fromJson(Map<String, dynamic> json) {
+    return Performance(
+      idPerformance: json['idPerformance'],
+      nomPerformance: json['nomPerformance'],
+      datePerformance: json['datePerformance'],
+      heureDebutPerformance: json['heureDebutPerformance'],
+      heureFinPerformance: json['heureFinPerformance'],
+      artistes: json['artistes'],
+      scene: json['scene'],
+    );
   }
-  return performancesInscene;
-}
 
-List<Performance> getPerformancesByArtiste(Artiste artiste) {
-  List<Performance> performances = getPerformancesTest();
-  List<Performance> performancesByArtiste = [];
-  for (Performance performance in performances) {
-    for (Artiste artistePerformance in performance.getArtistes) {
-      if (artistePerformance.getIdArtiste == artiste.getIdArtiste) {
-        performancesByArtiste.add(performance);
-      }
-    }
-  }
-  return performancesByArtiste;
+  Map<String, dynamic> toJson() => {
+        'idPerformance': idPerformance,
+        'nomPerformance': nomPerformance,
+        'datePerformance': datePerformance,
+        'heureDebutPerformance': heureDebutPerformance,
+        'heureFinPerformance': heureFinPerformance,
+        'artistes': artistes,
+        'scene': scene,
+      };
 }

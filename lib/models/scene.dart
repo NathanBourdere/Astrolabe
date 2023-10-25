@@ -23,4 +23,20 @@ class Scene {
   set setImageScene(String value) {
     imageScene = value;
   }
+
+  factory Scene.fromJson(Map<String, dynamic> json) {
+    return Scene(
+      idScene: json['idScene'],
+      nomScene: json['nomScene'],
+      imageScene: json['imageScene'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'idScene': idScene,
+      'nomScene': nomScene,
+      'imageScene': imageScene,
+    };
+  }
 }

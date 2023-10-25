@@ -5,7 +5,13 @@ class News {
   String imageNews;
   bool isRead = false;
 
-  News(this.idNews, this.titre, this.texte, this.imageNews);
+  News({
+    required this.idNews,
+    required this.titre,
+    required this.texte,
+    required this.imageNews,
+    required this.isRead,
+  });
 
   int get id => idNews;
   set id(int idNews) => this.idNews = idNews;
@@ -21,4 +27,24 @@ class News {
 
   bool get read => isRead;
   set read(bool isRead) => this.isRead = isRead;
+
+  factory News.fromJson(Map<String, dynamic> json) {
+    return News(
+      idNews: json['idNews'],
+      titre: json['titre'],
+      texte: json['texte'],
+      imageNews: json['imageNews'],
+      isRead: json['isRead'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'idNews': idNews,
+      'titre': titre,
+      'texte': texte,
+      'imageNews': imageNews,
+      'isRead': isRead,
+    };
+  }
 }

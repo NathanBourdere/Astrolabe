@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'models/news.dart';
 
 class NewsPage extends StatefulWidget {
@@ -11,35 +10,52 @@ class _NotificationPageState extends State<NewsPage> {
   @override
   Widget build(BuildContext context) {
     List<News> notifications = [
-      News(1, "Nouvelle notification 1", "Ceci est la première notification", "image1.png"),
-      News(2, "Nouvelle notification 2", "Ceci est la deuxième notification", "image2.png"),
-      News(3, "Nouvelle notification 3", "Ceci est la troisième notification", "image3.png"),
+      News(
+        idNews: 1,
+        titre: 'Titre 1',
+        texte: 'Texte 1',
+        imageNews: 'Image 1',
+        isRead: false,
+      ),
+      News(
+        idNews: 2,
+        titre: 'Titre 2',
+        texte: 'Texte 2',
+        imageNews: 'Image 2',
+        isRead: false,
+      ),
+      News(
+        idNews: 3,
+        titre: 'Titre 3',
+        texte: 'Texte 3',
+        imageNews: 'Image 3',
+        isRead: false,
+      ),
     ];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: const Text('Notifications'),
       ),
       body: Center(
-        // Vous afficherez les notifications ici
-        child: ListView.builder(
-          itemCount: notifications.length,
-          itemBuilder: (context, index) {
-            final notification = notifications[index];
-            final isRead = notification.isRead; // Indiquez si la notification a été lue
+          // Vous afficherez les notifications ici
+          child: ListView.builder(
+        itemCount: notifications.length,
+        itemBuilder: (context, index) {
+          final notification = notifications[index];
+          final isRead =
+              notification.isRead; // Indiquez si la notification a été lue
 
-            // Déterminez la couleur en fonction de si la notification est lue ou non
-            final textColor = isRead ? Colors.grey : Colors.black;
+          // Déterminez la couleur en fonction de si la notification est lue ou non
+          final textColor = isRead ? Colors.grey : Colors.black;
 
-            return ListTile(
-              title: Text(
-                notification.texte,
-                style: TextStyle(color: textColor),
-              ),
-            );
-          },
-        )
-
-      ),
+          return ListTile(
+            title: Text(
+              notification.texte,
+              style: TextStyle(color: textColor),
+            ),
+          );
+        },
+      )),
     );
   }
 }

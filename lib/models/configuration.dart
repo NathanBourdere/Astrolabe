@@ -100,4 +100,40 @@ class Configuration {
   set setLienBilletterie(String value) {
     lienBilletterie = value;
   }
+
+  factory Configuration.fromJson(Map<String, dynamic> json) {
+    return Configuration(
+      nomfestival: json['nomfestival'],
+      logofestival: json['logofestival'],
+      descriptionfestival: json['descriptionfestival'],
+      sitewebfestival: json['sitewebfestival'],
+      facebookfestival: json['facebookfestival'],
+      youtubefestival: json['youtubefestival'],
+      instagramfestival: json['instagramfestival'],
+      mentionlegale: json['mentionlegale'],
+      policeEcriture: json['policeEcriture'],
+      couleurPrincipale: json['couleurPrincipale'],
+      couleurSecondaire: json['couleurSecondaire'],
+      couleurBackground: json['couleurBackground'],
+      videoPromotionnelle: json['videoPromotionnelle'],
+      lienBilletterie: json['lienBilletterie'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'nomfestival': nomfestival,
+        'logofestival': logofestival,
+        'descriptionfestival': descriptionfestival,
+        'sitewebfestival': sitewebfestival,
+        'facebookfestival': facebookfestival,
+        'youtubefestival': youtubefestival,
+        'instagramfestival': instagramfestival,
+        'mentionlegale': mentionlegale,
+        'policeEcriture': policeEcriture,
+        'couleurPrincipale': couleurPrincipale,
+        'couleurSecondaire': couleurSecondaire,
+        'couleurBackground': couleurBackground,
+        'videoPromotionnelle': videoPromotionnelle,
+        'lienBilletterie': lienBilletterie,
+      };
 }
