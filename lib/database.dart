@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/performance.dart';
@@ -18,30 +19,36 @@ class DatabaseAstrolabe {
 
   Future<Database?> get database async {
     if (_database != null) return _database;
-    _database = await _initDatabase();
+    _database = await initDB();
     return _database;
   }
 
-  Future<Database> _initDatabase() async {
-    final path =
-        join(await getDatabasesPath(), 'festival/database/astrolabe.db');
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
+  static Future<Database> initDB() async {
+    final path = join(await getDatabasesPath(), 'astrolabe.db');
+    print(path);
+
+    // Check if the database already exists
+    final exists = await File(path).exists();
+
+    // If the database does not exist, create it
+    if (!exists) {
+      return await openDatabase(
+        path,
+        version: 1,
+        onCreate: (db, version) async {
+          await db.execute('''
         CREATE TABLE SCENE (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        idScene INTEGER PRIMARY KEY AUTOINCREMENT,
         nomScene TEXT NOT NULL,
         imageScene TEXT NOT NULL
         );
 
         CREATE TABLE NEWS (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        idNews INTEGER PRIMARY KEY AUTOINCREMENT,
         titre TEXT NOT NULL,
         texte TEXT NOT NULL,
         imageNews TEXT NOT NULL,
-        isRead BOOLEAN NOT NULL DEFAULT FALSE
+        isRead INT NOT NULL DEFAULT FALSE
         );
 
         CREATE TABLE CONFIGURATION (
@@ -62,7 +69,7 @@ class DatabaseAstrolabe {
         );
 
         CREATE TABLE ARTISTE (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        idArtiste INTEGER PRIMARY KEY AUTOINCREMENT,
         nomArtiste TEXT NOT NULL,
         descriptionArtiste TEXT NOT NULL,
         siteWebArtiste TEXT NOT NULL,
@@ -74,24 +81,26 @@ class DatabaseAstrolabe {
 
         
         CREATE TABLE PERFORMANCE (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        idPerformance INTEGER PRIMARY KEY AUTOINCREMENT,
         nomPerformance TEXT NOT NULL,
         datePerformance TEXT NOT NULL,
         heureDebutPerformance TEXT NOT NULL,
         heureFinPerformance TEXT NOT NULL,
-        idScene INTEGER NOT NULL,
-        FOREIGN KEY (sceneId) REFERENCES scenes(id)
+        scene INTEGER NOT NULL,
+        FOREIGN KEY (scene) REFERENCES SCENE(idScene)
         );
 
         CREATE TABLE PERF_ARTISTE (
         performanceId INTEGER NOT NULL,
         artisteId INTEGER NOT NULL,
-        FOREIGN KEY (performanceId) REFERENCES performances(id),
-        FOREIGN KEY (artisteId) REFERENCES artistes(id)
+        FOREIGN KEY (performanceId) REFERENCES PERFORMANCE(id),
+        FOREIGN KEY (artisteId) REFERENCES ARTISTE(id)
         );
         ''');
-      },
-    );
+        },
+      );
+    }
+    return await openDatabase(path);
   }
 
   // CRUD pour la configuration du festival
@@ -237,7 +246,7 @@ class DatabaseAstrolabe {
       titre: '',
       texte: '',
       imageNews: '',
-      isRead: false,
+      isRead: 0,
     );
   }
 
@@ -260,8 +269,16 @@ class DatabaseAstrolabe {
 
   void createPerformance(Performance performance) {
     final db = database;
+    // Il faut faire attention, les id des artistes dans performance sont les mêmes qye les id des artistes déjà créés.
+    // Il faut donc lier les artistes à la performance en fonction de leur id avec la table PERF_ARTISTE
     db.then((database) async {
-      await database!.insert('PERFORMANCE', performance.toJson());
+      await database!.insert('PERFORMANCE', performance.toJson_database());
+      for (Artiste artiste in performance.artistes) {
+        await database.insert('PERF_ARTISTE', {
+          'performanceId': performance.idPerformance,
+          'artisteId': artiste.idArtiste
+        });
+      }
     });
   }
 
@@ -275,7 +292,7 @@ class DatabaseAstrolabe {
     return Performance(
         idPerformance: -1,
         nomPerformance: '',
-        datePerformance: DateTime.now(),
+        datePerformance: '',
         heureDebutPerformance: '',
         heureFinPerformance: '',
         artistes: [],

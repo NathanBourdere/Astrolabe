@@ -4,6 +4,7 @@ import 'package:festival/models/configuration.dart';
 import 'package:festival/models/news.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/models/scene.dart';
+import 'package:intl/intl.dart';
 
 class TestsDatabaseInsert {
   // Etablir la connection a la base de données
@@ -81,56 +82,56 @@ class TestsDatabaseInsert {
       titre: "News 1",
       texte: "Texte de la news 1",
       imageNews: "assets/images/news1.jpg",
-      isRead: false,
+      isRead: 0,
     ),
     News(
       idNews: 2,
       titre: "News 2",
       texte: "Texte de la news 2",
       imageNews: "assets/images/news2.jpg",
-      isRead: false,
+      isRead: 0,
     ),
     News(
       idNews: 3,
       titre: "News 3",
       texte: "Texte de la news 3",
       imageNews: "assets/images/news3.jpg",
-      isRead: false,
+      isRead: 0,
     ),
     News(
       idNews: 4,
       titre: "News 4",
       texte: "Texte de la news 4",
       imageNews: "assets/images/news4.jpg",
-      isRead: false,
+      isRead: 0,
     ),
     News(
       idNews: 5,
       titre: "News 5",
       texte: "Texte de la news 5",
       imageNews: "assets/images/news5.jpg",
-      isRead: false,
+      isRead: 0,
     ),
     News(
       idNews: 6,
       titre: "News 6",
       texte: "Texte de la news 6",
       imageNews: "assets/images/news6.jpg",
-      isRead: false,
+      isRead: 0,
     ),
     News(
       idNews: 7,
       titre: "News 7",
       texte: "Texte de la news 7",
       imageNews: "assets/images/news7.jpg",
-      isRead: false,
+      isRead: 0,
     ),
     News(
       idNews: 8,
       titre: "News 8",
       texte: "Texte de la news 8",
       imageNews: "assets/images/news8.jpg",
-      isRead: false,
+      isRead: 0,
     ),
   ];
 
@@ -196,7 +197,7 @@ class TestsDatabaseInsert {
     Performance(
       idPerformance: 1,
       nomPerformance: "Performance 1",
-      datePerformance: DateTime.now(),
+      datePerformance: "2021-10-01 20:00:00",
       heureDebutPerformance: "20:00",
       heureFinPerformance: "21:00",
       artistes: [
@@ -232,7 +233,7 @@ class TestsDatabaseInsert {
     Performance(
       idPerformance: 2,
       nomPerformance: "Performance 2",
-      datePerformance: DateTime.now(),
+      datePerformance: "2021-10-02 20:00:00",
       heureDebutPerformance: "20:00",
       heureFinPerformance: "21:00",
       artistes: [
@@ -268,7 +269,7 @@ class TestsDatabaseInsert {
     Performance(
       idPerformance: 3,
       nomPerformance: "Performance 3",
-      datePerformance: DateTime.now(),
+      datePerformance: "2021-10-03 20:00:00",
       heureDebutPerformance: "20:00",
       heureFinPerformance: "21:00",
       artistes: [
@@ -327,6 +328,7 @@ class TestsDatabaseInsert {
     await insertScenes();
     await insertNews();
     await insertArtistes();
+    print('imma go perf');
     await insertPerformances();
   }
 }

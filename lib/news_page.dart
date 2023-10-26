@@ -15,21 +15,21 @@ class _NotificationPageState extends State<NewsPage> {
         titre: 'Titre 1',
         texte: 'Texte 1',
         imageNews: 'Image 1',
-        isRead: false,
+        isRead: 0,
       ),
       News(
         idNews: 2,
         titre: 'Titre 2',
         texte: 'Texte 2',
         imageNews: 'Image 2',
-        isRead: false,
+        isRead: 0,
       ),
       News(
         idNews: 3,
         titre: 'Titre 3',
         texte: 'Texte 3',
         imageNews: 'Image 3',
-        isRead: false,
+        isRead: 0,
       ),
     ];
     return Scaffold(
@@ -46,12 +46,11 @@ class _NotificationPageState extends State<NewsPage> {
               notification.isRead; // Indiquez si la notification a été lue
 
           // Déterminez la couleur en fonction de si la notification est lue ou non
-          final textColor = isRead ? Colors.grey : Colors.black;
 
           return ListTile(
             title: Text(
               notification.texte,
-              style: TextStyle(color: textColor),
+              style: TextStyle(color: Colors.grey),
             ),
           );
         },

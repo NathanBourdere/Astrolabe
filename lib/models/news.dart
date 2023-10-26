@@ -3,7 +3,7 @@ class News {
   String titre;
   String texte;
   String imageNews;
-  bool isRead = false;
+  int isRead = 0;
 
   News({
     required this.idNews,
@@ -25,8 +25,8 @@ class News {
   String get image => imageNews;
   set image(String imageNews) => this.imageNews = imageNews;
 
-  bool get read => isRead;
-  set read(bool isRead) => this.isRead = isRead;
+  int get read => isRead;
+  set read(int isRead) => this.isRead = isRead;
 
   factory News.fromJson(Map<String, dynamic> json) {
     return News(

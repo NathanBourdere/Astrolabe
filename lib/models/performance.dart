@@ -5,7 +5,7 @@ import 'package:festival/tests.dart';
 class Performance {
   int idPerformance;
   String nomPerformance;
-  DateTime datePerformance;
+  String datePerformance;
   String heureDebutPerformance;
   String heureFinPerformance;
   List<Artiste> artistes;
@@ -31,8 +31,8 @@ class Performance {
     nomPerformance = value;
   }
 
-  DateTime get getDatePerformance => datePerformance;
-  set setDatePerformance(DateTime value) {
+  String get getDatePerformance => datePerformance;
+  set setDatePerformance(String value) {
     datePerformance = value;
   }
 
@@ -71,4 +71,16 @@ class Performance {
         'artistes': artistes,
         'scene': scene,
       };
+
+  Map<String, dynamic> toJson_database() {
+    print('database_instance');
+    return {
+      'idPerformance': idPerformance,
+      'nomPerformance': nomPerformance,
+      'datePerformance': datePerformance,
+      'heureDebutPerformance': heureDebutPerformance,
+      'heureFinPerformance': heureFinPerformance,
+      'scene': scene.getIdScene,
+    };
+  }
 }
