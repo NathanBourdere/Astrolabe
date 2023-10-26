@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('API_festivals', '0002_modification_partenaire_artiste_recommendations_and_more'),
+        ('API_festivals', '0003_configurationfestival_mode'),
     ]
 
     operations = [
