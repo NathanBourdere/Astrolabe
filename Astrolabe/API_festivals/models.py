@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 class Artiste(models.Model):
     nom = models.CharField(max_length=200)
@@ -61,12 +62,12 @@ class Scene(models.Model):
         return self.nom
     
 class Modification(models.Model):
-    date_modif_artiste = models.DateField()
-    date_modif_performance = models.DateField()
-    date_modif_scene = models.DateField()
-    date_modif_config = models.DateField()
-    date_modif_partenaire = models.DateField()
-    date_modif_news = models.DateField()
+    date_modif_artiste = models.DateField(default=date.today)
+    date_modif_performance = models.DateField(default=date.today)
+    date_modif_scene = models.DateField(default=date.today)
+    date_modif_config = models.DateField(default=date.today)
+    date_modif_partenaire = models.DateField(default=date.today)
+    date_modif_news = models.DateField(default=date.today)
 
     def __str__(self) -> str:
         return self.date_modif_artiste
