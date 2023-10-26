@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/models/scene.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -26,6 +29,10 @@ class DatabaseAstrolabe {
   static Future<Database> initDB() async {
     print('1');
     final path = join(await getDatabasesPath(), 'astrolabe.db');
+    final file = File(path);
+    if (await file.exists()) {
+      await file.delete();
+    }
     print('2');
 
     // Check if the database already exists
@@ -34,7 +41,8 @@ class DatabaseAstrolabe {
 
     // If the database does not exist, create it
     if (!exists) {
-      return await openDatabase(
+      debugPrint('Not exists');
+      await openDatabase(
         path,
         version: 1,
         onCreate: (db, version) async {
@@ -101,6 +109,7 @@ class DatabaseAstrolabe {
         ''');
         },
       );
+      await Future.delayed(const Duration(milliseconds: 1000));
     }
     print('4');
     return await openDatabase(path);
@@ -347,7 +356,11 @@ class DatabaseAstrolabe {
     db.then((database) async {
       List<Map<String, dynamic>> performances =
           await database!.query('PERFORMANCE');
-      return Performance.fromJson(performances.first);
+      List<Performance> performancesList = [];
+      for (Map<String, dynamic> performance in performances) {
+        performancesList.add(Performance.fromJson(performance));
+      }
+      return performancesList;
     });
     return [];
   }
@@ -377,5 +390,16 @@ class DatabaseAstrolabe {
       return News.fromJson(news.first);
     });
     return [];
+  }
+
+  bool isDatabaseEmpty() {
+    final db = database;
+    db.then((database) async {
+      List<Map<String, dynamic>> news = await database!.query('NEWS');
+      if (news.isEmpty) {
+        return true;
+      }
+    });
+    return false;
   }
 }

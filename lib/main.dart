@@ -11,8 +11,11 @@ import 'tests.dart';
 void main() async {
   databaseFactory = databaseFactoryFfi;
   await DatabaseAstrolabe.initDB();
-  TestsDatabaseInsert testsDatabaseInsert = TestsDatabaseInsert();
-  testsDatabaseInsert.insertAll();
+  print('caca');
+  if (await DatabaseAstrolabe.instance.isDatabaseEmpty()) {
+    TestsDatabaseInsert testsDatabaseInsert = TestsDatabaseInsert();
+    testsDatabaseInsert.insertAll();
+  }
   runApp(const MyApp());
 }
 
