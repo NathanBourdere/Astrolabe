@@ -5,11 +5,8 @@ import 'package:festival/database.dart';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/navbar.dart';
-
 class ArtistesPage extends StatelessWidget {
-  final List<Artiste> artistes;
-
-  const ArtistesPage({Key? key, required this.artistes}) : super(key: key);
+  const ArtistesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,28 +15,40 @@ class ArtistesPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Artistes'),
       ),
-      body: ListView.builder(
-        itemCount: artistes.length,
-        itemBuilder: (context, index) {
-          final artiste = artistes[index];
-          return ListTile(
-            title: Text(artiste.nomArtiste),
-            onTap: () async {
-              // Utilisez DatabaseAstrolabe.instance pour accéder à la base de données
-              List<Performance> performances =
-                  DatabaseAstrolabe.instance.getPerformancesByArtiste(artiste);
-              // ignore: use_build_context_synchronously
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PageArtiste(
-                    artiste: artiste,
-                    performances: performances,
-                  ),
-                ),
-              );
-            },
-          );
+      body: FutureBuilder<List<Artiste>>(
+        future: DatabaseAstrolabe.instance.getArtistes(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            final artistes = snapshot.data ?? [];
+            return ListView.builder(
+              itemCount: artistes.length,
+              itemBuilder: (context, index) {
+                final artiste = artistes[index];
+                return ListTile(
+                  title: Text(artiste.nomArtiste),
+                  onTap: () async {
+                    // Utilisez DatabaseAstrolabe.instance pour accéder à la base de données
+                    List<Performance> performances =
+                    DatabaseAstrolabe.instance.getPerformancesByArtiste(artiste);
+                    // ignore: use_build_context_synchronously
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PageArtiste(
+                          artiste: artiste,
+                          performances: performances,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          }
         },
       ),
     );

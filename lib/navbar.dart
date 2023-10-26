@@ -45,9 +45,7 @@ class NavBar extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ArtistesPage(
-                            artistes: DatabaseAstrolabe.instance.getArtistes(),
-                          )),
+                      builder: (context) => ArtistesPage()),
                 );
               } else {
                 Navigator.pop(context);

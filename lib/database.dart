@@ -6,6 +6,7 @@ import 'package:festival/models/performance.dart';
 import 'package:festival/models/scene.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'models/configuration.dart';
 import 'models/news.dart';
@@ -25,7 +26,8 @@ class DatabaseAstrolabe {
 
   static Future<Database> initDB() async {
     print('1');
-    final path = join(await getDatabasesPath(), 'astrolabe.db');
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    final path = join(documentsDirectory.path, 'astrolabe.db');
     print('2');
 
     // Check if the database already exists
@@ -352,14 +354,14 @@ class DatabaseAstrolabe {
     return [];
   }
 
-  List<Artiste> getArtistes() {
+  Future<List<Artiste>> getArtistes() {
     final db = database;
-    db.then((database) async {
-      List<Map<String, dynamic>> artistes = await database!.query('ARTISTE');
-      return Artiste.fromJson(artistes.first);
+    return db.then((database) async {
+      final List<Map<String, dynamic>> artistes = await database!.query('ARTISTE');
+      return artistes.map((data) => Artiste.fromJson(data)).toList();
     });
-    return [];
   }
+
 
   List<Scene> getScenes() {
     final db = database;

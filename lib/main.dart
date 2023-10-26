@@ -9,6 +9,8 @@ import 'news_page.dart';
 import 'tests.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   databaseFactory = databaseFactoryFfi;
   await DatabaseAstrolabe.initDB();
   TestsDatabaseInsert testsDatabaseInsert = TestsDatabaseInsert();
@@ -30,9 +32,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'Astrolabe'),
       routes: {
-        '/artistes': (context) => ArtistesPage(
-              artistes: DatabaseAstrolabe.instance.getArtistes(),
-            ),
+        '/artistes': (context) => ArtistesPage(),
         '/news': (context) => NewsPage(),
         '/billetterie': (context) => const BilletteriePage(),
         '/calendrier': (context) => const CalendarApp(),
