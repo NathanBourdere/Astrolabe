@@ -1,6 +1,5 @@
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/scene.dart';
-import 'package:festival/tests.dart';
 
 class Performance {
   int idPerformance;

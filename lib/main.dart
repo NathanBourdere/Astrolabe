@@ -1,14 +1,12 @@
 import 'package:festival/database.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'artistes_page.dart';
 import 'billetterie_page.dart';
 import 'calendrier.dart';
 import 'home.dart';
 import 'news_page.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'tests.dart';
-
-final database = DatabaseAstrolabe.instance;
 
 void main() async {
   databaseFactory = databaseFactoryFfi;
@@ -33,7 +31,7 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'Astrolabe'),
       routes: {
         '/artistes': (context) => ArtistesPage(
-              artistes: database.getArtistes(),
+              artistes: DatabaseAstrolabe.instance.getArtistes(),
             ),
         '/news': (context) => NewsPage(),
         '/billetterie': (context) => const BilletteriePage(),

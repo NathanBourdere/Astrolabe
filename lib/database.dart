@@ -4,8 +4,8 @@ import 'package:festival/models/artiste.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/models/scene.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'models/configuration.dart';
 import 'models/news.dart';
@@ -24,11 +24,13 @@ class DatabaseAstrolabe {
   }
 
   static Future<Database> initDB() async {
+    print('1');
     final path = join(await getDatabasesPath(), 'astrolabe.db');
-    print(path);
+    print('2');
 
     // Check if the database already exists
     final exists = await File(path).exists();
+    print('3');
 
     // If the database does not exist, create it
     if (!exists) {
@@ -100,6 +102,7 @@ class DatabaseAstrolabe {
         },
       );
     }
+    print('4');
     return await openDatabase(path);
   }
 

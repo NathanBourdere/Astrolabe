@@ -1,4 +1,5 @@
 import 'package:festival/artiste_page.dart';
+import 'package:festival/database.dart';
 import 'package:festival/main.dart';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/performance.dart';
@@ -45,8 +46,8 @@ class PerformanceDetailsPage extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => ScenePage(
                         scene: performance.scene,
-                        performances:
-                            database.getPerformancesByScene(performance.scene)),
+                        performances: DatabaseAstrolabe.instance
+                            .getPerformancesByScene(performance.scene)),
                   ),
                 );
               },
@@ -73,8 +74,8 @@ class PerformanceDetailsPage extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => PageArtiste(
                           artiste: artiste,
-                          performances:
-                              database.getPerformancesByArtiste(artiste),
+                          performances: DatabaseAstrolabe.instance
+                              .getPerformancesByArtiste(artiste),
                         ),
                       ),
                     );

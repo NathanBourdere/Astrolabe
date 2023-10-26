@@ -1,7 +1,7 @@
 import 'package:festival/artiste_page.dart';
 import 'package:festival/main.dart';
 import 'package:flutter/material.dart';
-import 'package:festival/database.dart'; // Importez la classe DatabaseAstrolabe
+import 'package:festival/database.dart';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/navbar.dart';
@@ -27,7 +27,7 @@ class ArtistesPage extends StatelessWidget {
             onTap: () async {
               // Utilisez DatabaseAstrolabe.instance pour accéder à la base de données
               List<Performance> performances =
-                  database.getPerformancesByArtiste(artiste);
+                  DatabaseAstrolabe.instance.getPerformancesByArtiste(artiste);
               // ignore: use_build_context_synchronously
               Navigator.push(
                 context,

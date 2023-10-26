@@ -39,7 +39,6 @@ dependencies:
   intl: ^0.18.1
   table_calendar: ^3.0.9
   webview_flutter: 2.3.0
-  sqflite: ^2.3.0
   sqflite_common_ffi:
 
 dev_dependencies:

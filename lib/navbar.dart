@@ -1,4 +1,5 @@
 import 'package:festival/calendrier.dart';
+import 'package:festival/database.dart';
 import 'package:festival/main.dart';
 import 'package:festival/performances.dart';
 import 'package:festival/scenes_page.dart';
@@ -45,7 +46,7 @@ class NavBar extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ArtistesPage(
-                            artistes: database.getArtistes(),
+                            artistes: DatabaseAstrolabe.instance.getArtistes(),
                           )),
                 );
               } else {
@@ -89,7 +90,8 @@ class NavBar extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => PerformancesPage(
-                          performances: database.getPerformances(),
+                          performances:
+                              DatabaseAstrolabe.instance.getPerformances(),
                         )),
               );
             },
@@ -104,7 +106,7 @@ class NavBar extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ScenesPage(
-                          scenes: database.getScenes(),
+                          scenes: DatabaseAstrolabe.instance.getScenes(),
                         )),
               );
             },
