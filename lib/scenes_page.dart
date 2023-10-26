@@ -1,3 +1,4 @@
+import 'package:festival/main.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/navbar.dart';
 import 'package:festival/scene_page.dart';
@@ -28,7 +29,7 @@ class ScenesPage extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => ScenePage(
                       scene: scene,
-                      performances: getPerformancesByScene(scene)),
+                      performances: database.getPerformancesByScene(scene)),
                 ),
               );
             },

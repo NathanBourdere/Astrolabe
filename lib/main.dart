@@ -7,7 +7,7 @@ import 'calendrier.dart';
 import 'home.dart';
 import 'news_page.dart';
 
-final database = DatabaseAstrolabe.instance();
+final database = DatabaseAstrolabe.instance;
 
 void main() {
   runApp(const MyApp());
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'Astrolabe'),
       routes: {
         '/artistes': (context) => ArtistesPage(
-              artistes: getTestArtistes(),
+              artistes: database.getArtistes(),
             ),
         '/news': (context) => NewsPage(),
         '/billetterie': (context) => const BilletteriePage(),

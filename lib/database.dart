@@ -309,4 +309,53 @@ class DatabaseAstrolabe {
     });
     return [];
   }
+
+  List<Performance> getPerformancesByScene(Scene scene) {
+    final db = database;
+    db.then((database) async {
+      List<Map<String, dynamic>> performances = await database!.query(
+          'PERFORMANCE',
+          where: 'sceneId = ?',
+          whereArgs: [scene.idScene]);
+      return Performance.fromJson(performances.first);
+    });
+    return [];
+  }
+
+  List<Performance> getPerformances() {
+    final db = database;
+    db.then((database) async {
+      List<Map<String, dynamic>> performances =
+          await database!.query('PERFORMANCE');
+      return Performance.fromJson(performances.first);
+    });
+    return [];
+  }
+
+  List<Artiste> getArtistes() {
+    final db = database;
+    db.then((database) async {
+      List<Map<String, dynamic>> artistes = await database!.query('ARTISTE');
+      return Artiste.fromJson(artistes.first);
+    });
+    return [];
+  }
+
+  List<Scene> getScenes() {
+    final db = database;
+    db.then((database) async {
+      List<Map<String, dynamic>> scenes = await database!.query('SCENE');
+      return Scene.fromJson(scenes.first);
+    });
+    return [];
+  }
+
+  List<News> getNews() {
+    final db = database;
+    db.then((database) async {
+      List<Map<String, dynamic>> news = await database!.query('NEWS');
+      return News.fromJson(news.first);
+    });
+    return [];
+  }
 }
