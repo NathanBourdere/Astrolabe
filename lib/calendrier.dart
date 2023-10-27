@@ -3,17 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class CalendarApp extends StatelessWidget {
-  const CalendarApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: CalendarPage(),
-    );
-  }
-}
-
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
 
