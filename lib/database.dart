@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:io';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/configuration.dart';
@@ -9,9 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:path_provider/path_provider.dart';
-
-import 'models/configuration.dart';
 import 'models/news.dart';
 
 class DatabaseAstrolabe {
@@ -28,15 +24,11 @@ class DatabaseAstrolabe {
   }
 
   static Future<Database> initDB() async {
-    print('1');
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     final path = join(documentsDirectory.path, 'astrolabe.db');
 
-    print('2');
-
     // Check if the database already exists
     final exists = await File(path).exists();
-    print('3');
 
     // If the database does not exist, create it
     if (!exists) {
@@ -110,7 +102,6 @@ class DatabaseAstrolabe {
       );
       await Future.delayed(const Duration(milliseconds: 1000));
     }
-    print('4');
     return await openDatabase(path);
   }
 
@@ -338,67 +329,113 @@ class DatabaseAstrolabe {
     return [];
   }
 
-  List<Performance> getPerformancesByScene(Scene scene) {
+  Future<List<Performance>> getPerformances() async {
     final db = database;
-    db.then((database) async {
-      List<Map<String, dynamic>> performances = await database!.query(
-          'PERFORMANCE',
-          where: 'sceneId = ?',
-          whereArgs: [scene.idScene]);
-      return Performance.fromJson(performances.first);
-    });
-    return [];
+    final List<Map<String, dynamic>> performancesData =
+        await db.then((database) => database!.query('PERFORMANCE'));
+
+    // Convertir les données des performances en objets Performance
+    final List<Performance> performances =
+        performancesData.map((data) => Performance.fromJson(data)).toList();
+
+    // Parcourir chaque performance et obtenir les artistes correspondants
+    for (var performance in performances) {
+      final artistes =
+          await getArtistesByPerformance(performance.idPerformance);
+      performance.artistes = artistes;
+
+      final scene = await getSceneByPerformance(performance.idPerformance);
+      performance.scene = scene;
+    }
+    return performances;
   }
 
-  List<Performance> getPerformances() {
+  Future<List<Performance>> getPerformancesByScene(Scene scene) async {
     final db = database;
-    db.then((database) async {
-      List<Map<String, dynamic>> performances =
-          await database!.query('PERFORMANCE');
-      List<Performance> performancesList = [];
-      for (Map<String, dynamic> performance in performances) {
-        performancesList.add(Performance.fromJson(performance));
-      }
-      return performancesList;
-    });
-    return [];
+    final List<Map<String, dynamic>> performancesData = await db.then(
+        (database) => database!.query('PERFORMANCE',
+            where: 'scene = ?', whereArgs: [scene.idScene]));
+
+    // Convertir les données des performances en objets Performance
+    final List<Performance> performances =
+        performancesData.map((data) => Performance.fromJson(data)).toList();
+
+    // Parcourir chaque performance et obtenir les artistes correspondants
+    for (var performance in performances) {
+      final artistes =
+          await getArtistesByPerformance(performance.idPerformance);
+      performance.artistes = artistes;
+
+      final scene = await getSceneByPerformance(performance.idPerformance);
+      performance.scene = scene;
+    }
+    return performances;
+  }
+
+  Future<Performance> getPerformanceById(int idPerformance) async {
+    final db = database;
+    final List<Map<String, dynamic>> performancesData = await db.then(
+        (database) => database!.query('PERFORMANCE',
+            where: 'idPerformance = ?', whereArgs: [idPerformance]));
+
+    // Convertir les données des performances en objets Performance
+    final List<Performance> performances =
+        performancesData.map((data) => Performance.fromJson(data)).toList();
+
+    // Parcourir chaque performance et obtenir les artistes correspondants
+    for (var performance in performances) {
+      final artistes =
+          await getArtistesByPerformance(performance.idPerformance);
+      performance.artistes = artistes;
+
+      final scene = await getSceneByPerformance(performance.idPerformance);
+      performance.scene = scene;
+    }
+    return performances.first;
   }
 
   Future<List<Artiste>> getArtistes() {
     final db = database;
     return db.then((database) async {
-      final List<Map<String, dynamic>> artistes = await database!.query('ARTISTE');
+      final List<Map<String, dynamic>> artistes =
+          await database!.query('ARTISTE');
       return artistes.map((data) => Artiste.fromJson(data)).toList();
     });
   }
 
-
-  List<Scene> getScenes() {
+  Future<List<Scene>> getScenes() {
     final db = database;
-    db.then((database) async {
-      List<Map<String, dynamic>> scenes = await database!.query('SCENE');
+    return db.then((database) async {
+      final List<Map<String, dynamic>> scenes = await database!.query('SCENE');
+      return scenes.map((data) => Scene.fromJson(data)).toList();
+    });
+  }
+
+  Future<List<News>> getNews() {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> news = await database!.query('NEWS');
+      return news.map((data) => News.fromJson(data)).toList();
+    });
+  }
+
+  Future<List<Artiste>> getArtistesByPerformance(int idperformance) {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> artistes = await database!.rawQuery(
+          'SELECT ARTISTE.idArtiste, ARTISTE.nomArtiste, ARTISTE.descriptionArtiste, ARTISTE.siteWebArtiste, ARTISTE.youtubeArtiste, ARTISTE.instagramArtiste, ARTISTE.facebookArtiste, ARTISTE.imageArtiste FROM ARTISTE INNER JOIN PERF_ARTISTE ON ARTISTE.idArtiste = PERF_ARTISTE.artisteId WHERE PERF_ARTISTE.performanceId = ?',
+          [idperformance]);
+      return artistes.map((data) => Artiste.fromJson(data)).toList();
+    });
+  }
+
+  Future<Scene> getSceneByPerformance(int idperformance) {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> scenes = await database!.rawQuery(
+          'SELECT SCENE.idScene, SCENE.nomScene, SCENE.imageScene FROM SCENE INNER JOIN PERFORMANCE ON SCENE.idScene = PERFORMANCE.scene WHERE PERFORMANCE.idPerformance = ?',
+          [idperformance]);
       return Scene.fromJson(scenes.first);
     });
-    return [];
-  }
-
-  List<News> getNews() {
-    final db = database;
-    db.then((database) async {
-      List<Map<String, dynamic>> news = await database!.query('NEWS');
-      return News.fromJson(news.first);
-    });
-    return [];
-  }
-
-  bool isDatabaseEmpty() {
-    final db = database;
-    db.then((database) async {
-      List<Map<String, dynamic>> news = await database!.query('NEWS');
-      if (news.isEmpty) {
-        return true;
-      }
-    });
-    return false;
   }
 }

@@ -44,14 +44,8 @@ class ScenePage extends StatelessWidget {
                 return ListTile(
                   title: Text(performance.nomPerformance),
                   onTap: () {
-                    // Afficher la page de la performance
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            PerformanceDetailsPage(performance: performance),
-                      ),
-                    );
+                    Navigator.pushNamed(context, '/performance/',
+                        arguments: performance.idPerformance);
                   },
                 );
               },

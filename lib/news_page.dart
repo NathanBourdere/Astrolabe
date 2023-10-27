@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'models/news.dart';
 
 class NewsPage extends StatefulWidget {
+  const NewsPage({super.key});
+
   @override
   _NotificationPageState createState() => _NotificationPageState();
 }
@@ -42,15 +44,14 @@ class _NotificationPageState extends State<NewsPage> {
         itemCount: notifications.length,
         itemBuilder: (context, index) {
           final notification = notifications[index];
-          final isRead =
-              notification.isRead; // Indiquez si la notification a été lue
+// Indiquez si la notification a été lue
 
           // Déterminez la couleur en fonction de si la notification est lue ou non
 
           return ListTile(
             title: Text(
               notification.texte,
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
             ),
           );
         },

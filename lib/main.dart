@@ -1,4 +1,6 @@
 import 'package:festival/database.dart';
+import 'package:festival/performance.dart';
+import 'package:festival/performances.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'artistes_page.dart';
@@ -13,11 +15,8 @@ void main() async {
 
   databaseFactory = databaseFactoryFfi;
   await DatabaseAstrolabe.initDB();
-  print('caca');
-  if (await DatabaseAstrolabe.instance.isDatabaseEmpty()) {
-    TestsDatabaseInsert testsDatabaseInsert = TestsDatabaseInsert();
-    testsDatabaseInsert.insertAll();
-  }
+  // TestsDatabaseInsert testsDatabaseInsert = TestsDatabaseInsert();
+  // testsDatabaseInsert.insertAll();
   runApp(const MyApp());
 }
 
@@ -35,10 +34,12 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'Astrolabe'),
       routes: {
-        '/artistes': (context) => ArtistesPage(),
+        '/artistes': (context) => const ArtistesPage(),
         '/news': (context) => NewsPage(),
         '/billetterie': (context) => const BilletteriePage(),
         '/calendrier': (context) => const CalendarApp(),
+        '/performances': (context) => const PerformancesPage(),
+        '/performance/': (context) => const PerformanceDetailsPage(),
       },
     );
   }

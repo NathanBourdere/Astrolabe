@@ -4,7 +4,6 @@ import 'package:festival/models/configuration.dart';
 import 'package:festival/models/news.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/models/scene.dart';
-import 'package:intl/intl.dart';
 
 class TestsDatabaseInsert {
   // Etablir la connection a la base de données
@@ -328,7 +327,6 @@ class TestsDatabaseInsert {
     await insertScenes();
     await insertNews();
     await insertArtistes();
-    print('imma go perf');
     await insertPerformances();
   }
 }

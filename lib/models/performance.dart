@@ -51,14 +51,13 @@ class Performance {
 
   factory Performance.fromJson(Map<String, dynamic> json) {
     return Performance(
-      idPerformance: json['idPerformance'],
-      nomPerformance: json['nomPerformance'],
-      datePerformance: json['datePerformance'],
-      heureDebutPerformance: json['heureDebutPerformance'],
-      heureFinPerformance: json['heureFinPerformance'],
-      artistes: json['artistes'],
-      scene: json['scene'],
-    );
+        idPerformance: json['idPerformance'],
+        nomPerformance: json['nomPerformance'],
+        datePerformance: json['datePerformance'],
+        heureDebutPerformance: json['heureDebutPerformance'],
+        heureFinPerformance: json['heureFinPerformance'],
+        artistes: [],
+        scene: Scene(idScene: -1, nomScene: '', imageScene: ''));
   }
 
   Map<String, dynamic> toJson() => {

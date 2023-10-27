@@ -14,7 +14,10 @@ class Scene {
     idScene = value;
   }
 
-  String get getNomScene => nomScene;
+  String getNomScene() {
+    return nomScene;
+  }
+
   set setNomScene(String value) {
     nomScene = value;
   }

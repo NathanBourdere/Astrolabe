@@ -10,8 +10,6 @@ class BilletteriePage extends StatefulWidget {
 }
 
 class _BilletteriePageState extends State<BilletteriePage> {
-  WebViewController? _webViewController;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,9 +19,7 @@ class _BilletteriePageState extends State<BilletteriePage> {
       drawer: const NavBar(),
       body: WebView(
         initialUrl: 'https://www.hoppophop.fr/billetterie/',
-        onWebViewCreated: (controller) {
-          _webViewController = controller;
-        },
+        onWebViewCreated: (controller) {},
         navigationDelegate: (NavigationRequest request) {
           if (request.isForMainFrame) {
             return NavigationDecision.navigate;

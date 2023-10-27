@@ -1,9 +1,6 @@
-import 'package:festival/calendrier.dart';
 import 'package:festival/database.dart';
-import 'package:festival/main.dart';
 import 'package:festival/performances.dart';
 import 'package:festival/scenes_page.dart';
-import 'package:festival/tests.dart';
 import 'package:flutter/material.dart';
 import 'artistes_page.dart';
 
@@ -44,8 +41,7 @@ class NavBar extends StatelessWidget {
               if (ModalRoute.of(context)?.settings.name != '/artistes') {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => ArtistesPage()),
+                  MaterialPageRoute(builder: (context) => const ArtistesPage()),
                 );
               } else {
                 Navigator.pop(context);
@@ -87,10 +83,7 @@ class NavBar extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => PerformancesPage(
-                          performances:
-                              DatabaseAstrolabe.instance.getPerformances(),
-                        )),
+                    builder: (context) => const PerformancesPage()),
               );
             },
           ),
@@ -102,10 +95,7 @@ class NavBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => ScenesPage(
-                          scenes: DatabaseAstrolabe.instance.getScenes(),
-                        )),
+                MaterialPageRoute(builder: (context) => const ScenesPage()),
               );
             },
           )
