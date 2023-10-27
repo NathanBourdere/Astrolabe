@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}{{ artiste.nom }}{% endblock %}
+{% block content %}
+<h4>{{ artiste.nom }}</h4>
+<p>{{ artiste.description }}</p>
+<ul class="list-group" >
+    <li class="list-group-item">
+        Site : <a href="{{ artiste.site_web }}">{{ artiste.site_web }}</a>
+    </li>
+    <li class="list-group-item">
+        Youtube : <a href="{{ artiste.youtube }}">{{ artiste.youtube }}</a>
+    </li>
+    <li class="list-group-item">
+        Facebook : <a href="{{ artiste.facebook }}">{{ artiste.facebook }}</a>
+    </li>
+</ul>
+{% endblock %}
