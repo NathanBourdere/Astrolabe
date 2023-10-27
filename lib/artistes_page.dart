@@ -32,7 +32,8 @@ class ArtistesPage extends StatelessWidget {
                   title: Text(artiste.nomArtiste),
                   onTap: () async {
                     // Utilisez DatabaseAstrolabe.instance pour accéder à la base de données
-                    List<Performance> performances = DatabaseAstrolabe.instance
+                    List<Performance> performances = await DatabaseAstrolabe
+                        .instance
                         .getPerformancesByArtiste(artiste);
                     // ignore: use_build_context_synchronously
                     Navigator.push(

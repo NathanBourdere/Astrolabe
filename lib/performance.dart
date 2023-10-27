@@ -90,7 +90,8 @@ class PerformanceDetailsPage extends StatelessWidget {
                         final artiste = performance.artistes[index];
                         return ListTile(
                           onTap: () async {
-                            final performances = DatabaseAstrolabe.instance
+                            final performances = await DatabaseAstrolabe
+                                .instance
                                 .getPerformancesByArtiste(artiste);
                             Navigator.push(
                               context,
