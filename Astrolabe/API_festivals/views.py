@@ -2,8 +2,8 @@ from .serializers import *
 from .models import *
 from rest_framework import viewsets
 from django.shortcuts import redirect, render
-from datetime import date,timedelta
-from django.forms import ModelForm, CharField, Form
+from datetime import date,timedelta, timezone
+from django.forms import ModelForm, CharField, Form, ValidationError
 
 # --------------------------------------------------------------- DECORATEURS ---------------------------------------------------------------------
 def configuration_required(view_func):
@@ -34,6 +34,32 @@ class PerformanceForm(ModelForm):
     class Meta:
         model = Performance
         fields = '__all__'
+        
+    def clean(self):
+        date = self.cleaned_data.get('date')
+        if date < timezone.now().date():
+            raise ValidationError("Vous ne pouvez pas ajouter une performance dans le passé !")
+        
+        heure_debut = self.cleaned_data.get('heure_debut')
+        if date == timezone.now().date() and heure_debut < timezone.now().date().hour:
+            raise ValidationError("Vous ne pouvez pas ajouter une performance dans le passé !")
+        
+        heure_fin = self.cleaned_data.get('heure_fin')
+        if date == timezone.now().date() and heure_fin < timezone.now().date().hour:
+            raise ValidationError("Vous ne pouvez pas ajouter une performance dans le passé !")
+        
+        artistes = self.cleaned_data.get('artistes')
+        # on vérifie si il n'y a aucun doublon d'artistes
+        if len(artistes) == len(set(artistes)):
+            raise ValidationError("Vous ne pouvez pas ajouter deux fois le même artiste pour la même performance ! ")
+        
+        scene = self.cleaned_data.get('scene')
+        perfs = Performance.objects.filter(date=date,scene=scene)
+        if len(perfs) > 0:
+            for perf in perfs:
+                # on regarde si elles se chevauchent pas
+                if not(heure_debut >= perf.heure_fin or heure_fin <= perf.heure_debut):
+                    raise ValidationError("La scène est déjà occupée ce jour là")
 
 class SceneForm(ModelForm):
     class Meta:
@@ -127,8 +153,8 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
         
-    @configuration_required
-    def accueil(request):
+@configuration_required
+def accueil(request):
         
         festival = ConfigurationFestival.objects.all()
         if festival.exists():
@@ -198,7 +224,10 @@ def artistes(request,page):
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
-        artistes = artistes.filter(titre__icontains=search_term)
+        if search_term != "":
+            artistes = artistes.filter(titre__icontains=search_term)
+        else :
+            artistes = Artiste.objects.all()[page:50*page]
     return render(request, 'artistes/artistes.html',{"artistes": artistes,"form":form})
 
 @configuration_required
@@ -320,9 +349,12 @@ def partenaire_delete(request, id):
 def performances(request,page):
     performances = Performance.objects.all()[page:50*page]
     form = SearchForm(request.GET)
-    if form.is_valid():
+    if form.has_changed():
         search_term = form.cleaned_data['search']
-        performances = performances.filter(titre__icontains=search_term)
+        if search_term != "":
+            performances = performances.filter(titre__icontains=search_term)
+        else :
+            performances = Performance.objects.all()[page:50*page]
     return render(request, 'performances/performances.html',{"performances": performances})
 
 @configuration_required
