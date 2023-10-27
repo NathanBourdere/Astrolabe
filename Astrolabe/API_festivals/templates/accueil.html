@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}Accueil{% endblock %}
-{% block grand_titre %}{{ nom_festival }}{% endblock %}
+{% block grand_titre %}<h1>{{ nom_festival }}</h1>{% endblock %}
 {% block content %}
-
+{% for date, performances in performances_par_jour.items %}
+<h3>{{ date }}</h3>
+{% for performance in performances %}
+<p>{{ performance.nom }}</p>
+{% endfor %}
+{% endfor %}
 {% endblock %}
