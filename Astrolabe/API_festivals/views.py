@@ -3,8 +3,7 @@ from .models import *
 from rest_framework import viewsets
 from django.shortcuts import redirect, render
 from datetime import date,timedelta, timezone
-from colorfield.fields import ColorField,ColorWidget
-from django.forms import ModelForm, CharField,ChoiceField,CheckboxInput ,Form, ValidationError, FileInput,FileField
+from django.forms import ModelForm, CharField,ChoiceField,CheckboxInput ,Form, ValidationError, FileInput,FileField,TextInput
 
 # --------------------------------------------------------------- DECORATEURS ---------------------------------------------------------------------
 def configuration_required(view_func):
@@ -37,6 +36,7 @@ class ArtisteForm(ModelForm):
 
 class SearchForm(Form):
     search = CharField(label='Recherche', max_length=100, required=False)   
+
 class PerformanceForm(ModelForm):
     class Meta:
         model = Performance
@@ -73,14 +73,21 @@ class SceneForm(ModelForm):
         model = Scene
         fields = '__all__'
 
+class ColorPickerWidget(TextInput):
+    class Media:
+        css = {
+            'all': ('node_modules/spectrum-colorpicker/dist/css/spectrum.css',)
+        }
+        js = ('node_modules/spectrum-colorpicker/dist/js/spectrum.js',)
+
 class ConfigurationFestivalForm(ModelForm):
     class Meta:
         model = ConfigurationFestival
         fields = '__all__'
+    couleurPrincipale = CharField(widget=ColorPickerWidget)
+    couleurSecondaire = CharField(widget=ColorPickerWidget)
+    couleurBackground = CharField(widget=ColorPickerWidget)
     logoFestival = FileField(widget=FileInput)
-    couleurPrincipale = ColorField(widget=ColorWidget)
-    couleurSecondaire = ColorField(widget=ColorWidget)
-    couleurBackground = ColorField(widget=ColorWidget)
     mode = ChoiceField(widget=CheckboxInput)
 
 class PartenaireForm(ModelForm):
@@ -234,7 +241,6 @@ def artistes(request,page):
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
-        print(search_term)
         artistes = artistes.filter(nom__icontains=search_term)
     artistes = artistes[(page-1)*50:page*50]
 
@@ -310,18 +316,32 @@ def artiste_delete(request, id):
 # PARTENAIRES
 @configuration_required
 def partenaires(request,page):
-    partenaires = Partenaire.objects.all()[page:50*page]
+    partenaires = Partenaire.objects.all()
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
-        partenaires = partenaires.filter(titre__icontains=search_term)
-    return render(request, 'partenaires/partenaires.html',{"partenaires":partenaires,"form":form})#
+        partenaires = partenaires.filter(nom__icontains=search_term)
+    partenaires = partenaires[(page-1)*50:page*50]
+    render_right_arrow = False
+    render_left_arrow = False
+    # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
+    if len(Partenaire.objects.all()) > 50:
+        # si on est à la première page, on affiche pas la flèche de gauche
+        if page != 1:
+            render_left_arrow = True
+        # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
+        if len(partenaires) == 50:
+            render_right_arrow = True
+    
+
+    return render(request, 'partenaires/partenaires.html',{"partenaires": partenaires,"form":form,
+     "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
 @configuration_required
 def partenaire_create(request):
     if request.method == 'POST':
         partenaire_form = PartenaireForm(request.POST)
-        if partenaire_form.is_valid():#
+        if partenaire_form.is_valid():
             nom = partenaire_form.cleaned_data['nom']
             nom_lowered = nom.lower()
             if Partenaire.objects.filter(nom__iexact=nom_lowered).exists():
@@ -370,15 +390,26 @@ def partenaire_delete(request, id):
 # PERFORMANCES
 @configuration_required
 def performances(request,page):
-    performances = Performance.objects.all()[page:50*page]
+    performances = Performance.objects.all()
     form = SearchForm(request.GET)
-    if form.has_changed():
+    if form.is_valid():
         search_term = form.cleaned_data['search']
-        if search_term != "":
-            performances = performances.filter(titre__icontains=search_term)
-        else :
-            performances = Performance.objects.all()[page:50*page]
-    return render(request, 'performances/performances.html',{"performances": performances})
+        performances = performances.filter(nom__icontains=search_term)
+    performances = performances[(page-1)*50:page*50]
+    render_right_arrow = False
+    render_left_arrow = False
+    # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
+    if len(Performance.objects.all()) > 50:
+        # si on est à la première page, on affiche pas la flèche de gauche
+        if page != 1:
+            render_left_arrow = True
+        # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
+        if len(performances) == 50:
+            render_right_arrow = True
+    
+
+    return render(request, 'performances/performances.html',{"performances": performances,"form":form,
+     "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
 @configuration_required
 def performance_detail(request, id):
@@ -433,12 +464,26 @@ def performance_create(request):
 # SCENES
 @configuration_required
 def scenes(request,page):
-    scenes = Scene.objects.all()[page:50*page]
+    scenes = Scene.objects.all()
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
-        scenes = scenes.filter(titre__icontains=search_term)
-    return render(request, 'scenes/scenes.html',{"scenes": scenes,"form":form})
+        scenes = scenes.filter(nom__icontains=search_term)
+    scenes = scenes[(page-1)*50:page*50]
+    render_right_arrow = False
+    render_left_arrow = False
+    # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
+    if len(Scene.objects.all()) > 50:
+        # si on est à la première page, on affiche pas la flèche de gauche
+        if page != 1:
+            render_left_arrow = True
+        # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
+        if len(scenes) == 50:
+            render_right_arrow = True
+    
+
+    return render(request, 'scenes/scenes.html',{"scenes": scenes,"form":form,
+     "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
 @configuration_required
 def scene_detail(request, id):
@@ -493,12 +538,26 @@ def scene_create(request):
 # NEWS
 @configuration_required
 def news(request,page):
-    news = news.objects.all()[page:50*page]
+    news = News.objects.all()
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
-        news = news.filter(titre__icontains=search_term)
-    return render(request, 'news/news.html',{"news": news,"form":form})
+        news = news.filter(nom__icontains=search_term)
+    news = news[(page-1)*50:page*50]
+    render_right_arrow = False
+    render_left_arrow = False
+    # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
+    if len(News.objects.all()) > 50:
+        # si on est à la première page, on affiche pas la flèche de gauche
+        if page != 1:
+            render_left_arrow = True
+        # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
+        if len(news) == 50:
+            render_right_arrow = True
+    
+
+    return render(request, 'news/news.html',{"news": news,"form":form,
+     "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
 @configuration_required
 def news_detail(request, id):
