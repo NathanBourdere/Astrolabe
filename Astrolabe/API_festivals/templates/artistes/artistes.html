@@ -29,5 +29,8 @@
         <a href="{% url 'API_festivals:artistes' page=page_suivante %}">Page suivante</a>
     </button>
     {% endif %}
+    <button>
+        <a href="{% url 'API_festivals:artiste_create' %}">Nouvel artiste</a>
+    </button>
 </div>
 {% endblock %}
