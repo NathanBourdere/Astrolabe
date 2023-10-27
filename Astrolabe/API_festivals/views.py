@@ -29,7 +29,7 @@ class ArtisteForm(ModelForm):
         fields = '__all__'
 
 class SearchForm(Form):
-    search = CharField(label='Recherche', max_length=100)   
+    search = CharField(label='Recherche', max_length=100, required=False)   
 class PerformanceForm(ModelForm):
     class Meta:
         model = Performance
@@ -191,12 +191,28 @@ def configuration_delete(request):
 # ARTISTES
 @configuration_required
 def artistes(request,page):
-    artistes = Artiste.objects.all()[page:50*page]
+    artistes = Artiste.objects.all()
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
-        artistes = artistes.filter(titre__icontains=search_term)
-    return render(request, 'artistes/artistes.html',{"artistes": artistes,"form":form})
+        print(search_term)
+        artistes = artistes.filter(nom__icontains=search_term)
+    artistes = artistes[(page-1)*50:page*50]
+
+    render_right_arrow = False
+    render_left_arrow = False
+    # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
+    if len(Artiste.objects.all()) > 50:
+        # si on est à la première page, on affiche pas la flèche de gauche
+        if page != 1:
+            render_left_arrow = True
+        # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
+        if len(artistes) == 50:
+            render_right_arrow = True
+    
+
+    return render(request, 'artistes/artistes.html',{"artistes": artistes,"form":form,
+     "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
 @configuration_required
 def artiste_create(request):

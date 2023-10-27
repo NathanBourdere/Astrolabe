@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block title %}Artistes{% endblock %}
 {% block content %}
+<form method="GET">
+    {% csrf_token %}
+    {{ form.search|as_crispy_field }}
+</form>
 <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for artiste in artistes %}
     <div class="col">
@@ -12,5 +17,17 @@
         </div>
     </div>
     {% endfor %}
+</div>
+<div>
+    {% if render_left_arrow %}
+    <button>
+        <a href="{% url 'API_festivals:artistes' page=page_precedente %}">Page précédente</a>
+    </button>
+    {% endif %}
+    {% if render_right_arrow %}
+    <button>
+        <a href="{% url 'API_festivals:artistes' page=page_suivante %}">Page suivante</a>
+    </button>
+    {% endif %}
 </div>
 {% endblock %}
