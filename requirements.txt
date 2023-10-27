@@ -1,6 +1,7 @@
 asgiref==3.7.2
 crispy-bootstrap5==0.7
 Django==4.2.6
+django-colorfield==0.10.1
 django-crispy-forms==2.1
 djangorestframework==3.14.0
 mysqlclient==2.2.0
