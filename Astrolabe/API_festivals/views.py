@@ -220,7 +220,7 @@ def artiste_create(request):
 
 @configuration_required
 def artiste_detail(request, id):
-    artiste = artiste.objects.get(id=id)
+    artiste = Artiste.objects.get(id=id)
     template = "artistes/artiste_detail.html"
     context = {'artiste': artiste}
     return render(request, template, context)
