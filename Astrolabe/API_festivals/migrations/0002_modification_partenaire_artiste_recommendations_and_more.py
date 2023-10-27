@@ -11,17 +11,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Modification',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date_modif_artiste', models.DateField()),
-                ('date_modif_performance', models.DateField()),
-                ('date_modif_scene', models.DateField()),
-                ('date_modif_config', models.DateField()),
-                ('date_modif_partenaire', models.DateField()),
-            ],
-        ),
-        migrations.CreateModel(
             name='Partenaire',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),

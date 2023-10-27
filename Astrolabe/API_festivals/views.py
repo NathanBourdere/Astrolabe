@@ -3,7 +3,8 @@ from .models import *
 from rest_framework import viewsets
 from django.shortcuts import redirect, render
 from datetime import date,timedelta, timezone
-from django.forms import ModelForm, CharField, Form, ValidationError
+from colorfield.fields import ColorField,ColorWidget
+from django.forms import ModelForm, CharField,ChoiceField,CheckboxInput ,Form, ValidationError, FileInput,FileField
 
 # --------------------------------------------------------------- DECORATEURS ---------------------------------------------------------------------
 def configuration_required(view_func):
@@ -27,6 +28,12 @@ class ArtisteForm(ModelForm):
     class Meta:
         model = Artiste
         fields = '__all__'
+    
+    def clean(self):
+        recommendations = self.cleaned_data.get('recommendations')     
+        if len(recommendations) > len(set(recommendations)) :
+            raise ValidationError("vous recommandez plusieurs fois le même artiste")
+                
 
 class SearchForm(Form):
     search = CharField(label='Recherche', max_length=100)   
@@ -50,7 +57,7 @@ class PerformanceForm(ModelForm):
         
         artistes = self.cleaned_data.get('artistes')
         # on vérifie si il n'y a aucun doublon d'artistes
-        if len(artistes) == len(set(artistes)):
+        if len(artistes) > len(set(artistes)):
             raise ValidationError("Vous ne pouvez pas ajouter deux fois le même artiste pour la même performance ! ")
         
         scene = self.cleaned_data.get('scene')
@@ -70,17 +77,23 @@ class ConfigurationFestivalForm(ModelForm):
     class Meta:
         model = ConfigurationFestival
         fields = '__all__'
+    logoFestival = FileField(widget=FileInput)
+    couleurPrincipale = ColorField(widget=ColorWidget)
+    couleurSecondaire = ColorField(widget=ColorWidget)
+    couleurBackground = ColorField(widget=ColorWidget)
+    mode = ChoiceField(widget=CheckboxInput)
 
 class PartenaireForm(ModelForm):
     class Meta:
         model = Partenaire
         fields = '__all__'
+    banniere = FileField(widget=FileInput)
 
 class NewsForm(ModelForm):
     class Meta:
         model = News
         fields = '__all__'
-
+    image = FileField(widget=FileInput)
 
 class ArtisteViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ArtisteSerializer
