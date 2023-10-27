@@ -1,10 +1,9 @@
 from .serializers import *
 from .models import *
-from rest_framework import viewsets,decorators
+from rest_framework import viewsets
 from django.shortcuts import redirect, render
-from django.db import transaction  
 from datetime import date,timedelta
-from django.forms import ModelForm
+from django.forms import ModelForm, CharField, Form
 
 # --------------------------------------------------------------- DECORATEURS ---------------------------------------------------------------------
 def configuration_required(view_func):
@@ -29,6 +28,8 @@ class ArtisteForm(ModelForm):
         model = Artiste
         fields = '__all__'
 
+class SearchForm(Form):
+    search = CharField(label='Recherche', max_length=100)   
 class PerformanceForm(ModelForm):
     class Meta:
         model = Performance
@@ -126,23 +127,25 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
         
-@configuration_required
-def accueil(request):
-    
-    festival = ConfigurationFestival.objects.all()
-    if festival.exists():
-        festival = festival.first()
-    else :
-        configuration_form = ConfigurationFestivalForm()
-        return render(request,'configuration/configuration_create.html',{'configuration_form':configuration_form})
-    # liste de listes des 10 prochaines perfs du jour actuel jusqu'à la semaine prochaine
-    # exemple : [[perfaujourdhui1,perfaujourdhui2],[perfdemain1,perfdemain2],...]
-    performances_par_jour = []
-    for i in range(7):
-        date_recherchee = date.today() + timedelta(days=i)
-        performances_jour = Performance.objects.filter(date=date_recherchee).order_by('-date').limit(10)
-        performances_par_jour.append((date_recherchee, performances_jour))
-    return render(request, 'accueil.html', {'nom_festival':festival.nomFestival,'performances_par_jour':performances_par_jour})
+    @configuration_required
+    def accueil(request):
+        
+        festival = ConfigurationFestival.objects.all()
+        if festival.exists():
+            festival = festival.first()
+        else :
+            configuration_form = ConfigurationFestivalForm()
+            return render(request,'configuration/configuration_create.html',{'configuration_form':configuration_form})
+        # liste de listes des 10 prochaines perfs du jour actuel jusqu'à la semaine prochaine
+        # exemple : [[perfaujourdhui1,perfaujourdhui2],[perfdemain1,perfdemain2],...]
+        performances_par_jour = dict()
+        performances_jour = Performance.objects.all().order_by('-date')
+        for perf in performances_jour:
+            if perf.date not in performances_par_jour.keys():
+                performances_par_jour[perf.date] = [perf]
+            else :
+                performances_par_jour[perf.date].append(perf)
+        return render(request, 'accueil.html', {'nom_festival':festival.nomFestival,'performances_par_jour':performances_par_jour})
 
 # CONFIGURATION
 def configuration(request):
@@ -192,7 +195,11 @@ def configuration_delete(request):
 @configuration_required
 def artistes(request,page):
     artistes = Artiste.objects.all()[page:50*page]
-    return render(request, 'artistes/artistes.html',{"artistes": artistes})
+    form = SearchForm(request.GET)
+    if form.is_valid():
+        search_term = form.cleaned_data['search']
+        artistes = artistes.filter(titre__icontains=search_term)
+    return render(request, 'artistes/artistes.html',{"artistes": artistes,"form":form})
 
 @configuration_required
 def artiste_create(request):
@@ -252,7 +259,11 @@ def artiste_delete(request, id):
 @configuration_required
 def partenaires(request,page):
     partenaires = Partenaire.objects.all()[page:50*page]
-    return render(request, 'partenaires/partenaires.html',{"partenaires":partenaires})#
+    form = SearchForm(request.GET)
+    if form.is_valid():
+        search_term = form.cleaned_data['search']
+        partenaires = partenaires.filter(titre__icontains=search_term)
+    return render(request, 'partenaires/partenaires.html',{"partenaires":partenaires,"form":form})#
 
 @configuration_required
 def partenaire_create(request):
@@ -308,6 +319,10 @@ def partenaire_delete(request, id):
 @configuration_required
 def performances(request,page):
     performances = Performance.objects.all()[page:50*page]
+    form = SearchForm(request.GET)
+    if form.is_valid():
+        search_term = form.cleaned_data['search']
+        performances = performances.filter(titre__icontains=search_term)
     return render(request, 'performances/performances.html',{"performances": performances})
 
 @configuration_required
@@ -364,7 +379,11 @@ def performance_create(request):
 @configuration_required
 def scenes(request,page):
     scenes = Scene.objects.all()[page:50*page]
-    return render(request, 'scenes/scenes.html',{"scenes": scenes})
+    form = SearchForm(request.GET)
+    if form.is_valid():
+        search_term = form.cleaned_data['search']
+        scenes = scenes.filter(titre__icontains=search_term)
+    return render(request, 'scenes/scenes.html',{"scenes": scenes,"form":form})
 
 @configuration_required
 def scene_detail(request, id):
@@ -420,7 +439,11 @@ def scene_create(request):
 @configuration_required
 def news(request,page):
     news = news.objects.all()[page:50*page]
-    return render(request, 'news/news.html',{"news": news})
+    form = SearchForm(request.GET)
+    if form.is_valid():
+        search_term = form.cleaned_data['search']
+        news = news.filter(titre__icontains=search_term)
+    return render(request, 'news/news.html',{"news": news,"form":form})
 
 @configuration_required
 def news_detail(request, id):
