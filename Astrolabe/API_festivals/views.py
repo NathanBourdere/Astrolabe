@@ -127,25 +127,22 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
         
-    @configuration_required
-    def accueil(request):
-        
-        festival = ConfigurationFestival.objects.all()
-        if festival.exists():
-            festival = festival.first()
+@configuration_required
+def accueil(request):  
+    festival = ConfigurationFestival.objects.all()
+    if festival.exists():
+        festival = festival.first()
+    else :
+        configuration_form = ConfigurationFestivalForm()
+        return render(request,'configuration/configuration_create.html',{'configuration_form':configuration_form})
+    performances_par_jour = dict()
+    performances_jour = Performance.objects.all().order_by('date')
+    for perf in performances_jour:
+        if perf.date not in performances_par_jour.keys():
+            performances_par_jour[perf.date] = [perf]
         else :
-            configuration_form = ConfigurationFestivalForm()
-            return render(request,'configuration/configuration_create.html',{'configuration_form':configuration_form})
-        # liste de listes des 10 prochaines perfs du jour actuel jusqu'à la semaine prochaine
-        # exemple : [[perfaujourdhui1,perfaujourdhui2],[perfdemain1,perfdemain2],...]
-        performances_par_jour = dict()
-        performances_jour = Performance.objects.all().order_by('-date')
-        for perf in performances_jour:
-            if perf.date not in performances_par_jour.keys():
-                performances_par_jour[perf.date] = [perf]
-            else :
-                performances_par_jour[perf.date].append(perf)
-        return render(request, 'accueil.html', {'nom_festival':festival.nomFestival,'performances_par_jour':performances_par_jour})
+            performances_par_jour[perf.date].append(perf)
+    return render(request, 'accueil.html', {'nom_festival':festival.nomFestival,'performances_par_jour':performances_par_jour})
 
 # CONFIGURATION
 def configuration(request):
