@@ -35,9 +35,9 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'Astrolabe'),
       routes: {
         '/artistes': (context) => const ArtistesPage(),
-        '/news': (context) => NewsPage(),
+        '/news': (context) => const NewsPage(),
         '/billetterie': (context) => const BilletteriePage(),
-        '/calendrier': (context) => const CalendarApp(),
+        '/calendrier': (context) => const CalendarPage(),
         '/performances': (context) => const PerformancesPage(),
         '/performance/': (context) => const PerformanceDetailsPage(),
       },
