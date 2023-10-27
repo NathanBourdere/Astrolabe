@@ -22,6 +22,12 @@ class Partenaire(models.Model):
     def __str__(self) -> str:
         return self.nom
 
+class PoliceEcriture(models.Model):
+    nom = models.CharField(max_length=200,unique=True)
+
+    def __str__(self):
+        return self.nom
+
 class ConfigurationFestival(models.Model):
     nomFestival = models.CharField(max_length=200,unique=True)
     logoFestival = models.CharField(max_length=254,unique=True)
@@ -31,7 +37,7 @@ class ConfigurationFestival(models.Model):
     facebookFestival = models.URLField(max_length=254,unique=True)
     instagramFestival = models.URLField(max_length=254,unique=True)
     mentionsLegales = models.TextField(max_length=2500)
-    policeEcriture = models.CharField(max_length=200)
+    policeEcriture = models.ForeignKey('PoliceEcriture', on_delete=models.CASCADE)
     #RGB
     couleurPrincipale = models.CharField(max_length=30)
     couleurSecondaire = models.CharField(max_length=30)

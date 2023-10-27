@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer,PrimaryKeyRelatedField
-from .models import Artiste, Performance, Scene, ConfigurationFestival,Modification,Partenaire,News
+from .models import *
 class ArtisteSerializer(ModelSerializer):
     recommendations = PrimaryKeyRelatedField(many=True, queryset=Artiste.objects.all())
 
@@ -7,6 +7,10 @@ class ArtisteSerializer(ModelSerializer):
         model = Artiste
         fields = '__all__'
 
+class PoliceEcritureSerializer(ModelSerializer):
+    class Meta:
+        model = PoliceEcriture
+        fields = '__all__'
 
 class SceneSerializer(ModelSerializer):
     class Meta:
@@ -32,6 +36,7 @@ class PartenaireSerializer(ModelSerializer):
 
 class ConfigurationFestivalSerializer(ModelSerializer):
     partenaires = PartenaireSerializer(many=True)
+    policeEcriture = PoliceEcritureSerializer()
     class Meta:
         model = ConfigurationFestival
         fields = '__all__'
