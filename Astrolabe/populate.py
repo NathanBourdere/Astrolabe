@@ -4,11 +4,11 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Astrolabe.settings')
 django.setup()
 
-from API_festivals.models import Artiste, Performance, Scene, ConfigurationFestival, Partenaire, Modification
+from API_festivals.models import Artiste, Performance, Scene, ConfigurationFestival, Partenaire, Modification, PoliceEcriture,News
 
 hellfest = ConfigurationFestival()
 hellfest.nomFestival = "Hellfest"
-hellfest.logoFestival = "http://hellfest.fr/img/logo.png"
+hellfest.logoFestival = "static/model/configuration/logo/logo_hellfest.png"
 hellfest.descriptionFestival = """
     Le Hellfest est un festival de musique français spécialisé dans les musiques extrêmes, 
     annuellement organisé au mois de juin à Clisson en Loire-Atlantique. Il est l'un des plus 
@@ -19,12 +19,18 @@ hellfest.youtubeFestival = "https://www.youtube.com/user/HellfestFestival"
 hellfest.facebookFestival = "https://www.facebook.com/hellfest"
 hellfest.instagramFestival = "https://www.instagram.com/hellfestopenair/"
 hellfest.mentionsLegales = "Hellfest est une marque déposée de Hellfest Productions."
-hellfest.policeEcriture = "Arial"
 hellfest.couleurPrincipale = "#000000"
-hellfest.couleurSecondaire = "#FFFFFF"
-hellfest.couleurBackground = "#000000"
-hellfest.video_promo = "https://www.youtube.com/watch?v=VevuTQoTsSU"
+hellfest.couleurSecondaire = "#FF00FF"
+hellfest.couleurBackground = "#FF0000"
+hellfest.video_promo = "HELLFEST_2024.mp4"
 hellfest.mode = "festival"
+
+arial = PoliceEcriture()
+arial.nom = "Arial"
+arial.save()
+
+
+hellfest.policeEcriture = arial
 hellfest.save()
 
 slipknot = Artiste()
@@ -38,7 +44,7 @@ slipknot.site_web = "https://slipknot1.com/"
 slipknot.youtube = "https://www.youtube.com/user/slipknot"
 slipknot.instagram = "https://www.instagram.com/slipknot/"
 slipknot.facebook = "https://www.facebook.com/slipknot"
-slipknot.image = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Slipknot_-_Rock_am_Ring_2015-8722.jpg/330px-Slipknot_-_Rock_am_Ring_2015-8722.jpg"
+slipknot.image = "model/artistes/slipknot.png"
 slipknot.save()
 
 behemoth = Artiste()
@@ -51,7 +57,7 @@ behemoth.site_web = "https://behemoth.pl/"
 behemoth.youtube = "https://www.youtube.com/user/Behemothofficial"
 behemoth.instagram = "https://www.instagram.com/behemothofficial/"
 behemoth.facebook = "https://www.facebook.com/behemoth"
-behemoth.image = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Behemoth_-_Rock_am_Ring_2014-8727.jpg/330px-Behemoth_-_Rock_am_Ring_2014-8727.jpg"
+behemoth.image = "model/artistes/behemoth.png"
 behemoth.save()
 
 slayer = Artiste()
@@ -65,7 +71,7 @@ slayer.site_web = "http://www.slayer.net/"
 slayer.youtube = "https://www.youtube.com/user/slayer"
 slayer.instagram = "https://www.instagram.com/slayerbandofficial/"
 slayer.facebook = "https://www.facebook.com/slayer"
-slayer.image = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Slayer_-_Rock_am_Ring_2014-8721.jpg/330px-Slayer_-_Rock_am_Ring_2014-8721.jpg"
+slayer.image = "model/artistes/slayer.png"
 slayer.save()
 
 cannibal_corpse = Artiste()
@@ -79,7 +85,7 @@ cannibal_corpse.site_web = "https://cannibalcorpse.net/"
 cannibal_corpse.youtube = "https://www.youtube.com/user/cannibalcorpse"
 cannibal_corpse.instagram = "https://www.instagram.com/cannibalcorpseofficial/"
 cannibal_corpse.facebook = "https://www.facebook.com/cannibalcorpse"
-cannibal_corpse.image = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Cannibal_Corpse_-_Rock_am_Ring_2015-8726.jpg/330px-Cannibal_Corpse_-_Rock_am_Ring_2015-8726.jpg"
+cannibal_corpse.image = "model/artistes/cannibalcorpse.png"
 cannibal_corpse.save()
 
 kvelertak = Artiste()
@@ -92,24 +98,24 @@ kvelertak.site_web = "https://www.kvelertak.com/"
 kvelertak.youtube = "https://www.youtube.com/user/KvelertakOfficial"
 kvelertak.instagram = "https://www.instagram.com/kvelertakofficial/"
 kvelertak.facebook = "https://www.facebook.com/Kvelertak"
-kvelertak.image = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Kvelertak_-_Rock_am_Ring_2015-8737.jpg/330px-Kvelertak_-_Rock_am_Ring_2015-8737.jpg"
+kvelertak.image = "model/artistes/kvelertak.jpg"
 kvelertak.save()
 
 yeps = Partenaire()
 yeps.nom = "Yeps"
-yeps.banniere = "https://www.yeps.fr/wp-content/uploads/2019/05/logo-yeps-1.png"
+yeps.banniere = "model/partenaires/yeps.jpg"
 yeps.site = "https://www.yeps.fr/"
 yeps.save()
 
 redbull = Partenaire()
 redbull.nom = "Redbull"
-redbull.banniere = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Red_Bull_logo.svg/langfr-330px-Red_Bull_logo.svg.png"
+redbull.banniere = "model/partenaires/red bull.png"
 redbull.site = "https://www.redbull.com/fr-fr/"
 redbull.save()
 
 passculture = Partenaire()
 passculture.nom = "Pass Culture"
-passculture.banniere = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Pass_Culture_Logo.png/330px-Pass_Culture_Logo.png"
+passculture.banniere = "model/partenaires/pass culture.png"
 passculture.site = "https://pass.culture.fr/"
 passculture.save()
 
@@ -119,7 +125,7 @@ hellfest.partenaires.add(passculture)
 
 scene1 = Scene()
 scene1.nom = "Mainstage 1"
-scene1.image = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Hellfest_2017_-_Mainstage_1.jpg/330px-Hellfest_2017_-_Mainstage_1.jpg"
+scene1.image = "model/scenes/hellfest.png"
 scene1.save()
 
 performance1 = Performance()
@@ -170,3 +176,8 @@ modif.date_modif_config = "2023-10-25"
 modif.date_modif_partenaire = "2023-10-25"
 modif.date_modif_news = "2023-10-25"
 modif.save()
+
+news = News()
+news.titre = "Le hellfest va sûrement battre ses records d'audiences en 2024"
+news.corps = "Le hellfest, grand festival de hardrock et métal, va sûrement battre ses records d'audiences en 2024, s'expliquant par le fait qu'elle accueille des groupes plus connus"
+news.image = "model/news/news.jpg"
