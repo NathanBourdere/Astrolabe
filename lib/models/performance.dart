@@ -2,83 +2,90 @@ import 'package:festival/models/artiste.dart';
 import 'package:festival/models/scene.dart';
 
 class Performance {
-  int idPerformance;
-  String nomPerformance;
-  String datePerformance;
-  String heureDebutPerformance;
-  String heureFinPerformance;
+  int id;
+  String nom;
+  String date;
+  String heure_debut;
+  String heure_fin;
   List<Artiste> artistes;
   Scene scene;
 
   Performance({
-    required this.idPerformance,
-    required this.nomPerformance,
-    required this.datePerformance,
-    required this.heureDebutPerformance,
-    required this.heureFinPerformance,
+    required this.id,
+    required this.nom,
+    required this.date,
+    required this.heure_debut,
+    required this.heure_fin,
     required this.artistes,
     required this.scene,
   });
 
-  int get getIdPerformance => idPerformance;
-  set setIdPerformance(int value) {
-    idPerformance = value;
+  int get getid => id;
+  set setid(int value) {
+    id = value;
   }
 
-  String get getNomPerformance => nomPerformance;
-  set setNomPerformance(String value) {
-    nomPerformance = value;
+  String get getnom => nom;
+  set setnom(String value) {
+    nom = value;
   }
 
-  String get getDatePerformance => datePerformance;
-  set setDatePerformance(String value) {
-    datePerformance = value;
+  String get getdate => date;
+  set setdate(String value) {
+    date = value;
   }
 
-  String get getHeureDebutPerformance => heureDebutPerformance;
-  set setHeureDebutPerformance(String value) {
-    heureDebutPerformance = value;
+  String get getheure_debut => heure_debut;
+  set setheure_debut(String value) {
+    heure_debut = value;
   }
 
-  String get getHeureFinPerformance => heureFinPerformance;
-  set setHeureFinPerformance(String value) {
-    heureFinPerformance = value;
+  String get getheure_fin => heure_fin;
+  set setheure_fin(String value) {
+    heure_fin = value;
   }
 
-  List<Artiste> get getArtistes => artistes;
+  List<Artiste> get getartistes => artistes;
+  set setartistes(List<Artiste> value) {
+    artistes = value;
+  }
 
-  Scene get getScene => scene;
+  Scene get getscene => scene;
+  set setscene(Scene value) {
+    scene = value;
+  }
 
   factory Performance.fromJson(Map<String, dynamic> json) {
     return Performance(
-        idPerformance: json['idPerformance'],
-        nomPerformance: json['nomPerformance'],
-        datePerformance: json['datePerformance'],
-        heureDebutPerformance: json['heureDebutPerformance'],
-        heureFinPerformance: json['heureFinPerformance'],
-        artistes: [],
-        scene: Scene(idScene: -1, nomScene: '', imageScene: ''));
+      id: json['id'],
+      nom: json['nom'],
+      date: json['date'],
+      heure_debut: json['heure_debut'],
+      heure_fin: json['heure_fin'],
+      artistes: [],
+      scene: Scene.fromJson(json['scene']),
+    );
   }
 
   Map<String, dynamic> toJson() => {
-        'idPerformance': idPerformance,
-        'nomPerformance': nomPerformance,
-        'datePerformance': datePerformance,
-        'heureDebutPerformance': heureDebutPerformance,
-        'heureFinPerformance': heureFinPerformance,
+        'id': id,
+        'nom': nom,
+        'date': date,
+        'heure_debut': heure_debut,
+        'heure_fin': heure_fin,
         'artistes': artistes,
         'scene': scene,
       };
 
   Map<String, dynamic> toJson_database() {
-    print('database_instance');
     return {
-      'idPerformance': idPerformance,
-      'nomPerformance': nomPerformance,
-      'datePerformance': datePerformance,
-      'heureDebutPerformance': heureDebutPerformance,
-      'heureFinPerformance': heureFinPerformance,
-      'scene': scene.getIdScene,
+      'id': id,
+      'nom': nom,
+      'date': date,
+      'heure_debut': heure_debut,
+      'heure_fin': heure_fin,
+      'artistes': artistes,
+      'scene': scene,
     };
   }
 }

@@ -15,22 +15,22 @@ class _NotificationPageState extends State<NewsPage> {
       News(
         idNews: 1,
         titre: 'Titre 1',
-        texte: 'Texte 1',
-        imageNews: 'Image 1',
+        corps: 'corps 1',
+        image: 'Image 1',
         isRead: 0,
       ),
       News(
         idNews: 2,
         titre: 'Titre 2',
-        texte: 'Texte 2',
-        imageNews: 'Image 2',
+        corps: 'corps 2',
+        image: 'Image 2',
         isRead: 0,
       ),
       News(
         idNews: 3,
         titre: 'Titre 3',
-        texte: 'Texte 3',
-        imageNews: 'Image 3',
+        corps: 'corps 3',
+        image: 'Image 3',
         isRead: 0,
       ),
     ];
@@ -50,7 +50,7 @@ class _NotificationPageState extends State<NewsPage> {
 
           return ListTile(
             title: Text(
-              notification.texte,
+              notification.corps,
               style: const TextStyle(color: Colors.grey),
             ),
           );

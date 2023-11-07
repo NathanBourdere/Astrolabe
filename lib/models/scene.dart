@@ -1,45 +1,45 @@
 class Scene {
-  int idScene;
-  String nomScene;
-  String imageScene;
+  int id;
+  String nom;
+  String image;
 
   Scene({
-    required this.idScene,
-    required this.nomScene,
-    required this.imageScene,
+    required this.id,
+    required this.nom,
+    required this.image,
   });
 
-  int get getIdScene => idScene;
-  set setIdScene(int value) {
-    idScene = value;
+  int get getid => id;
+  set setid(int value) {
+    id = value;
   }
 
-  String getNomScene() {
-    return nomScene;
+  String getnom() {
+    return nom;
   }
 
-  set setNomScene(String value) {
-    nomScene = value;
+  set setnom(String value) {
+    nom = value;
   }
 
-  String get getImageScene => imageScene;
-  set setImageScene(String value) {
-    imageScene = value;
+  String get getimage => image;
+  set setimage(String value) {
+    image = value;
   }
 
   factory Scene.fromJson(Map<String, dynamic> json) {
     return Scene(
-      idScene: json['idScene'],
-      nomScene: json['nomScene'],
-      imageScene: json['imageScene'],
+      id: json['id'],
+      nom: json['nom'],
+      image: json['image'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'idScene': idScene,
-      'nomScene': nomScene,
-      'imageScene': imageScene,
+      'id': id,
+      'nom': nom,
+      'image': image,
     };
   }
 }

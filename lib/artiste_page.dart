@@ -24,7 +24,7 @@ class PageArtiste extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                artiste.nomArtiste,
+                artiste.nom,
               ),
             ),
             body: const Center(
@@ -34,7 +34,7 @@ class PageArtiste extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(artiste.nomArtiste,
+              title: Text(artiste.nom,
                   style: TextStyle(color: configuration.getFontColor)),
             ),
             body: Center(
@@ -47,7 +47,7 @@ class PageArtiste extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                artiste.nomArtiste,
+                artiste.nom,
               ),
               actions: [
                 IconButton(
@@ -61,9 +61,9 @@ class PageArtiste extends StatelessWidget {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  Image.network(artiste.imageArtiste),
+                  Image.network(artiste.image),
                   Text(
-                    artiste.descriptionArtiste,
+                    artiste.description,
                     style: TextStyle(
                         fontSize: 16, color: configuration.getMainColor),
                   ),
@@ -82,14 +82,14 @@ class PageArtiste extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final performance = performancesArtiste[index];
                       return ListTile(
-                        title: Text(performance.nomPerformance,
+                        title: Text(performance.nom,
                             style:
                                 TextStyle(color: configuration.getFontColor)),
                         onTap: () {
                           Navigator.pushNamed(
                             context,
                             '/performance/',
-                            arguments: performance.idPerformance,
+                            arguments: performance.id,
                           );
                         },
                       );

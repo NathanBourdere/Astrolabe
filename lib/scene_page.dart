@@ -18,7 +18,7 @@ class ScenePage extends StatelessWidget {
     Configuration configuration =
         Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
-      appBar: AppBar(title: Text(scene.nomScene), actions: [
+      appBar: AppBar(title: Text(scene.nom), actions: [
         IconButton(
           icon: const Icon(Icons.home),
           onPressed: () {
@@ -30,7 +30,7 @@ class ScenePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(scene.imageScene),
+            Image.network(scene.image),
             Text(
               'Événements :',
               style: TextStyle(
@@ -46,13 +46,13 @@ class ScenePage extends StatelessWidget {
                 final performance = performances[index];
                 return ListTile(
                   title: Text(
-                    performance.nomPerformance,
+                    performance.nom,
                     style: TextStyle(
                         fontSize: 14, color: configuration.getFontColor),
                   ),
                   onTap: () {
                     Navigator.pushNamed(context, '/performance/',
-                        arguments: performance.idPerformance);
+                        arguments: performance.id);
                   },
                 );
               },

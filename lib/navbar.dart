@@ -27,7 +27,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             title: Text(
               "Accueil",
-              style: GoogleFonts.getFont(configuration.getPoliceEcriture,
+              style: GoogleFonts.getFont(configuration.getpoliceEcriture,
                   textStyle: TextStyle(
                       fontSize: 16,
                       color: configuration.getFontColor,
@@ -44,7 +44,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             title: Text(
               "Artistes",
-              style: GoogleFonts.getFont(configuration.getPoliceEcriture,
+              style: GoogleFonts.getFont(configuration.getpoliceEcriture,
                   textStyle: TextStyle(
                       fontSize: 16,
                       color: configuration.getFontColor,
@@ -64,7 +64,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             title: Text(
               "Calendrier",
-              style: GoogleFonts.getFont(configuration.getPoliceEcriture,
+              style: GoogleFonts.getFont(configuration.getpoliceEcriture,
                   textStyle: TextStyle(
                       fontSize: 16,
                       color: configuration.getFontColor,
@@ -81,7 +81,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             title: Text(
               "Billetterie",
-              style: GoogleFonts.getFont(configuration.getPoliceEcriture,
+              style: GoogleFonts.getFont(configuration.getpoliceEcriture,
                   textStyle: TextStyle(
                       fontSize: 16,
                       color: configuration.getFontColor,
@@ -98,7 +98,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             title: Text(
               "Performances",
-              style: GoogleFonts.getFont(configuration.getPoliceEcriture,
+              style: GoogleFonts.getFont(configuration.getpoliceEcriture,
                   textStyle: TextStyle(
                       fontSize: 16,
                       color: configuration.getFontColor,
@@ -115,7 +115,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             title: Text(
               "Scenes",
-              style: GoogleFonts.getFont(configuration.getPoliceEcriture,
+              style: GoogleFonts.getFont(configuration.getpoliceEcriture,
                   textStyle: TextStyle(
                       fontSize: 16,
                       color: configuration.getFontColor,

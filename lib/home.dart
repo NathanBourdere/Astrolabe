@@ -17,35 +17,37 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Artiste> artistes = [
     Artiste(
-      idArtiste: 1,
-      nomArtiste: "Daft Punk",
-      descriptionArtiste: "Daft Punk",
-      siteWebArtiste: "https://www.daftpunk.com/",
-      youtubeArtiste:
-          "https://www.youtube.com/channel/UC_kRDKYrUlrbtrSiyu5Tflg",
-      instagramArtiste: "https://www.instagram.com/daftpunk/",
-      facebookArtiste: "https://www.facebook.com/daftpunk",
-      imageArtiste: "daftpunk",
+      id: 1,
+      nom: "Daft Punk",
+      recommendations: [],
+      description: "Daft Punk",
+      site_web: "https://www.daftpunk.com/",
+      youtube: "https://www.youtube.com/channel/UC_kRDKYrUlrbtrSiyu5Tflg",
+      instagram: "https://www.instagram.com/daftpunk/",
+      facebook: "https://www.facebook.com/daftpunk",
+      image: "daftpunk",
     ),
     Artiste(
-      idArtiste: 2,
-      nomArtiste: "Phantom Liberty",
-      descriptionArtiste: "Phantom Liberty",
-      siteWebArtiste: "",
-      youtubeArtiste: "",
-      instagramArtiste: "",
-      facebookArtiste: "",
-      imageArtiste: "phantomliberty",
+      id: 2,
+      nom: "Phantom Liberty",
+      description: "Phantom Liberty",
+      recommendations: [],
+      site_web: "",
+      youtube: "",
+      instagram: "",
+      facebook: "",
+      image: "phantomliberty",
     ),
     Artiste(
-      idArtiste: 3,
-      nomArtiste: "Hatsune Miku",
-      descriptionArtiste: "Hatsune Miku",
-      siteWebArtiste: "",
-      youtubeArtiste: "",
-      instagramArtiste: "",
-      facebookArtiste: "",
-      imageArtiste: "hatsunemiku",
+      id: 3,
+      nom: "Hatsune Miku",
+      recommendations: [],
+      description: "Hatsune Miku",
+      site_web: "",
+      youtube: "",
+      instagram: "",
+      facebook: "",
+      image: "hatsunemiku",
     ),
   ];
 
@@ -97,8 +99,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage(
-                              'assets/images/${artiste.imageArtiste}.png'),
+                          image:
+                              AssetImage('assets/images/${artiste.image}.png'),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.circular(20.0),
@@ -113,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              artiste.nomArtiste,
+                              artiste.nom,
                               style: const TextStyle(
                                 fontSize: 42,
                                 fontWeight: FontWeight.bold,

@@ -28,9 +28,9 @@ class ScenesPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final scene = snapshot.data![index];
                   return ListTile(
-                    title: Text(scene.nomScene,
+                    title: Text(scene.nom,
                         style: GoogleFonts.getFont(
-                            configuration.getPoliceEcriture,
+                            configuration.getpoliceEcriture,
                             textStyle: TextStyle(
                                 fontSize: 16,
                                 color: configuration.getFontColor))),

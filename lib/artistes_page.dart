@@ -34,9 +34,9 @@ class ArtistesPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final artiste = artistes[index];
                 return ListTile(
-                  title: Text(artiste.nomArtiste,
+                  title: Text(artiste.nom,
                       style:
-                          GoogleFonts.getFont(configuration.getPoliceEcriture,
+                          GoogleFonts.getFont(configuration.getpoliceEcriture,
                               textStyle: TextStyle(
                                 fontSize: 16,
                                 color: configuration.getFontColor,

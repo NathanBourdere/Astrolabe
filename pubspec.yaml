@@ -44,6 +44,7 @@ dependencies:
   path_provider: ^2.0.1
   google_fonts: ^6.1.0
   provider:
+  http:
 
 
 dev_dependencies:

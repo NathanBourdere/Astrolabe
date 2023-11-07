@@ -1,5 +1,6 @@
 import 'package:festival/database.dart';
 import 'package:festival/models/configuration.dart';
+import 'package:festival/models/modifications.dart';
 import 'package:festival/performance.dart';
 import 'package:festival/performances.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +13,12 @@ import 'billetterie_page.dart';
 import 'calendrier.dart';
 import 'home.dart';
 import 'news_page.dart';
-import 'tests.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   databaseFactory = databaseFactoryFfi;
   await DatabaseAstrolabe.initDB();
-  TestsDatabaseInsert testsDatabaseInsert = TestsDatabaseInsert();
-  testsDatabaseInsert.insertAll();
+  Modifications.updateModifications();
   TextStyle textStyle =
       GoogleFonts.getFont('Roboto', textStyle: const TextStyle(fontSize: 16));
   Configuration configuration =

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/configuration.dart';
+import 'package:festival/models/modifications.dart';
+import 'package:festival/models/partenaire.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/models/scene.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,7 @@ class DatabaseAstrolabe {
   static Future<Database> initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     final path = join(documentsDirectory.path, 'astrolabe.db');
-
+    print(path);
     // Check if the database already exists
     final exists = await File(path).exists();
 
@@ -39,16 +41,16 @@ class DatabaseAstrolabe {
         onCreate: (db, version) async {
           await db.execute('''
         CREATE TABLE SCENE (
-        idScene INTEGER PRIMARY KEY AUTOINCREMENT,
-        nomScene TEXT NOT NULL,
-        imageScene TEXT NOT NULL
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nom TEXT NOT NULL,
+        image TEXT NOT NULL
         );
 
         CREATE TABLE NEWS (
-        idNews INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         titre TEXT NOT NULL,
-        texte TEXT NOT NULL,
-        imageNews TEXT NOT NULL,
+        corps TEXT NOT NULL,
+        image TEXT NOT NULL,
         isRead INT NOT NULL DEFAULT FALSE
         );
 
@@ -70,25 +72,25 @@ class DatabaseAstrolabe {
         );
 
         CREATE TABLE ARTISTE (
-        idArtiste INTEGER PRIMARY KEY AUTOINCREMENT,
-        nomArtiste TEXT NOT NULL,
-        descriptionArtiste TEXT NOT NULL,
-        siteWebArtiste TEXT NOT NULL,
-        youtubeArtiste TEXT NOT NULL,
-        instagramArtiste TEXT NOT NULL,
-        facebookArtiste TEXT NOT NULL,
-        imageArtiste TEXT NOT NULL
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nom TEXT NOT NULL,
+        description TEXT NOT NULL,
+        site_web TEXT NOT NULL,
+        youtube TEXT NOT NULL,
+        instagram TEXT NOT NULL,
+        facebook TEXT NOT NULL,
+        image TEXT NOT NULL
         );
 
         
         CREATE TABLE PERFORMANCE (
-        idPerformance INTEGER PRIMARY KEY AUTOINCREMENT,
-        nomPerformance TEXT NOT NULL,
-        datePerformance TEXT NOT NULL,
-        heureDebutPerformance TEXT NOT NULL,
-        heureFinPerformance TEXT NOT NULL,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nom TEXT NOT NULL,
+        date TEXT NOT NULL,
+        heure_debut TEXT NOT NULL,
+        heure_fin TEXT NOT NULL,
         scene INTEGER NOT NULL,
-        FOREIGN KEY (scene) REFERENCES SCENE(idScene)
+        FOREIGN KEY (scene) REFERENCES SCENE(id)
         );
 
         CREATE TABLE PERF_ARTISTE (
@@ -97,224 +99,37 @@ class DatabaseAstrolabe {
         FOREIGN KEY (performanceId) REFERENCES PERFORMANCE(id),
         FOREIGN KEY (artisteId) REFERENCES ARTISTE(id)
         );
+
+        CREATE TABLE RECO_ARTISTE(
+        artisteId1 INTEGER NOT NULL,
+        artisteId2 INTEGER NOT NULL,
+        FOREIGN KEY (artisteId1) REFERENCES ARTISTE(id),
+        FOREIGN KEY (artisteId2) REFERENCES ARTISTE(id)
+        )
+
+        CREATE TABLE PARTENAIRE (
+        idPartenaire INTEGER PRIMARY KEY AUTOINCREMENT,
+        nomPartenaire TEXT NOT NULL,
+        logoPartenaire TEXT NOT NULL,
+        lienPartenaire TEXT NOT NULL
+        );
+        
+        CREATE TABLE MODIFICATIONS (
+        date_modif_artiste TEXT NOT NULL,
+        date_modif_performance TEXT NOT NULL,
+        date_modif_scene TEXT NOT NULL,
+        date_modif_config TEXT NOT NULL,
+        date_modif_news TEXT NOT NULL
+        );
+
+        INSERT INTO MODIFICATIONS (date_modif_artiste, date_modif_performance, date_modif_scene, date_modif_config, date_modif_news) VALUES ('zerferzf', 'ezgezg', 'zegrezg', 'zgegzzeg', 'zegrezg');
+
         ''');
         },
       );
-      await Future.delayed(const Duration(milliseconds: 1000));
+      await Future.delayed(const Duration(milliseconds: 500));
     }
     return await openDatabase(path);
-  }
-
-  // CRUD pour la configuration du festival
-  void createConfiguration(Configuration configuration) {
-    final db = database;
-    db.then((database) async {
-      await database!.insert('CONFIGURATION', configuration.toJson());
-    });
-  }
-
-  Configuration readConfiguration() {
-    final db = database;
-    db.then((database) async {
-      List<Map<String, dynamic>> configurations =
-          await database!.query('CONFIGURATION');
-      return Configuration.fromJson(configurations.first);
-    });
-    return Configuration(
-        nomfestival: '',
-        logofestival: '',
-        descriptionfestival: '',
-        sitewebfestival: '',
-        facebookfestival: '',
-        youtubefestival: '',
-        instagramfestival: '',
-        mentionlegale: '',
-        policeEcriture: '',
-        couleurPrincipale: '',
-        couleurSecondaire: '',
-        couleurBackground: '',
-        videoPromotionnelle: '',
-        lienBilletterie: '');
-  }
-
-  void updateConfiguration(Configuration configuration) {
-    final db = database;
-    db.then((database) async {
-      await database!.update('CONFIGURATION', configuration.toJson());
-    });
-  }
-
-  void deleteConfiguration(Configuration configuration) {
-    final db = database;
-    db.then((database) async {
-      await database!.delete('CONFIGURATION');
-    });
-  }
-
-  // CRUD pour les artistes
-  void createArtiste(Artiste artiste) {
-    final db = database;
-    db.then((database) async {
-      await database!.insert('ARTISTE', artiste.toJson());
-    });
-  }
-
-  Artiste readArtiste(int idArtiste) {
-    final db = database;
-    db.then((database) async {
-      List<Map<String, dynamic>> artistes = await database!
-          .query('ARTISTE', where: 'id = ?', whereArgs: [idArtiste]);
-      return Artiste.fromJson(artistes.first);
-    });
-    return Artiste(
-        idArtiste: -1,
-        nomArtiste: '',
-        descriptionArtiste: '',
-        siteWebArtiste: '',
-        youtubeArtiste: '',
-        instagramArtiste: '',
-        facebookArtiste: '',
-        imageArtiste: '');
-  }
-
-  void updateArtiste(Artiste artiste) {
-    final db = database;
-    db.then((database) async {
-      await database!.update('ARTISTE', artiste.toJson(),
-          where: 'id = ?', whereArgs: [artiste.idArtiste]);
-    });
-  }
-
-  void deleteArtiste(Artiste artiste) {
-    final db = database;
-    db.then((database) async {
-      await database!
-          .delete('ARTISTE', where: 'id = ?', whereArgs: [artiste.idArtiste]);
-    });
-  }
-  // Creation du CRUD pour les scenes
-
-  void createScene(Scene scene) {
-    final db = database;
-    db.then((database) async {
-      await database!.insert('SCENE', scene.toJson());
-    });
-  }
-
-  Scene readScene(int idScene) {
-    final db = database;
-    db.then((database) async {
-      List<Map<String, dynamic>> scenes =
-          await database!.query('SCENE', where: 'id = ?', whereArgs: [idScene]);
-      return Scene.fromJson(scenes.first);
-    });
-    return Scene(idScene: -1, nomScene: '', imageScene: '');
-  }
-
-  void updateScene(Scene scene) {
-    final db = database;
-    db.then((database) async {
-      await database!.update('SCENE', scene.toJson(),
-          where: 'id = ?', whereArgs: [scene.idScene]);
-    });
-  }
-
-  void deleteScene(Scene scene) {
-    final db = database;
-    db.then((database) async {
-      await database!
-          .delete('SCENE', where: 'id = ?', whereArgs: [scene.idScene]);
-    });
-  }
-
-  // Creation du CRUD pour les news
-
-  void createNews(News news) {
-    final db = database;
-    db.then((database) async {
-      await database!.insert('NEWS', news.toJson());
-    });
-  }
-
-  News readNews(int idNews) {
-    final db = database;
-    db.then((database) async {
-      List<Map<String, dynamic>> news =
-          await database!.query('NEWS', where: 'id = ?', whereArgs: [idNews]);
-      return News.fromJson(news.first);
-    });
-    return News(
-      idNews: -1,
-      titre: '',
-      texte: '',
-      imageNews: '',
-      isRead: 0,
-    );
-  }
-
-  void updateNews(News news) {
-    final db = database;
-    db.then((database) async {
-      await database!.update('NEWS', news.toJson(),
-          where: 'id = ?', whereArgs: [news.idNews]);
-    });
-  }
-
-  void deleteNews(News news) {
-    final db = database;
-    db.then((database) async {
-      await database!.delete('NEWS', where: 'id = ?', whereArgs: [news.idNews]);
-    });
-  }
-
-  // Creation du CRUD pour les performances
-
-  void createPerformance(Performance performance) {
-    final db = database;
-    // Il faut faire attention, les id des artistes dans performance sont les mêmes qye les id des artistes déjà créés.
-    // Il faut donc lier les artistes à la performance en fonction de leur id avec la table PERF_ARTISTE
-    db.then((database) async {
-      await database!.insert('PERFORMANCE', performance.toJson_database());
-      for (Artiste artiste in performance.artistes) {
-        await database.insert('PERF_ARTISTE', {
-          'performanceId': performance.idPerformance,
-          'artisteId': artiste.idArtiste
-        });
-      }
-    });
-  }
-
-  Performance readPerformance(int idPerformance) {
-    final db = database;
-    db.then((database) async {
-      List<Map<String, dynamic>> performances = await database!
-          .query('PERFORMANCE', where: 'id = ?', whereArgs: [idPerformance]);
-      return Performance.fromJson(performances.first);
-    });
-    return Performance(
-        idPerformance: -1,
-        nomPerformance: '',
-        datePerformance: '',
-        heureDebutPerformance: '',
-        heureFinPerformance: '',
-        artistes: [],
-        scene: Scene(idScene: -1, nomScene: '', imageScene: ''));
-  }
-
-  void updatePerformance(Performance performance) {
-    final db = database;
-    db.then((database) async {
-      await database!.update('PERFORMANCE', performance.toJson(),
-          where: 'id = ?', whereArgs: [performance.idPerformance]);
-    });
-  }
-
-  void deletePerformance(Performance performance) {
-    final db = database;
-    db.then((database) async {
-      await database!.delete('PERFORMANCE',
-          where: 'id = ?', whereArgs: [performance.idPerformance]);
-    });
   }
 
   Future<List<Performance>> getPerformances() async {
@@ -328,11 +143,10 @@ class DatabaseAstrolabe {
 
     // Parcourir chaque performance et obtenir les artistes correspondants
     for (var performance in performances) {
-      final artistes =
-          await getArtistesByPerformance(performance.idPerformance);
+      final artistes = await getArtistesByPerformance(performance.id);
       performance.artistes = artistes;
 
-      final scene = await getSceneByPerformance(performance.idPerformance);
+      final scene = await getSceneByPerformance(performance.id);
       performance.scene = scene;
     }
     return performances;
@@ -341,8 +155,8 @@ class DatabaseAstrolabe {
   Future<List<Performance>> getPerformancesByScene(Scene scene) async {
     final db = database;
     final List<Map<String, dynamic>> performancesData = await db.then(
-        (database) => database!.query('PERFORMANCE',
-            where: 'scene = ?', whereArgs: [scene.idScene]));
+        (database) => database!
+            .query('PERFORMANCE', where: 'scene = ?', whereArgs: [scene.id]));
 
     // Convertir les données des performances en objets Performance
     final List<Performance> performances =
@@ -350,21 +164,20 @@ class DatabaseAstrolabe {
 
     // Parcourir chaque performance et obtenir les artistes correspondants
     for (var performance in performances) {
-      final artistes =
-          await getArtistesByPerformance(performance.idPerformance);
+      final artistes = await getArtistesByPerformance(performance.id);
       performance.artistes = artistes;
 
-      final scene = await getSceneByPerformance(performance.idPerformance);
+      final scene = await getSceneByPerformance(performance.id);
       performance.scene = scene;
     }
     return performances;
   }
 
-  Future<Performance> getPerformanceById(int idPerformance) async {
+  Future<Performance> getPerformanceById(int id) async {
     final db = database;
     final List<Map<String, dynamic>> performancesData = await db.then(
-        (database) => database!.query('PERFORMANCE',
-            where: 'idPerformance = ?', whereArgs: [idPerformance]));
+        (database) =>
+            database!.query('PERFORMANCE', where: 'id = ?', whereArgs: [id]));
 
     // Convertir les données des performances en objets Performance
     final List<Performance> performances =
@@ -372,11 +185,10 @@ class DatabaseAstrolabe {
 
     // Parcourir chaque performance et obtenir les artistes correspondants
     for (var performance in performances) {
-      final artistes =
-          await getArtistesByPerformance(performance.idPerformance);
+      final artistes = await getArtistesByPerformance(performance.id);
       performance.artistes = artistes;
 
-      final scene = await getSceneByPerformance(performance.idPerformance);
+      final scene = await getSceneByPerformance(performance.id);
       performance.scene = scene;
     }
     return performances.first;
@@ -388,18 +200,17 @@ class DatabaseAstrolabe {
       final List<
           Map<String,
               dynamic>> performancesData = await database!.rawQuery(
-          'SELECT PERFORMANCE.idPerformance, PERFORMANCE.nomPerformance, PERFORMANCE.datePerformance, PERFORMANCE.heureDebutPerformance, PERFORMANCE.heureFinPerformance, PERFORMANCE.scene FROM PERFORMANCE INNER JOIN PERF_ARTISTE ON PERFORMANCE.idPerformance = PERF_ARTISTE.performanceId WHERE PERF_ARTISTE.artisteId = ?',
-          [artiste.idArtiste]);
+          'SELECT PERFORMANCE.id, PERFORMANCE.nomPerformance, PERFORMANCE.datePerformance, PERFORMANCE.heureDebutPerformance, PERFORMANCE.heureFinPerformance, PERFORMANCE.scene FROM PERFORMANCE INNER JOIN PERF_ARTISTE ON PERFORMANCE.id = PERF_ARTISTE.performanceId WHERE PERF_ARTISTE.artisteId = ?',
+          [artiste.id]);
       // Convertir les données des performances en objets Performance
       final List<Performance> performances =
           performancesData.map((data) => Performance.fromJson(data)).toList();
       // Parcourir chaque performance et obtenir les artistes correspondants
       for (Performance performance in performances) {
-        final artistes =
-            await getArtistesByPerformance(performance.idPerformance);
+        final artistes = await getArtistesByPerformance(performance.id);
         performance.artistes = artistes;
 
-        final scene = await getSceneByPerformance(performance.idPerformance);
+        final scene = await getSceneByPerformance(performance.id);
         performance.scene = scene;
       }
       return performances;
@@ -431,22 +242,22 @@ class DatabaseAstrolabe {
     });
   }
 
-  Future<List<Artiste>> getArtistesByPerformance(int idperformance) {
+  Future<List<Artiste>> getArtistesByPerformance(int id) {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> artistes = await database!.rawQuery(
           'SELECT ARTISTE.idArtiste, ARTISTE.nomArtiste, ARTISTE.descriptionArtiste, ARTISTE.siteWebArtiste, ARTISTE.youtubeArtiste, ARTISTE.instagramArtiste, ARTISTE.facebookArtiste, ARTISTE.imageArtiste FROM ARTISTE INNER JOIN PERF_ARTISTE ON ARTISTE.idArtiste = PERF_ARTISTE.artisteId WHERE PERF_ARTISTE.performanceId = ?',
-          [idperformance]);
+          [id]);
       return artistes.map((data) => Artiste.fromJson(data)).toList();
     });
   }
 
-  Future<Scene> getSceneByPerformance(int idperformance) {
+  Future<Scene> getSceneByPerformance(int id) {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> scenes = await database!.rawQuery(
-          'SELECT SCENE.idScene, SCENE.nomScene, SCENE.imageScene FROM SCENE INNER JOIN PERFORMANCE ON SCENE.idScene = PERFORMANCE.scene WHERE PERFORMANCE.idPerformance = ?',
-          [idperformance]);
+          'SELECT SCENE.id, SCENE.nomScene, SCENE.imageScene FROM SCENE INNER JOIN PERFORMANCE ON SCENE.id = PERFORMANCE.scene WHERE PERFORMANCE.id = ?',
+          [id]);
       return Scene.fromJson(scenes.first);
     });
   }
@@ -457,6 +268,53 @@ class DatabaseAstrolabe {
       final List<Map<String, dynamic>> configurations =
           await database!.query('CONFIGURATION');
       return Configuration.fromJson(configurations.first);
+    });
+  }
+
+  Future<Modifications> getModifications() {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> modifications =
+          await database!.query('MODIFICATIONS');
+      return Modifications.fromJson(modifications.first);
+    });
+  }
+
+  void updateDatabase(
+      List<Artiste> artistes,
+      List<Performance> performances,
+      List<Scene> scenes,
+      List<News> news,
+      List<Partenaire> partenaires,
+      Modifications modifications,
+      Configuration configuration) async {
+    // delete tout et refill les tables
+    final db = database;
+    db.then((database) async {
+      await database!.delete('ARTISTE');
+      await database.delete('PERFORMANCE');
+      await database.delete('SCENE');
+      await database.delete('NEWS');
+      await database.delete('PARTENAIRE');
+      await database.delete('MODIFICATIONS');
+      await database.delete('CONFIGURATION');
+      await database.insert('MODIFICATIONS', modifications.toJson());
+      await database.insert('CONFIGURATION', configuration.toJson());
+      for (Artiste artiste in artistes) {
+        await database.insert('ARTISTE', artiste.toJson());
+      }
+      for (Performance performance in performances) {
+        await database.insert('PERFORMANCE', performance.toJson_database());
+      }
+      for (Scene scene in scenes) {
+        await database.insert('SCENE', scene.toJson());
+      }
+      for (News news in news) {
+        await database.insert('NEWS', news.toJson());
+      }
+      for (Partenaire partenaire in partenaires) {
+        await database.insert('PARTENAIRE', partenaire.toJson());
+      }
     });
   }
 }

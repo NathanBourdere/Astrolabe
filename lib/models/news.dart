@@ -1,49 +1,49 @@
 class News {
   int idNews;
   String titre;
-  String texte;
-  String imageNews;
+  String corps;
+  String image;
   int isRead = 0;
 
   News({
     required this.idNews,
     required this.titre,
-    required this.texte,
-    required this.imageNews,
+    required this.corps,
+    required this.image,
     required this.isRead,
   });
 
   int get id => idNews;
   set id(int idNews) => this.idNews = idNews;
 
-  String get title => titre;
-  set title(String titre) => this.titre = titre;
+  String get gettitre => titre;
+  set settitle(String titre) => this.titre = titre;
 
-  String get text => texte;
-  set text(String texte) => this.texte = texte;
+  String get gettext => corps;
+  set settext(String corps) => this.corps = corps;
 
-  String get image => imageNews;
-  set image(String imageNews) => this.imageNews = imageNews;
+  String get getimage => image;
+  set setimage(String image) => image = image;
 
   int get read => isRead;
   set read(int isRead) => this.isRead = isRead;
 
   factory News.fromJson(Map<String, dynamic> json) {
     return News(
-      idNews: json['idNews'],
+      idNews: json['id'],
       titre: json['titre'],
-      texte: json['texte'],
-      imageNews: json['imageNews'],
-      isRead: json['isRead'],
+      corps: json['corps'],
+      image: json['image'],
+      isRead: 0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'idNews': idNews,
+      'id': idNews,
       'titre': titre,
-      'texte': texte,
-      'imageNews': imageNews,
+      'corps': corps,
+      'image': image,
       'isRead': isRead,
     };
   }

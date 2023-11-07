@@ -25,7 +25,7 @@ class PerformanceDetailsPage extends StatelessWidget {
 
             return Scaffold(
               appBar: AppBar(
-                title: Text(performance.nomPerformance),
+                title: Text(performance.nom),
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.home),
@@ -39,12 +39,12 @@ class PerformanceDetailsPage extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      performance.nomPerformance,
+                      performance.nom,
                       style: TextStyle(
                           fontSize: 20, color: configuration.getMainColor),
                     ),
                     Text(
-                      '${performance.datePerformance} à ${performance.heureDebutPerformance} - ${performance.heureFinPerformance}',
+                      '${performance.date} à ${performance.heure_debut} - ${performance.heure_fin}',
                       style: TextStyle(
                           fontSize: 14, color: configuration.getMainColor),
                     ),
@@ -78,7 +78,7 @@ class PerformanceDetailsPage extends StatelessWidget {
                             );
                           },
                           title: Text(
-                            performance.scene.getNomScene(),
+                            performance.scene.getnom(),
                             style: TextStyle(
                                 fontSize: 14,
                                 color: configuration.getFontColor),
@@ -116,7 +116,7 @@ class PerformanceDetailsPage extends StatelessWidget {
                             );
                           },
                           title: Text(
-                            artiste.nomArtiste,
+                            artiste.nom,
                             style: TextStyle(
                                 fontSize: 14,
                                 color: configuration.getFontColor),

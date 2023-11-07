@@ -1,142 +1,133 @@
 import 'dart:ui';
 
 class Configuration {
-  String nomfestival;
-  String logofestival;
-  String descriptionfestival;
-  String sitewebfestival;
-  String facebookfestival;
-  String youtubefestival;
-  String instagramfestival;
-  String mentionlegale;
+  String nomFestival;
+  String logoFestival;
+  String descriptionFestival;
+  String siteWebFestival;
+  String facebookFestival;
+  String youtubeFestival;
+  String instagramFestival;
+  String mentionsLegales;
   String policeEcriture;
   String couleurPrincipale;
   String couleurSecondaire;
   String couleurBackground;
-  String videoPromotionnelle;
-  String lienBilletterie;
+  String video_promo;
 
   Configuration({
-    required this.nomfestival,
-    required this.logofestival,
-    required this.descriptionfestival,
-    required this.sitewebfestival,
-    required this.facebookfestival,
-    required this.youtubefestival,
-    required this.instagramfestival,
-    required this.mentionlegale,
+    required this.nomFestival,
+    required this.logoFestival,
+    required this.descriptionFestival,
+    required this.siteWebFestival,
+    required this.facebookFestival,
+    required this.youtubeFestival,
+    required this.instagramFestival,
+    required this.mentionsLegales,
     required this.policeEcriture,
     required this.couleurPrincipale,
     required this.couleurSecondaire,
     required this.couleurBackground,
-    required this.videoPromotionnelle,
-    required this.lienBilletterie,
+    required this.video_promo,
   });
 
-  String get getNomfestival => nomfestival;
-  set setNomfestival(String value) {
-    nomfestival = value;
+  String get nomfestival => nomFestival;
+  set nomfestival(String value) {
+    nomFestival = value;
   }
 
-  String get getLogofestival => logofestival;
-  set setLogofestival(String value) {
-    logofestival = value;
+  String get logofestival => logoFestival;
+  set logofestival(String value) {
+    logoFestival = value;
   }
 
-  String get getDescriptionfestival => descriptionfestival;
-  set setDescriptionfestival(String value) {
-    descriptionfestival = value;
+  String get descriptionfestival => descriptionFestival;
+  set descriptionfestival(String value) {
+    descriptionFestival = value;
   }
 
-  String get getSitewebfestival => sitewebfestival;
-  set setSitewebfestival(String value) {
-    sitewebfestival = value;
+  String get sitewebfestival => siteWebFestival;
+  set sitewebfestival(String value) {
+    siteWebFestival = value;
   }
 
-  String get getFacebookfestival => facebookfestival;
-  set setFacebookfestival(String value) {
-    facebookfestival = value;
+  String get facebookfestival => facebookFestival;
+  set facebookfestival(String value) {
+    facebookFestival = value;
   }
 
-  String get getYoutubefestival => youtubefestival;
-  set setYoutubefestival(String value) {
-    youtubefestival = value;
+  String get youtubefestival => youtubeFestival;
+  set youtubefestival(String value) {
+    youtubeFestival = value;
   }
 
-  String get getInstagramfestival => instagramfestival;
-  set setInstagramfestival(String value) {
-    instagramfestival = value;
+  String get instagramfestival => instagramFestival;
+  set instagramfestival(String value) {
+    instagramFestival = value;
   }
 
-  String get getMentionlegale => mentionlegale;
-  set setMentionlegale(String value) {
-    mentionlegale = value;
+  String get mentionlegale => mentionsLegales;
+  set mentionlegale(String value) {
+    mentionsLegales = value;
   }
 
-  String get getPoliceEcriture => policeEcriture;
-  set setPoliceEcriture(String value) {
+  String get getpoliceEcriture => policeEcriture;
+  set setpoliceEcriture(String value) {
     policeEcriture = value;
   }
 
-  String get getCouleurPrincipale => couleurPrincipale;
-  set setCouleurPrincipale(String value) {
+  String get getcouleurPrincipale => couleurPrincipale;
+  set setcouleurPrincipale(String value) {
     couleurPrincipale = value;
   }
 
-  String get getCouleurSecondaire => couleurSecondaire;
-  set setCouleurSecondaire(String value) {
+  String get getcouleurSecondaire => couleurSecondaire;
+  set setcouleurSecondaire(String value) {
     couleurSecondaire = value;
   }
 
-  String get getCouleurBackground => couleurBackground;
-  set setCouleurBackground(String value) {
+  String get getcouleurBackground => couleurBackground;
+  set setcouleurBackground(String value) {
     couleurBackground = value;
   }
 
-  String get getVideoPromotionnelle => videoPromotionnelle;
-  set setVideoPromotionnelle(String value) {
-    videoPromotionnelle = value;
-  }
-
-  String get getLienBilletterie => lienBilletterie;
-  set setLienBilletterie(String value) {
-    lienBilletterie = value;
+  String get videoPromotionnelle => video_promo;
+  set videoPromotionnelle(String value) {
+    video_promo = value;
   }
 
   factory Configuration.fromJson(Map<String, dynamic> json) {
     return Configuration(
-      nomfestival: json['nomfestival'],
-      logofestival: json['logofestival'],
-      descriptionfestival: json['descriptionfestival'],
-      sitewebfestival: json['sitewebfestival'],
-      facebookfestival: json['facebookfestival'],
-      youtubefestival: json['youtubefestival'],
-      instagramfestival: json['instagramfestival'],
-      mentionlegale: json['mentionlegale'],
-      policeEcriture: json['policeEcriture'],
+      nomFestival: json['nomFestival'],
+      logoFestival: json['logoFestival'],
+      descriptionFestival: json['descriptionFestival'],
+      siteWebFestival: json['siteWebFestival'],
+      facebookFestival: json['facebookFestival'],
+      youtubeFestival: json['youtubeFestival'],
+      instagramFestival: json['instagramFestival'],
+      mentionsLegales: json['mentionsLegales'],
+      policeEcriture: json['policeEcriture']['nom'],
       couleurPrincipale: json['couleurPrincipale'],
       couleurSecondaire: json['couleurSecondaire'],
       couleurBackground: json['couleurBackground'],
-      videoPromotionnelle: json['videoPromotionnelle'],
-      lienBilletterie: json['lienBilletterie'],
+      video_promo: json['video_promo'],
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'nomfestival': nomfestival,
-        'logofestival': logofestival,
-        'descriptionfestival': descriptionfestival,
-        'sitewebfestival': sitewebfestival,
-        'facebookfestival': facebookfestival,
-        'youtubefestival': youtubefestival,
-        'instagramfestival': instagramfestival,
-        'mentionlegale': mentionlegale,
+        'nomFestival': nomFestival,
+        'logoFestival': logoFestival,
+        'descriptionFestival': descriptionFestival,
+        'siteWebFestival': siteWebFestival,
+        'facebookFestival': facebookFestival,
+        'youtubeFestival': youtubeFestival,
+        'instagramFestival': instagramFestival,
+        'mentionLegales': mentionsLegales,
         'policeEcriture': policeEcriture,
         'couleurPrincipale': couleurPrincipale,
         'couleurSecondaire': couleurSecondaire,
         'couleurBackground': couleurBackground,
-        'videoPromotionnelle': videoPromotionnelle,
-        'lienBilletterie': lienBilletterie,
+        'video_promo': video_promo,
       };
 
   Color get getMainColor {

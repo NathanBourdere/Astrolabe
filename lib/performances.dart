@@ -29,22 +29,22 @@ class PerformancesPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final performance = performances[index];
                 return ListTile(
-                    title: Text(performance.nomPerformance,
+                    title: Text(performance.nom,
                         style: GoogleFonts.getFont(
-                            configuration.getPoliceEcriture,
+                            configuration.getpoliceEcriture,
                             textStyle: TextStyle(
                                 fontSize: 16,
                                 color: configuration.getFontColor))),
                     subtitle: Text(
-                      '${performance.datePerformance} à ${performance.heureDebutPerformance} - ${performance.heureFinPerformance}',
+                      '${performance.date} à ${performance.heure_debut} - ${performance.heure_fin}',
                       style: GoogleFonts.getFont(
-                          configuration.getPoliceEcriture,
+                          configuration.getpoliceEcriture,
                           textStyle: TextStyle(
                               fontSize: 14, color: configuration.getFontColor)),
                     ),
                     onTap: () {
                       Navigator.pushNamed(context, '/performance/',
-                          arguments: performance.idPerformance);
+                          arguments: performance.id);
                     });
               },
             );
