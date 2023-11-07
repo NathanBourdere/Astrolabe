@@ -35,10 +35,12 @@
         Vidéo promotionnelle : <a href="{{ configuration.video_prommo }}">{{ configuration.video_prommo }}</a>
     </li>
 </ul>
-<button>
-    <a href="{% url 'API_festivals:configuration_update' %}">Modifier</a>
-</button>
-<button>
-    <a href="{% url 'API_festivals:configuration_delete' %}">Supprimer</a>
-</button>
+<a href="{% url 'API_festivals:configuration_update' %}">
+    <button>Modifier</button>
+</a>
+
+<a href="{% url 'API_festivals:configuration_delete' %}">
+    <button>Supprimer</button>
+</a>
+
 {% endblock %}
