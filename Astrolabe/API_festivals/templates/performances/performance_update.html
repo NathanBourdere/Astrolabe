@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}{{performance.nom}}{% endblock %}
 {% block content %}
-{{ form.as_p }}
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Enregistrer">
+</form>
 {% endblock %}
