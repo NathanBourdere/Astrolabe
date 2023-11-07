@@ -8,7 +8,7 @@ class Artiste(models.Model):
     youtube = models.URLField(null=True, blank=True)
     instagram = models.URLField(null=True, blank=True)
     facebook = models.URLField(null=True, blank=True)
-    image = models.ImageField(upload_to='images/', null=True, blank=True)
+    image = models.ImageField(upload_to='static/model/artistes/', null=True, blank=True)
     recommendations = models.ManyToManyField('self',blank=True)
 
     def __str__(self):
@@ -30,7 +30,7 @@ class PoliceEcriture(models.Model):
 
 class ConfigurationFestival(models.Model):
     nomFestival = models.CharField(max_length=200,unique=True)
-    logoFestival = models.CharField(max_length=254,unique=True)
+    logoFestival = models.ImageField(upload_to="static/model/configuration/logo/",unique=True)
     descriptionFestival = models.TextField(max_length=2500)
     siteWebFestival = models.URLField(max_length=254,unique=True)
     youtubeFestival = models.URLField(max_length=254,unique=True)
@@ -42,9 +42,9 @@ class ConfigurationFestival(models.Model):
     couleurPrincipale = models.CharField(max_length=30)
     couleurSecondaire = models.CharField(max_length=30)
     couleurBackground = models.CharField(max_length=30)
-    video_promo = models.URLField(max_length=254,null=True,blank=True)
+    video_promo = models.FileField(upload_to="static/model/configuration/video/",null=True,blank=True)
     partenaires = models.ManyToManyField(Partenaire)
-    mode = models.CharField(max_length=30,null=True,blank=True)
+    mode = models.BooleanField(null=True,blank=True)
 
     def __str__(self):
         return self.nomFestival

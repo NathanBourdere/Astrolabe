@@ -14,10 +14,12 @@
         Facebook : <a href="{{ artiste.facebook }}">{{ artiste.facebook }}</a>
     </li>
 </ul>
-<button>
-    <a href="{% url 'API_festivals:artiste_update' id=artiste.id %}">Modifier</a>
-</button>
-<button>
-    <a href="{% url 'API_festivals:artiste_delete' id=artiste.id %}">Supprimer</a>
-</button>
+<a href="{% url 'API_festivals:artiste_update' id=artiste.id %}">
+    <button>Modifier</button>
+</a>
+
+<a href="{% url 'API_festivals:artiste_delete' id=artiste.id %}">
+    <button>Supprimer</button>
+</a>
+
 {% endblock %}

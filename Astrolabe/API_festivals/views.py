@@ -84,11 +84,10 @@ class ConfigurationFestivalForm(ModelForm):
     class Meta:
         model = ConfigurationFestival
         fields = '__all__'
-    couleurPrincipale = CharField(widget=ColorPickerWidget)
-    couleurSecondaire = CharField(widget=ColorPickerWidget)
-    couleurBackground = CharField(widget=ColorPickerWidget)
-    logoFestival = FileField(widget=FileInput)
-    mode = ChoiceField(widget=CheckboxInput)
+    # couleurPrincipale = CharField(widget=ColorPickerWidget)
+    # couleurSecondaire = CharField(widget=ColorPickerWidget)
+    # couleurBackground = CharField(widget=ColorPickerWidget)
+    # mode = ChoiceField(widget=CheckboxInput)
 
 class PartenaireForm(ModelForm):
     class Meta:
@@ -172,7 +171,6 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(id=id_news)
         return queryset
 
-        
 @configuration_required
 def accueil(request):  
     festival = ConfigurationFestival.objects.all()
@@ -199,40 +197,43 @@ def configuration(request):
     if request.method == "GET":
         configuration = ConfigurationFestival.objects.all()
         if configuration.exists():
-            return render(request,'configuration/configuration_detail.html',{'configuration':configuration})
+            return render(request,'configuration/configuration_detail.html',{'configuration':configuration.first()})
         configuration_form = ConfigurationFestivalForm()
         return render(request,'configuration/configuration_create.html',{'configuration_form':configuration_form})
     elif request.method == "POST":
-        configuration_form = ConfigurationFestivalForm(request.POST)
+        configuration_form = ConfigurationFestivalForm(request.POST, request.FILES)
         if configuration_form.is_valid():
             configuration_form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_config = date.today()
             modif.save()
-            return redirect('API_festivals:configuration_create')
+            return redirect('API_festivals:configuration')
+    configuration_form = ConfigurationFestivalForm()
+    return render(request, 'configuration/configuration_create.html', {'configuration_form': configuration_form})
 
 @configuration_required
 def configuration_update(request):
-    configuration = configuration.objects.all().first()
+    configuration = ConfigurationFestival.objects.all().first()
     if request.method == 'POST':
-        configuration_form = ConfigurationFestivalForm(request.POST, instance=configuration)
+        configuration_form = ConfigurationFestivalForm(request.POST, request.FILES, instance=configuration)
         if configuration_form.has_changed() and configuration_form.is_valid():
             configuration_form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_config = date.today()
             modif.save()
-            return redirect('API_festivals:configuration_detail', id=1)
+            return redirect('API_festivals:configuration')
     configuration_form = ConfigurationFestivalForm(instance=configuration)
-    return render(request, 'configurations/configuration_update.html', {'form': configuration_form, 'configuration': configuration})
-    
+    print(configuration_form.data)
+    return render(request, 'configuration/configuration_update.html', {'form': configuration_form, 'configuration': configuration})
+
 @configuration_required
 def configuration_delete(request):
-    configuration = ConfigurationFestival.objects.get(id=1)
+    configuration = ConfigurationFestival.objects.all().first()
     configuration.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_config = date.today()
     modif.save()
-    return redirect("API_festivals:configuration_create")
+    return redirect("API_festivals:configuration")
 
 # ARTISTES
 @configuration_required
@@ -262,7 +263,7 @@ def artistes(request,page):
 @configuration_required
 def artiste_create(request):
     if request.method == 'POST':
-        artiste_form = ArtisteForm(request.POST)
+        artiste_form = ArtisteForm(request.POST, request.FILES)
         if artiste_form.is_valid():
             nom = artiste_form.cleaned_data['nom']
             nom_lowered = nom.lower()
@@ -274,7 +275,7 @@ def artiste_create(request):
             modif = Modification.objects.all().first()
             modif.date_modif_artiste = date.today()
             modif.save()
-            return redirect('API_festivals:artiste_create')
+            return redirect('API_festivals:artistes', page=1)
     else:
         artiste_form = ArtisteForm()
     return render(request, 'artistes/artiste_create.html', {'form': artiste_form})
@@ -288,25 +289,21 @@ def artiste_detail(request, id):
 
 @configuration_required
 def artiste_update(request, id):
-    artiste = artiste.objects.get(id=id)
+    artiste = Artiste.objects.get(id=id)
     if request.method == 'POST':
-        artiste_form = ArtisteForm(request.POST, instance=artiste)
+        artiste_form = ArtisteForm(request.POST, request.FILES, instance=artiste)
         if artiste_form.has_changed() and artiste_form.is_valid():
             artiste_form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_artiste = date.today()
             modif.save()
             return redirect('API_festivals:artiste_detail', id=id)
-        else:
-            artiste_form = ArtisteForm(instance=artiste)
-            return render(request, 'artistes/artiste_update.html', {'form': artiste_form, 'artiste': artiste})
-    else:
-        artiste_form = ArtisteForm(instance=artiste)
-        return render(request, 'artistes/artiste_update.html', {'form': artiste_form, 'artiste': artiste})
+    artiste_form = ArtisteForm(instance=artiste)
+    return render(request, 'artistes/artiste_update.html', {'form': artiste_form, 'artiste': artiste})
 
 @configuration_required
 def artiste_delete(request, id):
-    artiste = artiste.objects.get(id=id)
+    artiste = Artiste.objects.get(id=id)
     artiste.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_artiste = date.today()
@@ -487,7 +484,7 @@ def scenes(request,page):
 
 @configuration_required
 def scene_detail(request, id):
-    scene = scene.objects.get(id=id)
+    scene = Scene.objects.get(id=id)
     template = "scenes/scene_detail.html"
     context = {'scene': scene}
     return render(request, template, context)
@@ -542,7 +539,7 @@ def news(request,page):
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
-        news = news.filter(nom__icontains=search_term)
+        news = news.filter(titre__icontains=search_term)
     news = news[(page-1)*50:page*50]
     render_right_arrow = False
     render_left_arrow = False
@@ -561,16 +558,16 @@ def news(request,page):
 
 @configuration_required
 def news_detail(request, id):
-    news = news.objects.get(id=id)
+    news = News.objects.get(id=id)
     template = "news/news_detail.html"
     context = {'news': news}
     return render(request, template, context)
 
 @configuration_required
 def news_update(request, id):
-    news = news.objects.get(id=id)
+    news = News.objects.get(id=id)
     if request.method == 'POST':
-        news_form = NewsForm(request.POST, instance=news)
+        news_form = NewsForm(request.POST, request.FILES, instance=news)
         if news_form.has_changed() and news_form.is_valid():
             news_form.save()
             modif = Modification.objects.all().first()
@@ -592,7 +589,7 @@ def news_delete(request, id):
 @configuration_required
 def news_create(request):
     if request.method == 'POST':
-        news_form = NewsForm(request.POST)
+        news_form = NewsForm(request.POST, request.FILES)
         if news_form.is_valid():#
             nom = news_form.cleaned_data['titre']
             nom_lowered = nom.lower()
@@ -604,7 +601,7 @@ def news_create(request):
             modif = Modification.objects.all().first()
             modif.date_modif_news = date.today()
             modif.save()
-            return redirect('API_festivals:news_create')
+            return redirect('API_festivals:news', page=1)
     else:
         news_form = NewsForm()
     return render(request, 'news/news_create.html', {'form': news_form})
