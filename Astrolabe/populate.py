@@ -140,6 +140,7 @@ performance1.date = "2024-06-18"
 performance1.heure_debut = "21:00:00"
 performance1.heure_fin = "22:30:00"
 performance1.scene = scene1
+performance1.artistes.add(slipknot)
 performance1.save()
 
 performance2 = Performance()
@@ -148,6 +149,7 @@ performance2.date = "2024-06-18"
 performance2.heure_debut = "19:30:00"
 performance2.heure_fin = "20:30:00"
 performance2.scene = scene1
+performance2.artistes.add(behemoth)
 performance2.save()
 
 performance3 = Performance()
@@ -156,6 +158,7 @@ performance3.date = "2024-06-18"
 performance3.heure_debut = "18:00:00"
 performance3.heure_fin = "19:00:00"
 performance3.scene = scene1
+performance3.artistes.add(slayer)
 performance3.save()
 
 performance4 = Performance()
@@ -164,6 +167,7 @@ performance4.date = "2024-06-19"
 performance4.heure_debut = "21:00:00"
 performance4.heure_fin = "22:30:00"
 performance4.scene = scene1
+performance4.artistes.add(cannibal_corpse)
 performance4.save()
 
 performance5 = Performance()
@@ -172,6 +176,7 @@ performance5.date = "2024-06-19"
 performance5.heure_debut = "19:30:00"
 performance5.heure_fin = "20:30:00"
 performance5.scene = scene1
+performance5.artistes.add(kvelertak)
 performance5.save()
 
 modif = Modification()
@@ -188,3 +193,4 @@ news.titre = "Le hellfest va sûrement battre ses records d'audiences en 2024"
 news.corps = "Le hellfest, grand festival de hardrock et métal, va sûrement battre ses records d'audiences en 2024, s'expliquant par le fait qu'elle accueille des groupes plus connus"
 news.image = "model/news/news.jpg"
 news.save()
+
