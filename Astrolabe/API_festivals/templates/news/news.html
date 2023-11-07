@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}News{% endblock %}
+{% block content %}
+<form method="GET">
+    {% csrf_token %}
+    {{ form.search|as_crispy_field }}
+</form>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for nouvelle in news %}
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title" >{{ nouvelle.titre }}</h5>
+                <a href="{% url 'API_festivals:news_detail' nouvelle.id %}">Détail</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div>
+    {% if render_left_arrow %}
+    <button>
+        <a href="{% url 'API_festivals:news' page=page_precedente %}">Page précédente</a>
+    </button>
+    {% endif %}
+    {% if render_right_arrow %}
+    <button>
+        <a href="{% url 'API_festivals:news' page=page_suivante %}">Page suivante</a>
+    </button>
+    {% endif %}
+    <button>
+        <a href="{% url 'API_festivals:news_create' %}">Nouvelle news</a>
+    </button>
+</div>
+{% endblock %}
