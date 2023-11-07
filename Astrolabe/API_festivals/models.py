@@ -16,7 +16,7 @@ class Artiste(models.Model):
 
 class Partenaire(models.Model):
     nom = models.CharField(max_length=254)
-    banniere = models.CharField(max_length=254,unique=True)
+    banniere = models.ImageField(upload_to='static/model/partenaires/', unique=True)
     site = models.URLField(max_length=254,unique=True)
 
     def __str__(self) -> str:
