@@ -216,6 +216,7 @@ def configuration_update(request):
     configuration = ConfigurationFestival.objects.all().first()
     if request.method == 'POST':
         configuration_form = ConfigurationFestivalForm(request.POST, request.FILES, instance=configuration)
+        print(configuration_form.errors)
         if configuration_form.has_changed() and configuration_form.is_valid():
             configuration_form.save()
             modif = Modification.objects.all().first()
@@ -337,7 +338,7 @@ def partenaires(request,page):
 @configuration_required
 def partenaire_create(request):
     if request.method == 'POST':
-        partenaire_form = PartenaireForm(request.POST)
+        partenaire_form = PartenaireForm(request.POST, request.FILES)
         if partenaire_form.is_valid():
             nom = partenaire_form.cleaned_data['nom']
             nom_lowered = nom.lower()
@@ -363,9 +364,9 @@ def partenaire_detail(request, id):
 
 @configuration_required
 def partenaire_update(request, id):
-    partenaire = partenaire.objects.get(id=id)
+    partenaire = Partenaire.objects.get(id=id)
     if request.method == 'POST':
-        partenaire_form = PartenaireForm(request.POST, instance=partenaire)
+        partenaire_form = PartenaireForm(request.POST, request.FILES, instance=partenaire)
         if partenaire_form.has_changed() and partenaire_form.is_valid():
             partenaire_form.save()
             modif = Modification.objects.all().first()
@@ -377,7 +378,7 @@ def partenaire_update(request, id):
 
 @configuration_required
 def partenaire_delete(request, id):
-    partenaire = partenaire.objects.get(id=id)
+    partenaire = Partenaire.objects.get(id=id)
     partenaire.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_partenaire = date.today()
