@@ -412,8 +412,9 @@ def performances(request,page):
 @configuration_required
 def performance_detail(request, id):
     performance = Performance.objects.get(id=id)
+    artistes = Artiste.objects.filter(performance=performance)
     template = "performances/performance_detail.html"
-    context = {'performance': performance}
+    context = {'performance': performance, 'artistes': artistes}
     return render(request, template, context)
 
 @configuration_required

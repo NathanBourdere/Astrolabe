@@ -140,8 +140,9 @@ performance1.date = "2024-06-18"
 performance1.heure_debut = "21:00:00"
 performance1.heure_fin = "22:30:00"
 performance1.scene = scene1
-performance1.artistes.add(slipknot)
 performance1.save()
+performance1.artistes.add(slipknot)
+
 
 performance2 = Performance()
 performance2.nom = "Behemoth"
@@ -149,8 +150,9 @@ performance2.date = "2024-06-18"
 performance2.heure_debut = "19:30:00"
 performance2.heure_fin = "20:30:00"
 performance2.scene = scene1
-performance2.artistes.add(behemoth)
 performance2.save()
+performance2.artistes.add(behemoth)
+
 
 performance3 = Performance()
 performance3.nom = "Slayer"
@@ -158,8 +160,9 @@ performance3.date = "2024-06-18"
 performance3.heure_debut = "18:00:00"
 performance3.heure_fin = "19:00:00"
 performance3.scene = scene1
-performance3.artistes.add(slayer)
 performance3.save()
+performance3.artistes.add(slayer)
+
 
 performance4 = Performance()
 performance4.nom = "Cannibal Corpse"
@@ -167,8 +170,9 @@ performance4.date = "2024-06-19"
 performance4.heure_debut = "21:00:00"
 performance4.heure_fin = "22:30:00"
 performance4.scene = scene1
-performance4.artistes.add(cannibal_corpse)
 performance4.save()
+performance4.artistes.add(cannibal_corpse)
+
 
 performance5 = Performance()
 performance5.nom = "Kvelertak"
@@ -176,8 +180,9 @@ performance5.date = "2024-06-19"
 performance5.heure_debut = "19:30:00"
 performance5.heure_fin = "20:30:00"
 performance5.scene = scene1
-performance5.artistes.add(kvelertak)
 performance5.save()
+performance5.artistes.add(kvelertak)
+
 
 modif = Modification()
 modif.date_modif_artiste = "2023-10-25"
