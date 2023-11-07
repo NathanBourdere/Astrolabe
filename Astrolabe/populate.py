@@ -19,11 +19,11 @@ hellfest.youtubeFestival = "https://www.youtube.com/user/HellfestFestival"
 hellfest.facebookFestival = "https://www.facebook.com/hellfest"
 hellfest.instagramFestival = "https://www.instagram.com/hellfestopenair/"
 hellfest.mentionsLegales = "Hellfest est une marque déposée de Hellfest Productions."
-hellfest.couleurPrincipale = "#000000"
+hellfest.couleurPrincipale = "#00000https://prod.liveshare.vsengsaas.visualstudio.com/join?86B1A5EB11884F7345BDAA65A2C7B1F463CD      0"
 hellfest.couleurSecondaire = "#FF00FF"
 hellfest.couleurBackground = "#FF0000"
 hellfest.video_promo = "HELLFEST_2024.mp4"
-hellfest.mode = "festival"
+hellfest.mode = True
 
 arial = PoliceEcriture()
 arial.nom = "Arial"
@@ -100,6 +100,12 @@ kvelertak.instagram = "https://www.instagram.com/kvelertakofficial/"
 kvelertak.facebook = "https://www.facebook.com/Kvelertak"
 kvelertak.image = "model/artistes/kvelertak.jpg"
 kvelertak.save()
+
+slipknot.recommendations.add(behemoth,slayer)
+behemoth.recommendations.add(slipknot,kvelertak)
+cannibal_corpse.recommendations.add(kvelertak,slayer)
+slayer.recommendations.add(slipknot,behemoth)
+kvelertak.recommendations.add(slayer,cannibal_corpse)
 
 yeps = Partenaire()
 yeps.nom = "Yeps"
@@ -181,3 +187,4 @@ news = News()
 news.titre = "Le hellfest va sûrement battre ses records d'audiences en 2024"
 news.corps = "Le hellfest, grand festival de hardrock et métal, va sûrement battre ses records d'audiences en 2024, s'expliquant par le fait qu'elle accueille des groupes plus connus"
 news.image = "model/news/news.jpg"
+news.save()
