@@ -20,17 +20,18 @@
 </div>
 <div>
     {% if render_left_arrow %}
-    <button>
-        <a href="{% url 'API_festivals:news' page=page_precedente %}">Page précédente</a>
-    </button>
+    <a href="{% url 'API_festivals:news' page=page_precedente %}">
+        <button>Page précédente</button>
+    </a>
     {% endif %}
     {% if render_right_arrow %}
-    <button>
-        <a href="{% url 'API_festivals:news' page=page_suivante %}">Page suivante</a>
-    </button>
+    <a href="{% url 'API_festivals:news' page=page_suivante %}">
+        <button>Page suivante</button>
+    </a>
     {% endif %}
-    <button>
-        <a href="{% url 'API_festivals:news_create' %}">Nouvelle news</a>
-    </button>
+    <a href="{% url 'API_festivals:news_create' %}">
+        <button>Nouvelle news</button>
+    </a>
+
 </div>
 {% endblock %}
