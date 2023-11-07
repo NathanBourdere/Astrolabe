@@ -388,11 +388,11 @@ def partenaire_delete(request, id):
 # PERFORMANCES
 @configuration_required
 def performances(request,page):
-    performances = Performance.objects.all()
+    performances = Performance.objects.all().order_by('date')
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
-        performances = performances.filter(nom__icontains=search_term)
+        performances = performances.filter(nom__icontains=search_term).order_by('date')
     performances = performances[(page-1)*50:page*50]
     render_right_arrow = False
     render_left_arrow = False
