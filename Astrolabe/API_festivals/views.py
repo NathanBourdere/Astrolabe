@@ -498,7 +498,7 @@ def scene_detail(request, id):
 def scene_update(request, id):
     scene = Scene.objects.get(id=id)
     if request.method == 'POST':
-        scene_form = SceneForm(request.POST, instance=scene)
+        scene_form = SceneForm(request.POST, request.FILES, instance=scene)
         if scene_form.has_changed() and scene_form.is_valid():
             scene_form.save()
             modif = Modification.objects.all().first()
@@ -520,7 +520,7 @@ def scene_delete(request, id):
 @configuration_required
 def scene_create(request):
     if request.method == 'POST':
-        scene_form = SceneForm(request.POST)
+        scene_form = SceneForm(request.POST, request.FILES)
         if scene_form.is_valid():#
             nom = scene_form.cleaned_data['nom']
             nom_lowered = nom.lower()
@@ -532,7 +532,7 @@ def scene_create(request):
             modif = Modification.objects.all().first()
             modif.date_modif_scene = date.today()
             modif.save()
-            return redirect('API_festivals:scene_create')
+            return redirect('API_festivals:scenes', page=1)
     else:
         scene_form = SceneForm()
     return render(request, 'scenes/scene_create.html', {'form': scene_form})
