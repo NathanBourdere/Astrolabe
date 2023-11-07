@@ -142,7 +142,7 @@ class ConfigurationFestivalViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 class PartenaireViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = PartenaireSerializer()
+    serializer_class = PartenaireSerializer
 
     def get_queryset(self):
         queryset = Partenaire.objects.all()
