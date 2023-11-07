@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}{{scene.nom}}{% endblock %}
+{% block content %}
+<h4>{{ scene.nom }}</h4>
+    <a href="{% url 'API_festivals:scene_update' id=scene.id %}">
+        <button>Modifier</button>
+    </a>
+    <a href="{% url 'API_festivals:scene_delete' id=scene.id %}">
+        <button>Supprimer</button>
+    </a>
+{% endblock %}
