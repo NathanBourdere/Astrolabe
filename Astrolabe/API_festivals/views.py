@@ -3,7 +3,8 @@ from .models import *
 from rest_framework import viewsets
 from django.shortcuts import redirect, render
 from datetime import date,timedelta, timezone
-from django.forms import ModelForm, CharField,ChoiceField,CheckboxInput ,Form, ValidationError, FileInput,FileField,TextInput
+from django.forms import ModelForm, CharField,ChoiceField,CheckboxInput ,Form, ValidationError, FileInput,FileField,TextInput, DateField, DateInput
+import datetime
 
 # --------------------------------------------------------------- DECORATEURS ---------------------------------------------------------------------
 def configuration_required(view_func):
@@ -41,32 +42,34 @@ class PerformanceForm(ModelForm):
     class Meta:
         model = Performance
         fields = '__all__'
+    date = DateField(widget=DateInput)
         
     def clean(self):
         date = self.cleaned_data.get('date')
-        if date < timezone.now().date():
-            raise ValidationError("Vous ne pouvez pas ajouter une performance dans le passé !")
-        
-        heure_debut = self.cleaned_data.get('heure_debut')
-        if date == timezone.now().date() and heure_debut < timezone.now().date().hour:
-            raise ValidationError("Vous ne pouvez pas ajouter une performance dans le passé !")
-        
-        heure_fin = self.cleaned_data.get('heure_fin')
-        if date == timezone.now().date() and heure_fin < timezone.now().date().hour:
-            raise ValidationError("Vous ne pouvez pas ajouter une performance dans le passé !")
-        
-        artistes = self.cleaned_data.get('artistes')
-        # on vérifie si il n'y a aucun doublon d'artistes
-        if len(artistes) > len(set(artistes)):
-            raise ValidationError("Vous ne pouvez pas ajouter deux fois le même artiste pour la même performance ! ")
-        
-        scene = self.cleaned_data.get('scene')
-        perfs = Performance.objects.filter(date=date,scene=scene)
-        if len(perfs) > 0:
-            for perf in perfs:
-                # on regarde si elles se chevauchent pas
-                if not(heure_debut >= perf.heure_fin or heure_fin <= perf.heure_debut):
-                    raise ValidationError("La scène est déjà occupée ce jour là")
+        if self.is_valid():
+            if date < datetime.date.today():
+                raise ValidationError("Vous ne pouvez pas ajouter une performance dans le passé !")
+            
+            heure_debut = self.cleaned_data.get('heure_debut')
+            if date == datetime.date.today() and heure_debut < datetime.date.today().hour:
+                raise ValidationError("Vous ne pouvez pas ajouter une performance dans le passé !")
+            
+            heure_fin = self.cleaned_data.get('heure_fin')
+            if date == datetime.date.today() and heure_fin < datetime.date.today().hour:
+                raise ValidationError("Vous ne pouvez pas ajouter une performance dans le passé !")
+            
+            artistes = self.cleaned_data.get('artistes')
+            # on vérifie si il n'y a aucun doublon d'artistes
+            if len(artistes) > len(set(artistes)):
+                raise ValidationError("Vous ne pouvez pas ajouter deux fois le même artiste pour la même performance ! ")
+            
+            scene = self.cleaned_data.get('scene')
+            perfs = Performance.objects.filter(date=date,scene=scene)
+            if len(perfs) > 0:
+                for perf in perfs:
+                    # on regarde si elles se chevauchent pas
+                    if not(heure_debut >= perf.heure_fin or heure_fin <= perf.heure_debut):
+                        raise ValidationError("La scène est déjà occupée ce jour là")
 
 class SceneForm(ModelForm):
     class Meta:
