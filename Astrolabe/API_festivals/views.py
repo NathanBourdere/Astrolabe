@@ -458,7 +458,7 @@ def performance_create(request):
             modif = Modification.objects.all().first()
             modif.date_modif_performance = date.today()
             modif.save()
-            return redirect('API_festivals:performance_create')
+            return redirect('API_festivals:performances', page=1)
     else:
         performance_form = PerformanceForm()
     return render(request, 'performances/performance_create.html', {'form': performance_form})
