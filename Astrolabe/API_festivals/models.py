@@ -62,7 +62,7 @@ class Performance(models.Model):
 
 class Scene(models.Model):
     nom = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='static/model/scenes/images/', null=True, blank=True)
+    image = models.ImageField(upload_to='static/model/scenes/', null=True, blank=True)
 
     def __str__(self):
         return self.nom
