@@ -450,4 +450,13 @@ class DatabaseAstrolabe {
       return Scene.fromJson(scenes.first);
     });
   }
+
+  Future<Configuration> getConfiguration() {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> configurations =
+          await database!.query('CONFIGURATION');
+      return Configuration.fromJson(configurations.first);
+    });
+  }
 }

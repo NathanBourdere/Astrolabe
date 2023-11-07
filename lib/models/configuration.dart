@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 class Configuration {
   String nomfestival;
   String logofestival;
@@ -136,4 +138,34 @@ class Configuration {
         'videoPromotionnelle': videoPromotionnelle,
         'lienBilletterie': lienBilletterie,
       };
+
+  Color get getMainColor {
+    final bgr = int.parse(couleurPrincipale.substring(1, 3), radix: 16);
+    final bgg = int.parse(couleurPrincipale.substring(3, 5), radix: 16);
+    final bgb = int.parse(couleurPrincipale.substring(5, 7), radix: 16);
+    final bgopacity = 1.0;
+    final backgroundColor = Color.fromRGBO(bgr, bgg, bgb, bgopacity);
+    return backgroundColor;
+  }
+
+  Color get getFontColor {
+    final r = int.parse(couleurSecondaire.substring(1, 3), radix: 16);
+    final g = int.parse(couleurSecondaire.substring(3, 5), radix: 16);
+    final b = int.parse(couleurSecondaire.substring(5, 7), radix: 16);
+    final opacity = 1.0;
+    final fontColor = Color.fromRGBO(r, g, b, opacity);
+    return fontColor;
+  }
+
+  Color get getBackgroundColor {
+    final r = int.parse(couleurBackground.substring(1, 3), radix: 16);
+    final g = int.parse(couleurBackground.substring(3, 5), radix: 16);
+    final b = int.parse(couleurBackground.substring(5, 7), radix: 16);
+    final opacity = 1.0;
+    final backgroundColor = Color.fromRGBO(r, g, b, opacity);
+    print(r);
+    print(g);
+    print(b);
+    return backgroundColor;
+  }
 }

@@ -1,15 +1,20 @@
 import 'package:festival/artiste_page.dart';
+import 'package:festival/models/configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:festival/database.dart';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/navbar.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class ArtistesPage extends StatelessWidget {
   const ArtistesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Configuration configuration =
+        Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
       drawer: const NavBar(),
       appBar: AppBar(
@@ -29,7 +34,13 @@ class ArtistesPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final artiste = artistes[index];
                 return ListTile(
-                  title: Text(artiste.nomArtiste),
+                  title: Text(artiste.nomArtiste,
+                      style:
+                          GoogleFonts.getFont(configuration.getPoliceEcriture,
+                              textStyle: TextStyle(
+                                fontSize: 16,
+                                color: configuration.getFontColor,
+                              ))),
                   onTap: () async {
                     // Utilisez DatabaseAstrolabe.instance pour accéder à la base de données
                     List<Performance> performances = await DatabaseAstrolabe

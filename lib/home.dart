@@ -21,7 +21,8 @@ class _MyHomePageState extends State<MyHomePage> {
       nomArtiste: "Daft Punk",
       descriptionArtiste: "Daft Punk",
       siteWebArtiste: "https://www.daftpunk.com/",
-      youtubeArtiste: "https://www.youtube.com/channel/UC_kRDKYrUlrbtrSiyu5Tflg",
+      youtubeArtiste:
+          "https://www.youtube.com/channel/UC_kRDKYrUlrbtrSiyu5Tflg",
       instagramArtiste: "https://www.instagram.com/daftpunk/",
       facebookArtiste: "https://www.facebook.com/daftpunk",
       imageArtiste: "daftpunk",
@@ -74,106 +75,106 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
+      body: CarouselSlider(
+        items: artistes.asMap().entries.map((entry) {
+          final index = entry.key;
+          final artiste = entry.value;
 
-        body: CarouselSlider(
-          items: artistes.asMap().entries.map((entry) {
-            final index = entry.key;
-            final artiste = entry.value;
-
-            return Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 9.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(0.0),
-              ),
-              child: Stack(
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.77,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/images/${artiste.imageArtiste}.png'),
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.circular(20.0),
+          return Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 9.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(0.0),
+            ),
+            child: Stack(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.77,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                              'assets/images/${artiste.imageArtiste}.png'),
+                          fit: BoxFit.cover,
                         ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                artiste.nomArtiste,
-                                style: const TextStyle(
-                                  fontSize: 42,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              artiste.nomArtiste,
+                              style: const TextStyle(
+                                fontSize: 42,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
                             ),
                           ),
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isLiked = !isLiked;
-                          });
-                        },
-                        icon: Icon(
-                          isLiked ? Icons.favorite : Icons.favorite_border,
-                          color: isLiked ? Colors.red : Colors.black,
-                        ),
-                        color: Colors.white,
-                        iconSize: 32.0,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                      },
+                      icon: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? Colors.red : Colors.black,
                       ),
-                    ],
-                  ),
-                  Positioned(
-                    top: 10,
-                    left: 100,
-                    right: 100,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: const EdgeInsets.all(4.0),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          'DANS ${index + 1} JOURS',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
+                      color: Colors.white,
+                      iconSize: 32.0,
+                    ),
+                  ],
+                ),
+                Positioned(
+                  top: 10,
+                  left: 100,
+                  right: 100,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.all(4.0),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        'DANS ${index + 1} JOURS',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            );
-          }).toList(),
-          options: CarouselOptions(
-            height: MediaQuery.of(context).size.height,
-            aspectRatio: 16/9,
-            viewportFraction: 1.0,
-            initialPage: 0,
-            enableInfiniteScroll: true,
-            autoPlay: false,
-            enlargeCenterPage: true,
-          ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+        options: CarouselOptions(
+          height: MediaQuery.of(context).size.height,
+          aspectRatio: 16 / 9,
+          viewportFraction: 1.0,
+          initialPage: 0,
+          enableInfiniteScroll: true,
+          autoPlay: true,
+          enlargeCenterPage: true,
         ),
+      ),
     );
   }
 }

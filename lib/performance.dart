@@ -1,8 +1,10 @@
+import 'package:festival/models/configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:festival/database.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/artiste_page.dart';
 import 'package:festival/scene_page.dart';
+import 'package:provider/provider.dart';
 
 class PerformanceDetailsPage extends StatelessWidget {
   const PerformanceDetailsPage({Key? key}) : super(key: key);
@@ -11,6 +13,8 @@ class PerformanceDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)?.settings.arguments;
     final performanceId = arguments as int;
+    Configuration configuration =
+        Provider.of<ValueNotifier<Configuration>>(context).value;
 
     return FutureBuilder<Performance>(
       future: DatabaseAstrolabe.instance.getPerformanceById(performanceId),
@@ -36,17 +40,21 @@ class PerformanceDetailsPage extends StatelessWidget {
                   children: [
                     Text(
                       performance.nomPerformance,
-                      style: const TextStyle(fontSize: 20),
+                      style: TextStyle(
+                          fontSize: 20, color: configuration.getMainColor),
                     ),
                     Text(
                       '${performance.datePerformance} à ${performance.heureDebutPerformance} - ${performance.heureFinPerformance}',
-                      style: const TextStyle(fontSize: 14),
+                      style: TextStyle(
+                          fontSize: 14, color: configuration.getMainColor),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
+                    Text(
                       'La scène :',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: configuration.getMainColor),
                     ),
                     ListView.builder(
                       shrinkWrap: true,
@@ -71,16 +79,20 @@ class PerformanceDetailsPage extends StatelessWidget {
                           },
                           title: Text(
                             performance.scene.getNomScene(),
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: configuration.getFontColor),
                           ),
                         );
                       },
                     ),
                     const SizedBox(height: 16),
-                    const Text(
+                    Text(
                       'Artistes:',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: configuration.getMainColor),
                     ),
                     ListView.builder(
                       shrinkWrap: true,
@@ -105,7 +117,9 @@ class PerformanceDetailsPage extends StatelessWidget {
                           },
                           title: Text(
                             artiste.nomArtiste,
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: configuration.getFontColor),
                           ),
                         );
                       },

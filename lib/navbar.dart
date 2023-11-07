@@ -2,27 +2,36 @@ import 'package:festival/database.dart';
 import 'package:festival/performances.dart';
 import 'package:festival/scenes_page.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'artistes_page.dart';
+import 'models/configuration.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final configuration =
+        Provider.of<ValueNotifier<Configuration>>(context).value;
     return Drawer(
-      backgroundColor: Colors.black,
+      backgroundColor: configuration.getMainColor,
       child: ListView(
         children: [
           DrawerHeader(
             child: Image.asset(
               "assets/images/image_festival.png",
-              fit: BoxFit.contain,
+              fit: BoxFit.cover,
             ),
           ),
           ListTile(
-            title: const Text(
+            title: Text(
               "Accueil",
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.getFont(configuration.getPoliceEcriture,
+                  textStyle: TextStyle(
+                      fontSize: 16,
+                      color: configuration.getFontColor,
+                      fontWeight: FontWeight.bold)),
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != '/') {
@@ -33,9 +42,13 @@ class NavBar extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text(
+            title: Text(
               "Artistes",
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.getFont(configuration.getPoliceEcriture,
+                  textStyle: TextStyle(
+                      fontSize: 16,
+                      color: configuration.getFontColor,
+                      fontWeight: FontWeight.bold)),
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != '/artistes') {
@@ -49,9 +62,13 @@ class NavBar extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text(
+            title: Text(
               "Calendrier",
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.getFont(configuration.getPoliceEcriture,
+                  textStyle: TextStyle(
+                      fontSize: 16,
+                      color: configuration.getFontColor,
+                      fontWeight: FontWeight.bold)),
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != '/calendrier') {
@@ -62,9 +79,13 @@ class NavBar extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text(
+            title: Text(
               "Billetterie",
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.getFont(configuration.getPoliceEcriture,
+                  textStyle: TextStyle(
+                      fontSize: 16,
+                      color: configuration.getFontColor,
+                      fontWeight: FontWeight.bold)),
             ),
             onTap: () {
               if (ModalRoute.of(context)?.settings.name != '/billetterie') {
@@ -75,9 +96,13 @@ class NavBar extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text(
+            title: Text(
               "Performances",
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.getFont(configuration.getPoliceEcriture,
+                  textStyle: TextStyle(
+                      fontSize: 16,
+                      color: configuration.getFontColor,
+                      fontWeight: FontWeight.bold)),
             ),
             onTap: () {
               Navigator.push(
@@ -88,9 +113,13 @@ class NavBar extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text(
+            title: Text(
               "Scenes",
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.getFont(configuration.getPoliceEcriture,
+                  textStyle: TextStyle(
+                      fontSize: 16,
+                      color: configuration.getFontColor,
+                      fontWeight: FontWeight.bold)),
             ),
             onTap: () {
               Navigator.push(

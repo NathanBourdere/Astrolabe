@@ -1,14 +1,19 @@
 import 'package:festival/database.dart';
+import 'package:festival/models/configuration.dart';
 import 'package:festival/navbar.dart';
 import 'package:festival/scene_page.dart';
 import 'package:flutter/material.dart';
 import 'package:festival/models/scene.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class ScenesPage extends StatelessWidget {
   const ScenesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Configuration configuration =
+        Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
         drawer: const NavBar(),
         appBar: AppBar(
@@ -23,7 +28,12 @@ class ScenesPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final scene = snapshot.data![index];
                   return ListTile(
-                    title: Text(scene.nomScene),
+                    title: Text(scene.nomScene,
+                        style: GoogleFonts.getFont(
+                            configuration.getPoliceEcriture,
+                            textStyle: TextStyle(
+                                fontSize: 16,
+                                color: configuration.getFontColor))),
                     onTap: () async {
                       final performances = await DatabaseAstrolabe.instance
                           .getPerformancesByScene(scene);

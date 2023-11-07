@@ -1,14 +1,19 @@
 import 'package:festival/database.dart';
+import 'package:festival/models/configuration.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/navbar.dart';
 import 'package:festival/performance.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class PerformancesPage extends StatelessWidget {
   const PerformancesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Configuration configuration =
+        Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
       drawer: const NavBar(),
       appBar: AppBar(
@@ -24,9 +29,18 @@ class PerformancesPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final performance = performances[index];
                 return ListTile(
-                    title: Text(performance.nomPerformance),
+                    title: Text(performance.nomPerformance,
+                        style: GoogleFonts.getFont(
+                            configuration.getPoliceEcriture,
+                            textStyle: TextStyle(
+                                fontSize: 16,
+                                color: configuration.getFontColor))),
                     subtitle: Text(
                       '${performance.datePerformance} à ${performance.heureDebutPerformance} - ${performance.heureFinPerformance}',
+                      style: GoogleFonts.getFont(
+                          configuration.getPoliceEcriture,
+                          textStyle: TextStyle(
+                              fontSize: 14, color: configuration.getFontColor)),
                     ),
                     onTap: () {
                       Navigator.pushNamed(context, '/performance/',

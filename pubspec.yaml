@@ -42,6 +42,8 @@ dependencies:
   sqflite_common_ffi: ^2.3.0+2
   sqlite3_flutter_libs: ^0.5.17
   path_provider: ^2.0.1
+  google_fonts: ^6.1.0
+  provider:
 
 
 dev_dependencies:

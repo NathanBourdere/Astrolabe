@@ -1,7 +1,9 @@
 import 'package:festival/models/artiste.dart';
+import 'package:festival/models/configuration.dart';
 import 'package:festival/models/performance.dart';
 import 'package:flutter/material.dart';
 import 'package:festival/database.dart';
+import 'package:provider/provider.dart';
 
 class PageArtiste extends StatelessWidget {
   final Artiste artiste;
@@ -13,13 +15,17 @@ class PageArtiste extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Configuration configuration =
+        Provider.of<ValueNotifier<Configuration>>(context).value;
     return FutureBuilder<List<Performance>>(
       future: DatabaseAstrolabe.instance.getPerformancesByArtiste(artiste),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(artiste.nomArtiste),
+              title: Text(
+                artiste.nomArtiste,
+              ),
             ),
             body: const Center(
               child: CircularProgressIndicator(),
@@ -28,7 +34,8 @@ class PageArtiste extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(artiste.nomArtiste),
+              title: Text(artiste.nomArtiste,
+                  style: TextStyle(color: configuration.getFontColor)),
             ),
             body: Center(
               child: Text('Error: ${snapshot.error}'),
@@ -39,7 +46,9 @@ class PageArtiste extends StatelessWidget {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text(artiste.nomArtiste),
+              title: Text(
+                artiste.nomArtiste,
+              ),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.home),
@@ -54,18 +63,17 @@ class PageArtiste extends StatelessWidget {
                 children: [
                   Image.network(artiste.imageArtiste),
                   Text(
-                    artiste.nomArtiste,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  Text(
                     artiste.descriptionArtiste,
-                    style: const TextStyle(fontSize: 16),
+                    style: TextStyle(
+                        fontSize: 16, color: configuration.getMainColor),
                   ),
-                  // ... other artiste details
                   const SizedBox(height: 16),
-                  const Text(
+                  Text(
                     "Performances de l'artiste : ",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: configuration.getMainColor),
                   ),
                   ListView.builder(
                     shrinkWrap: true,
@@ -74,7 +82,9 @@ class PageArtiste extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final performance = performancesArtiste[index];
                       return ListTile(
-                        title: Text(performance.nomPerformance),
+                        title: Text(performance.nomPerformance,
+                            style:
+                                TextStyle(color: configuration.getFontColor)),
                         onTap: () {
                           Navigator.pushNamed(
                             context,

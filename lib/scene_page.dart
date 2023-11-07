@@ -1,7 +1,9 @@
+import 'package:festival/models/configuration.dart';
 import 'package:festival/performance.dart';
 import 'package:flutter/material.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/models/scene.dart';
+import 'package:provider/provider.dart';
 
 @immutable
 class ScenePage extends StatelessWidget {
@@ -13,6 +15,8 @@ class ScenePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Configuration configuration =
+        Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
       appBar: AppBar(title: Text(scene.nomScene), actions: [
         IconButton(
@@ -28,12 +32,11 @@ class ScenePage extends StatelessWidget {
           children: [
             Image.network(scene.imageScene),
             Text(
-              'Nom : ${scene.nomScene}',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const Text(
               'Événements :',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: configuration.getMainColor),
             ),
             ListView.builder(
               shrinkWrap: true,
@@ -42,7 +45,11 @@ class ScenePage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final performance = performances[index];
                 return ListTile(
-                  title: Text(performance.nomPerformance),
+                  title: Text(
+                    performance.nomPerformance,
+                    style: TextStyle(
+                        fontSize: 14, color: configuration.getFontColor),
+                  ),
                   onTap: () {
                     Navigator.pushNamed(context, '/performance/',
                         arguments: performance.idPerformance);
