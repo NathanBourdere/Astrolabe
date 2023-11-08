@@ -1,3 +1,4 @@
+import 'package:festival/database.dart';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/scene.dart';
 
@@ -55,16 +56,29 @@ class Performance {
     scene = value;
   }
 
-  factory Performance.fromJson(Map<String, dynamic> json) {
+  factory Performance.fromJson_api(Map<String, dynamic> json) {
     return Performance(
-      id: json['id'],
-      nom: json['nom'],
-      date: json['date'],
-      heure_debut: json['heure_debut'],
-      heure_fin: json['heure_fin'],
-      artistes: [],
-      scene: Scene.fromJson(json['scene']),
-    );
+        id: json['id'],
+        nom: json['nom'],
+        date: json['date'],
+        heure_debut: json['heure_debut'],
+        heure_fin: json['heure_fin'],
+        artistes: [],
+        scene: Scene(
+            id: json['scene']['id'],
+            nom: json['scene']['nom'],
+            image: json['scene']['image']));
+  }
+
+  factory Performance.fromJson_database(Map<String, dynamic> json) {
+    return Performance(
+        id: json['id'],
+        nom: json['nom'],
+        date: json['date'],
+        heure_debut: json['heure_debut'],
+        heure_fin: json['heure_fin'],
+        artistes: [],
+        scene: Scene(id: json['scene'], nom: '', image: ''));
   }
 
   Map<String, dynamic> toJson() => {

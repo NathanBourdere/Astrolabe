@@ -97,7 +97,6 @@ class Configuration {
   }
 
   factory Configuration.fromJson_database(Map<String, dynamic> json) {
-    print(json);
     return Configuration(
       nomFestival: json['nomFestival'],
       logoFestival: json['logoFestival'],
@@ -116,7 +115,6 @@ class Configuration {
   }
 
   factory Configuration.fromJson_api(Map<String, dynamic> json) {
-    print(json);
     return Configuration(
       nomFestival: json['nomFestival'],
       logoFestival: json['logoFestival'],
@@ -174,9 +172,6 @@ class Configuration {
     final b = int.parse(couleurBackground.substring(5, 7), radix: 16);
     final opacity = 1.0;
     final backgroundColor = Color.fromRGBO(r, g, b, opacity);
-    print(r);
-    print(g);
-    print(b);
     return backgroundColor;
   }
 }

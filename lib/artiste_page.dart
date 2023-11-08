@@ -3,6 +3,7 @@ import 'package:festival/models/configuration.dart';
 import 'package:festival/models/performance.dart';
 import 'package:flutter/material.dart';
 import 'package:festival/database.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class PageArtiste extends StatelessWidget {
@@ -85,6 +86,14 @@ class PageArtiste extends StatelessWidget {
                         title: Text(performance.nom,
                             style:
                                 TextStyle(color: configuration.getFontColor)),
+                        subtitle: Text(
+                          '${performance.date} à ${performance.heure_debut} - ${performance.heure_fin}',
+                          style: GoogleFonts.getFont(
+                              configuration.getpoliceEcriture,
+                              textStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: configuration.getFontColor)),
+                        ),
                         onTap: () {
                           Navigator.pushNamed(
                             context,

@@ -25,7 +25,9 @@ class FestivalApi {
     final response = await http.get(Uri.parse('$baseUrl/performances/'));
     if (response.statusCode == 200) {
       final performances = jsonDecode(response.body) as List;
-      return performances.map((json) => Performance.fromJson(json)).toList();
+      return performances
+          .map((json) => Performance.fromJson_api(json))
+          .toList();
     } else {
       throw Exception('Failed to load performances');
     }
@@ -78,6 +80,44 @@ class FestivalApi {
       return partenaires.map((json) => Partenaire.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load partenaires');
+    }
+  }
+
+  Future<Map<int, List<int>>> getArtistesPerformances() async {
+    final response = await http.get(Uri.parse('$baseUrl/performances/'));
+    if (response.statusCode == 200) {
+      final performances = jsonDecode(response.body) as List;
+      Map<int, List<int>> artistesPerformances = {};
+      for (var performance in performances) {
+        List<dynamic> artistes = performance['artistes'];
+        List<int> artistesIds = [];
+        for (var artiste in artistes) {
+          artistesIds.add(artiste['id']);
+        }
+        artistesPerformances[performance['id']] = artistesIds;
+      }
+      return artistesPerformances;
+    } else {
+      throw Exception('Failed to load artistes');
+    }
+  }
+
+  Future<Map<int, List<int>>> getArtistesRecommandations() async {
+    final response = await http.get(Uri.parse('$baseUrl/artistes/'));
+    if (response.statusCode == 200) {
+      final artistes = jsonDecode(response.body) as List;
+      Map<int, List<int>> artistesRecommandations = {};
+      for (var artiste in artistes) {
+        List<dynamic> recommandations = artiste['recommendations'];
+        List<int> recommandationsIds = [];
+        for (var recommandation in recommandations) {
+          recommandationsIds.add(recommandation);
+        }
+        artistesRecommandations[artiste['id']] = recommandationsIds;
+      }
+      return artistesRecommandations;
+    } else {
+      throw Exception('Failed to load artistes');
     }
   }
 }

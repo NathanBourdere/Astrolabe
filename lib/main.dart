@@ -18,8 +18,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   databaseFactory = databaseFactoryFfi;
   await DatabaseAstrolabe.initDB();
-  Modifications.updateModifications();
-  await Future.delayed(const Duration(milliseconds: 1000));
+  await Modifications.updateModifications();
   TextStyle textStyle =
       GoogleFonts.getFont('Roboto', textStyle: const TextStyle(fontSize: 16));
   Configuration configuration =

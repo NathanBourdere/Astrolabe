@@ -31,7 +31,6 @@ class Modifications {
   String get getdate_modif_news => date_modif_news;
 
   factory Modifications.fromJson(Map<String, dynamic> json) {
-    print(json);
     return Modifications(
       date_modif_artiste: json['date_modif_artiste'],
       date_modif_performance: json['date_modif_performance'],
@@ -51,7 +50,7 @@ class Modifications {
     };
   }
 
-  static void updateModifications() async {
+  static Future<int> updateModifications() async {
     // Requete API pour modifier les données
     FestivalApi festivalApi = FestivalApi();
     DatabaseAstrolabe database = DatabaseAstrolabe.instance;
@@ -72,8 +71,22 @@ class Modifications {
       List<Performance> performances = await festivalApi.getPerformances();
       List<Partenaire> partenaires = []; //await festivalApi.getPartenaires();
       Configuration configuration = await festivalApi.getConfiguration();
-      database.updateDatabase(artistes, performances, scenes, news, partenaires,
-          modifications, configuration);
+      // Il faudrait la liste des artistes participants à chaque performance ainsi que les recommandations d'artistes
+      Map<int, List<int>> artistesPerformances =
+          await festivalApi.getArtistesPerformances();
+      Map<int, List<int>> artistesRecommandations =
+          await festivalApi.getArtistesRecommandations();
+      await database.updateDatabase(
+          artistes,
+          performances,
+          scenes,
+          news,
+          partenaires,
+          newModifs,
+          configuration,
+          artistesPerformances,
+          artistesRecommandations);
     }
+    return Future.value(1);
   }
 }

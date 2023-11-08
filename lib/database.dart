@@ -28,13 +28,11 @@ class DatabaseAstrolabe {
   static Future<Database> initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     final path = join(documentsDirectory.path, 'astrolabe.db');
-    print(path);
     // Check if the database already exists
     final exists = await File(path).exists();
 
     // If the database does not exist, create it
     if (!exists) {
-      debugPrint('Not exists');
       await openDatabase(
         path,
         version: 1,
@@ -137,8 +135,9 @@ class DatabaseAstrolabe {
         await db.then((database) => database!.query('PERFORMANCE'));
 
     // Convertir les données des performances en objets Performance
-    final List<Performance> performances =
-        performancesData.map((data) => Performance.fromJson(data)).toList();
+    final List<Performance> performances = performancesData
+        .map((data) => Performance.fromJson_database(data))
+        .toList();
 
     // Parcourir chaque performance et obtenir les artistes correspondants
     for (var performance in performances) {
@@ -158,8 +157,9 @@ class DatabaseAstrolabe {
             .query('PERFORMANCE', where: 'scene = ?', whereArgs: [scene.id]));
 
     // Convertir les données des performances en objets Performance
-    final List<Performance> performances =
-        performancesData.map((data) => Performance.fromJson(data)).toList();
+    final List<Performance> performances = performancesData
+        .map((data) => Performance.fromJson_database(data))
+        .toList();
 
     // Parcourir chaque performance et obtenir les artistes correspondants
     for (var performance in performances) {
@@ -179,8 +179,9 @@ class DatabaseAstrolabe {
             database!.query('PERFORMANCE', where: 'id = ?', whereArgs: [id]));
 
     // Convertir les données des performances en objets Performance
-    final List<Performance> performances =
-        performancesData.map((data) => Performance.fromJson(data)).toList();
+    final List<Performance> performances = performancesData
+        .map((data) => Performance.fromJson_database(data))
+        .toList();
 
     // Parcourir chaque performance et obtenir les artistes correspondants
     for (var performance in performances) {
@@ -202,8 +203,9 @@ class DatabaseAstrolabe {
           'SELECT PERFORMANCE.id, PERFORMANCE.nom, PERFORMANCE.date, PERFORMANCE.heure_debut, PERFORMANCE.heure_fin, PERFORMANCE.scene FROM PERFORMANCE INNER JOIN PERF_ARTISTE ON PERFORMANCE.id = PERF_ARTISTE.performanceId WHERE PERF_ARTISTE.artisteId = ?',
           [artiste.id]);
       // Convertir les données des performances en objets Performance
-      final List<Performance> performances =
-          performancesData.map((data) => Performance.fromJson(data)).toList();
+      final List<Performance> performances = performancesData
+          .map((data) => Performance.fromJson_database(data))
+          .toList();
       // Parcourir chaque performance et obtenir les artistes correspondants
       for (Performance performance in performances) {
         final artistes = await getArtistesByPerformance(performance.id);
@@ -245,7 +247,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> artistes = await database!.rawQuery(
-          'SELECT ARTISTE.id, ARTISTE.nom, ARTISTE.description, ARTISTE.site_web, ARTISTE.youtube, ARTISTE.instagram, ARTISTE.facebook, ARTISTE.image FROM ARTISTE INNER JOIN PERF_ARTISTE ON ARTISTE.idArtiste = PERF_ARTISTE.artisteId WHERE PERF_ARTISTE.performanceId = ?',
+          'SELECT ARTISTE.id, ARTISTE.nom, ARTISTE.description, ARTISTE.site_web, ARTISTE.youtube, ARTISTE.instagram, ARTISTE.facebook, ARTISTE.image FROM ARTISTE INNER JOIN PERF_ARTISTE ON ARTISTE.id = PERF_ARTISTE.artisteId WHERE PERF_ARTISTE.performanceId = ?',
           [id]);
       return artistes.map((data) => Artiste.fromJson(data)).toList();
     });
@@ -279,17 +281,28 @@ class DatabaseAstrolabe {
     });
   }
 
-  void updateDatabase(
+  Future<Artiste> getArtisteById(int idArtiste) {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> artistes = await database!
+          .query('ARTISTE', where: 'id = ?', whereArgs: [idArtiste]);
+      return Artiste.fromJson(artistes.first);
+    });
+  }
+
+  Future<int> updateDatabase(
       List<Artiste> artistes,
       List<Performance> performances,
       List<Scene> scenes,
       List<News> news,
       List<Partenaire> partenaires,
       Modifications modifications,
-      Configuration configuration) async {
+      Configuration configuration,
+      Map<int, List<int>> artistesPerformances,
+      Map<int, List<int>> artistesRecommandations) async {
     // delete tout et refill les tables
     final db = database;
-    db.then((database) async {
+    await db.then((database) async {
       await database!.delete('ARTISTE');
       await database.delete('PERFORMANCE');
       await database.delete('SCENE');
@@ -298,23 +311,35 @@ class DatabaseAstrolabe {
       await database.delete('MODIFICATIONS');
       await database.delete('CONFIGURATION');
       await database.insert('MODIFICATIONS', modifications.toJson());
-      print(configuration.toJson());
+      for (Partenaire partenaire in partenaires) {
+        await database.insert('PARTENAIRE', partenaire.toJson());
+      }
       await database.insert('CONFIGURATION', configuration.toJson());
       for (Artiste artiste in artistes) {
         await database.insert('ARTISTE', artiste.toJson());
       }
-      for (Performance performance in performances) {
-        await database.insert('PERFORMANCE', performance.toJson_database());
-      }
       for (Scene scene in scenes) {
         await database.insert('SCENE', scene.toJson());
+      }
+      for (Performance performance in performances) {
+        await database.insert('PERFORMANCE', performance.toJson_database());
       }
       for (News news in news) {
         await database.insert('NEWS', news.toJson());
       }
-      for (Partenaire partenaire in partenaires) {
-        await database.insert('PARTENAIRE', partenaire.toJson());
+      for (int idArtiste in artistesPerformances.keys) {
+        for (int idPerformance in artistesPerformances[idArtiste]!) {
+          await database.insert('PERF_ARTISTE',
+              {'performanceId': idPerformance, 'artisteId': idArtiste});
+        }
+      }
+      for (int idArtiste1 in artistesRecommandations.keys) {
+        for (int idArtiste2 in artistesRecommandations[idArtiste1]!) {
+          await database.insert('RECO_ARTISTE',
+              {'artisteId1': idArtiste1, 'artisteId2': idArtiste2});
+        }
       }
     });
+    return await Future.value(1);
   }
 }

@@ -15,7 +15,7 @@ class NavBar extends StatelessWidget {
     final configuration =
         Provider.of<ValueNotifier<Configuration>>(context).value;
     return Drawer(
-      backgroundColor: configuration.getMainColor,
+      backgroundColor: configuration.getBackgroundColor,
       child: ListView(
         children: [
           DrawerHeader(

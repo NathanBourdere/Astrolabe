@@ -1,4 +1,6 @@
+import 'package:festival/models/configuration.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'models/artiste.dart';
 import 'navbar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -53,6 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final configuration =
+        Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
       drawer: const NavBar(),
       appBar: AppBar(
@@ -87,8 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
             width: MediaQuery.of(context).size.width,
             margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 9.0),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(0.0),
-            ),
+                borderRadius: BorderRadius.circular(0.0),
+                color: configuration.getBackgroundColor),
             child: Stack(
               children: [
                 Column(
