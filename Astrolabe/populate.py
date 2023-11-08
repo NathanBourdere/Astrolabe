@@ -44,7 +44,7 @@ slipknot.site_web = "https://slipknot1.com/"
 slipknot.youtube = "https://www.youtube.com/user/slipknot"
 slipknot.instagram = "https://www.instagram.com/slipknot/"
 slipknot.facebook = "https://www.facebook.com/slipknot"
-slipknot.image = "model/artistes/slipknot.png"
+slipknot.image = "static/model/artistes/slipknot.png"
 slipknot.save()
 
 behemoth = Artiste()
@@ -57,7 +57,7 @@ behemoth.site_web = "https://behemoth.pl/"
 behemoth.youtube = "https://www.youtube.com/user/Behemothofficial"
 behemoth.instagram = "https://www.instagram.com/behemothofficial/"
 behemoth.facebook = "https://www.facebook.com/behemoth"
-behemoth.image = "model/artistes/behemoth.png"
+behemoth.image = "static/model/artistes/behemoth.png"
 behemoth.save()
 
 slayer = Artiste()
@@ -71,7 +71,7 @@ slayer.site_web = "http://www.slayer.net/"
 slayer.youtube = "https://www.youtube.com/user/slayer"
 slayer.instagram = "https://www.instagram.com/slayerbandofficial/"
 slayer.facebook = "https://www.facebook.com/slayer"
-slayer.image = "model/artistes/slayer.png"
+slayer.image = "static/model/artistes/slayer.png"
 slayer.save()
 
 cannibal_corpse = Artiste()
@@ -85,7 +85,7 @@ cannibal_corpse.site_web = "https://cannibalcorpse.net/"
 cannibal_corpse.youtube = "https://www.youtube.com/user/cannibalcorpse"
 cannibal_corpse.instagram = "https://www.instagram.com/cannibalcorpseofficial/"
 cannibal_corpse.facebook = "https://www.facebook.com/cannibalcorpse"
-cannibal_corpse.image = "model/artistes/cannibalcorpse.png"
+cannibal_corpse.image = "static/model/artistes/cannibalcorpse.png"
 cannibal_corpse.save()
 
 kvelertak = Artiste()
@@ -98,7 +98,7 @@ kvelertak.site_web = "https://www.kvelertak.com/"
 kvelertak.youtube = "https://www.youtube.com/user/KvelertakOfficial"
 kvelertak.instagram = "https://www.instagram.com/kvelertakofficial/"
 kvelertak.facebook = "https://www.facebook.com/Kvelertak"
-kvelertak.image = "model/artistes/kvelertak.jpg"
+kvelertak.image = "static/model/artistes/kvelertak.jpg"
 kvelertak.save()
 
 slipknot.recommendations.add(behemoth,slayer)
@@ -109,19 +109,19 @@ kvelertak.recommendations.add(slayer,cannibal_corpse)
 
 yeps = Partenaire()
 yeps.nom = "Yeps"
-yeps.banniere = "model/partenaires/yeps.jpg"
+yeps.banniere = "static/model/partenaires/yeps.jpg"
 yeps.site = "https://www.yeps.fr/"
 yeps.save()
 
 redbull = Partenaire()
 redbull.nom = "Redbull"
-redbull.banniere = "model/partenaires/red bull.png"
+redbull.banniere = "static/model/partenaires/red bull.png"
 redbull.site = "https://www.redbull.com/fr-fr/"
 redbull.save()
 
 passculture = Partenaire()
 passculture.nom = "Pass Culture"
-passculture.banniere = "model/partenaires/pass culture.png"
+passculture.banniere = "static/model/partenaires/pass culture.png"
 passculture.site = "https://pass.culture.fr/"
 passculture.save()
 
@@ -131,7 +131,7 @@ hellfest.partenaires.add(passculture)
 
 scene1 = Scene()
 scene1.nom = "Mainstage 1"
-scene1.image = "model/scenes/hellfest.png"
+scene1.image = "static/model/scenes/hellfest.png"
 scene1.save()
 
 performance1 = Performance()
@@ -196,6 +196,6 @@ modif.save()
 news = News()
 news.titre = "Le hellfest va sûrement battre ses records d'audiences en 2024"
 news.corps = "Le hellfest, grand festival de hardrock et métal, va sûrement battre ses records d'audiences en 2024, s'expliquant par le fait qu'elle accueille des groupes plus connus"
-news.image = "model/news/news.jpg"
+news.image = "static/model/news/news.jpg"
 news.save()
 
