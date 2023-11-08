@@ -96,13 +96,11 @@ class PartenaireForm(ModelForm):
     class Meta:
         model = Partenaire
         fields = '__all__'
-    banniere = FileField(widget=FileInput)
 
 class NewsForm(ModelForm):
     class Meta:
         model = News
         fields = '__all__'
-    image = FileField(widget=FileInput)
 
 class ArtisteViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ArtisteSerializer
