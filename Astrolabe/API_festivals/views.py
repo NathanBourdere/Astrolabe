@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render
 from datetime import date,timedelta, timezone
 from django.forms import ModelForm, CharField,ChoiceField,CheckboxInput ,Form, ValidationError, FileInput,FileField,TextInput, DateField, DateInput
 import datetime
+import os
 
 # --------------------------------------------------------------- DECORATEURS ---------------------------------------------------------------------
 def configuration_required(view_func):
@@ -225,12 +226,13 @@ def configuration_update(request):
             modif.save()
             return redirect('API_festivals:configuration')
     configuration_form = ConfigurationFestivalForm(instance=configuration)
-    print(configuration_form.data)
     return render(request, 'configuration/configuration_update.html', {'form': configuration_form, 'configuration': configuration})
 
 @configuration_required
 def configuration_delete(request):
     configuration = ConfigurationFestival.objects.all().first()
+    os.remove(str(configuration.logoFestival))
+    os.remove(str(configuration.video_promo))
     configuration.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_config = date.today()
@@ -306,6 +308,7 @@ def artiste_update(request, id):
 @configuration_required
 def artiste_delete(request, id):
     artiste = Artiste.objects.get(id=id)
+    os.remove(str(artiste.image))
     artiste.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_artiste = date.today()
@@ -380,6 +383,7 @@ def partenaire_update(request, id):
 @configuration_required
 def partenaire_delete(request, id):
     partenaire = Partenaire.objects.get(id=id)
+    os.remove(str(partenaire.banniere))
     partenaire.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_partenaire = date.today()
@@ -509,6 +513,7 @@ def scene_update(request, id):
 @configuration_required
 def scene_delete(request, id):
     scene = Scene.objects.get(id=id)
+    os.remove(str(scene.image))
     scene.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_scene = date.today()
@@ -583,6 +588,7 @@ def news_update(request, id):
 @configuration_required
 def news_delete(request, id):
     news = News.objects.get(id=id)
+    os.remove(str(news.image))
     news.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_news = date.today()
