@@ -80,8 +80,8 @@ class Modification(models.Model):
 
 class News(models.Model):
     titre = models.CharField(max_length=254)
-    corps = models.CharField(max_length=254)
-    image = models.CharField(max_length=254)
+    corps = models.TextField(max_length=254)
+    image = models.ImageField(max_length=254)
 
     def __str__(self):
         return self.titre
