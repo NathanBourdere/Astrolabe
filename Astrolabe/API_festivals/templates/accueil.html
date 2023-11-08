@@ -4,8 +4,19 @@
 <h1>{{ nom_festival }}</h1>
 {% for date, performances in performances_par_jour.items %}
 <h3>{{ date }}</h3>
-{% for performance in performances %}
-<p>{{ performance.nom }}</p>
+<div class="row">
+{% for performance, artiste in performances %}
+<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+<div class="card" style="margin-bottom: 1rem;">
+    <img src="/{{ artiste.image }}" class="card-img-top rounded" style="width:100%; max-height: 150px;" alt="image de l'artiste qui performera">
+    <div class="card-body">
+      <h5 class="card-title">{{ performance.nom }}</h5>
+      <p class="card-text">de {{ performance.heure_debut }} à {{ performance.heure_fin }}</p>
+      <a href="#" class="btn btn-primary">Voir en détails</a>
+    </div>
+</div>
+</div>
 {% endfor %}
+</div>
 {% endfor %}
 {% endblock %}
