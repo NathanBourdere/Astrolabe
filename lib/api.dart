@@ -14,7 +14,8 @@ class FestivalApi {
   Future<List<Artiste>> getArtistes() async {
     final response = await http.get(Uri.parse('$baseUrl/artistes/'));
     if (response.statusCode == 200) {
-      final artistes = jsonDecode(response.body) as List;
+      final artistes = jsonDecode(utf8.decode(response.bodyBytes)) as List;
+      print(artistes);
       return artistes.map((json) => Artiste.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load artistes');
