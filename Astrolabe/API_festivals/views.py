@@ -185,10 +185,11 @@ def accueil(request):
     performances_par_jour = dict()
     performances_jour = Performance.objects.all().order_by('date')
     for perf in performances_jour:
+        artistes = Artiste.objects.filter(performance=perf)
         if perf.date not in performances_par_jour.keys():
-            performances_par_jour[perf.date] = [perf]
+            performances_par_jour[perf.date] = [(perf,artistes)]
         else :
-            performances_par_jour[perf.date].append(perf)
+            performances_par_jour[perf.date].append((perf,artistes))
     return render(request, 'accueil.html', {'nom_festival':festival.nomFestival,'performances_par_jour':performances_par_jour})
 
 # CONFIGURATION
