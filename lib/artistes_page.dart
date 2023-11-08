@@ -13,8 +13,7 @@ class ArtistesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Configuration configuration =
-        Provider.of<ValueNotifier<Configuration>>(context).value;
+    Configuration configuration = Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
       drawer: const NavBar(),
       appBar: AppBar(
@@ -24,29 +23,22 @@ class ArtistesPage extends StatelessWidget {
         future: DatabaseAstrolabe.instance.getArtistes(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
             final artistes = snapshot.data ?? [];
-            return ListView.builder(
+
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // 2 artistes par ligne
+              ),
               itemCount: artistes.length,
               itemBuilder: (context, index) {
                 final artiste = artistes[index];
-                return ListTile(
-                  title: Text(artiste.nom,
-                      style:
-                          GoogleFonts.getFont(configuration.getpoliceEcriture,
-                              textStyle: TextStyle(
-                                fontSize: 16,
-                                color: configuration.getFontColor,
-                              ))),
+                return GestureDetector(
                   onTap: () async {
-                    // Utilisez DatabaseAstrolabe.instance pour accéder à la base de données
-                    List<Performance> performances = await DatabaseAstrolabe
-                        .instance
-                        .getPerformancesByArtiste(artiste);
-                    // ignore: use_build_context_synchronously
+                    List<Performance> performances = await DatabaseAstrolabe.instance.getPerformancesByArtiste(artiste);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -57,6 +49,35 @@ class ArtistesPage extends StatelessWidget {
                       ),
                     );
                   },
+                  child: Card(
+                    child: Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/${artiste.nom}.png'),
+                              fit: BoxFit.cover, // Remplit l'espace disponible
+                            ),
+                          ),
+                        ),
+                        Container(
+                          color: Colors.black.withOpacity(0.2),
+                          alignment: Alignment.bottomCenter,
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            artiste.nom,
+                            style: GoogleFonts.getFont(
+                              configuration.getpoliceEcriture,
+                              textStyle: TextStyle(
+                                fontSize: 18,
+                                color: configuration.getFontColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               },
             );

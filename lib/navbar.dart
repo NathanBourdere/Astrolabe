@@ -1,4 +1,3 @@
-import 'package:festival/database.dart';
 import 'package:festival/performances.dart';
 import 'package:festival/scenes_page.dart';
 import 'package:flutter/material.dart';
@@ -34,10 +33,9 @@ class NavBar extends StatelessWidget {
                       fontWeight: FontWeight.bold)),
             ),
             onTap: () {
+              Navigator.pop(context);
               if (ModalRoute.of(context)?.settings.name != '/') {
                 Navigator.pushNamed(context, '/');
-              } else {
-                Navigator.pop(context);
               }
             },
           ),
@@ -51,13 +49,12 @@ class NavBar extends StatelessWidget {
                       fontWeight: FontWeight.bold)),
             ),
             onTap: () {
+              Navigator.pop(context);
               if (ModalRoute.of(context)?.settings.name != '/artistes') {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const ArtistesPage()),
                 );
-              } else {
-                Navigator.pop(context);
               }
             },
           ),
@@ -71,10 +68,9 @@ class NavBar extends StatelessWidget {
                       fontWeight: FontWeight.bold)),
             ),
             onTap: () {
+              Navigator.pop(context);
               if (ModalRoute.of(context)?.settings.name != '/calendrier') {
                 Navigator.pushNamed(context, '/calendrier');
-              } else {
-                Navigator.pop(context);
               }
             },
           ),
@@ -88,10 +84,9 @@ class NavBar extends StatelessWidget {
                       fontWeight: FontWeight.bold)),
             ),
             onTap: () {
+              Navigator.pop(context);
               if (ModalRoute.of(context)?.settings.name != '/billetterie') {
                 Navigator.pushNamed(context, '/billetterie');
-              } else {
-                Navigator.pop(context);
               }
             },
           ),
@@ -105,6 +100,7 @@ class NavBar extends StatelessWidget {
                       fontWeight: FontWeight.bold)),
             ),
             onTap: () {
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -122,6 +118,7 @@ class NavBar extends StatelessWidget {
                       fontWeight: FontWeight.bold)),
             ),
             onTap: () {
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const ScenesPage()),
