@@ -55,7 +55,7 @@ class FestivalApi {
     final response = await http.get(Uri.parse('$baseUrl/festivals/'));
     if (response.statusCode == 200) {
       final configuration = jsonDecode(response.body);
-      return Configuration.fromJson(configuration[0]);
+      return Configuration.fromJson_api(configuration[0]);
     } else {
       throw Exception('Failed to load configuration');
     }

@@ -84,8 +84,7 @@ class Performance {
       'date': date,
       'heure_debut': heure_debut,
       'heure_fin': heure_fin,
-      'artistes': artistes,
-      'scene': scene,
+      'scene': scene.id,
     };
   }
 }

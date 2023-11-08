@@ -96,7 +96,27 @@ class Configuration {
     video_promo = value;
   }
 
-  factory Configuration.fromJson(Map<String, dynamic> json) {
+  factory Configuration.fromJson_database(Map<String, dynamic> json) {
+    print(json);
+    return Configuration(
+      nomFestival: json['nomFestival'],
+      logoFestival: json['logoFestival'],
+      descriptionFestival: json['descriptionFestival'],
+      siteWebFestival: json['siteWebFestival'],
+      facebookFestival: json['facebookFestival'],
+      youtubeFestival: json['youtubeFestival'],
+      instagramFestival: json['instagramFestival'],
+      mentionsLegales: json['mentionsLegales'],
+      policeEcriture: json['policeEcriture'],
+      couleurPrincipale: json['couleurPrincipale'],
+      couleurSecondaire: json['couleurSecondaire'],
+      couleurBackground: json['couleurBackground'],
+      video_promo: json['video_promo'],
+    );
+  }
+
+  factory Configuration.fromJson_api(Map<String, dynamic> json) {
+    print(json);
     return Configuration(
       nomFestival: json['nomFestival'],
       logoFestival: json['logoFestival'],
@@ -122,7 +142,7 @@ class Configuration {
         'facebookFestival': facebookFestival,
         'youtubeFestival': youtubeFestival,
         'instagramFestival': instagramFestival,
-        'mentionLegales': mentionsLegales,
+        'mentionsLegales': mentionsLegales,
         'policeEcriture': policeEcriture,
         'couleurPrincipale': couleurPrincipale,
         'couleurSecondaire': couleurSecondaire,

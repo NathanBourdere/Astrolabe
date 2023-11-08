@@ -49,7 +49,6 @@ class Artiste {
     return {
       'id': id,
       'nom': nom,
-      'recommendations': recommendations,
       'description': description,
       'site_web': site_web,
       'youtube': youtube,

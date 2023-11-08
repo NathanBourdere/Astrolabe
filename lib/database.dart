@@ -55,20 +55,19 @@ class DatabaseAstrolabe {
         );
 
         CREATE TABLE CONFIGURATION (
-        nomfestival TEXT NOT NULL,
-        logofestival TEXT NOT NULL,
-        descriptionfestival TEXT NOT NULL,
-        sitewebfestival TEXT NOT NULL,
-        facebookfestival TEXT NOT NULL,
-        youtubefestival TEXT NOT NULL,
-        instagramfestival TEXT NOT NULL,
-        mentionlegale TEXT NOT NULL,
+        nomFestival TEXT NOT NULL,
+        logoFestival TEXT NOT NULL,
+        descriptionFestival TEXT NOT NULL,
+        siteWebFestival TEXT NOT NULL,
+        facebookFestival TEXT NOT NULL,
+        youtubeFestival TEXT NOT NULL,
+        instagramFestival TEXT NOT NULL,
+        mentionsLegales TEXT NOT NULL,
         policeEcriture TEXT NOT NULL,
         couleurPrincipale TEXT NOT NULL,
         couleurSecondaire TEXT NOT NULL,
         couleurBackground TEXT NOT NULL,
-        videoPromotionnelle TEXT NOT NULL,
-        lienBilletterie TEXT NOT NULL
+        video_promo TEXT NOT NULL
         );
 
         CREATE TABLE ARTISTE (
@@ -105,7 +104,7 @@ class DatabaseAstrolabe {
         artisteId2 INTEGER NOT NULL,
         FOREIGN KEY (artisteId1) REFERENCES ARTISTE(id),
         FOREIGN KEY (artisteId2) REFERENCES ARTISTE(id)
-        )
+        );
 
         CREATE TABLE PARTENAIRE (
         idPartenaire INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -200,7 +199,7 @@ class DatabaseAstrolabe {
       final List<
           Map<String,
               dynamic>> performancesData = await database!.rawQuery(
-          'SELECT PERFORMANCE.id, PERFORMANCE.nomPerformance, PERFORMANCE.datePerformance, PERFORMANCE.heureDebutPerformance, PERFORMANCE.heureFinPerformance, PERFORMANCE.scene FROM PERFORMANCE INNER JOIN PERF_ARTISTE ON PERFORMANCE.id = PERF_ARTISTE.performanceId WHERE PERF_ARTISTE.artisteId = ?',
+          'SELECT PERFORMANCE.id, PERFORMANCE.nom, PERFORMANCE.date, PERFORMANCE.heure_debut, PERFORMANCE.heure_fin, PERFORMANCE.scene FROM PERFORMANCE INNER JOIN PERF_ARTISTE ON PERFORMANCE.id = PERF_ARTISTE.performanceId WHERE PERF_ARTISTE.artisteId = ?',
           [artiste.id]);
       // Convertir les données des performances en objets Performance
       final List<Performance> performances =
@@ -246,7 +245,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> artistes = await database!.rawQuery(
-          'SELECT ARTISTE.idArtiste, ARTISTE.nomArtiste, ARTISTE.descriptionArtiste, ARTISTE.siteWebArtiste, ARTISTE.youtubeArtiste, ARTISTE.instagramArtiste, ARTISTE.facebookArtiste, ARTISTE.imageArtiste FROM ARTISTE INNER JOIN PERF_ARTISTE ON ARTISTE.idArtiste = PERF_ARTISTE.artisteId WHERE PERF_ARTISTE.performanceId = ?',
+          'SELECT ARTISTE.id, ARTISTE.nom, ARTISTE.description, ARTISTE.site_web, ARTISTE.youtube, ARTISTE.instagram, ARTISTE.facebook, ARTISTE.image FROM ARTISTE INNER JOIN PERF_ARTISTE ON ARTISTE.idArtiste = PERF_ARTISTE.artisteId WHERE PERF_ARTISTE.performanceId = ?',
           [id]);
       return artistes.map((data) => Artiste.fromJson(data)).toList();
     });
@@ -256,7 +255,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> scenes = await database!.rawQuery(
-          'SELECT SCENE.id, SCENE.nomScene, SCENE.imageScene FROM SCENE INNER JOIN PERFORMANCE ON SCENE.id = PERFORMANCE.scene WHERE PERFORMANCE.id = ?',
+          'SELECT SCENE.id, SCENE.nom, SCENE.image FROM SCENE INNER JOIN PERFORMANCE ON SCENE.id = PERFORMANCE.scene WHERE PERFORMANCE.id = ?',
           [id]);
       return Scene.fromJson(scenes.first);
     });
@@ -267,7 +266,7 @@ class DatabaseAstrolabe {
     return db.then((database) async {
       final List<Map<String, dynamic>> configurations =
           await database!.query('CONFIGURATION');
-      return Configuration.fromJson(configurations.first);
+      return Configuration.fromJson_database(configurations.first);
     });
   }
 
@@ -299,6 +298,7 @@ class DatabaseAstrolabe {
       await database.delete('MODIFICATIONS');
       await database.delete('CONFIGURATION');
       await database.insert('MODIFICATIONS', modifications.toJson());
+      print(configuration.toJson());
       await database.insert('CONFIGURATION', configuration.toJson());
       for (Artiste artiste in artistes) {
         await database.insert('ARTISTE', artiste.toJson());
