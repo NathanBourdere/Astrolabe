@@ -16,7 +16,7 @@ routers.register('news',NewsViewSet,basename="news")
 urlpatterns = [
     path('v0/', include(routers.urls)),
     path('', accueil, name='accueil'),
-    path('configuration', configuration, name='configuration'),
+    path('configuration/', configuration, name='configuration'),
     path('configuration/update', configuration_update, name='configuration_update'),
     path('configuration/delete', configuration_delete, name='configuration_delete'),
     path('artistes/<int:page>', artistes, name='artistes'),
