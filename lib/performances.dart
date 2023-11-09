@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:festival/database.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/performance.dart';
@@ -15,7 +17,6 @@ class PerformancesPage extends StatelessWidget {
     Configuration configuration =
         Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
-      drawer: const NavBar(),
       appBar: AppBar(
         title: const Text('Performances'),
       ),

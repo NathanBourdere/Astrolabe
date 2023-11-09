@@ -30,7 +30,7 @@ class PerformanceDetailsPage extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.home),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/');
+                      Navigator.popUntil(context, (route) => route.isFirst);
                     },
                   ),
                 ],

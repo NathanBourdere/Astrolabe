@@ -1,12 +1,16 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:festival/database.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/modifications.dart';
 import 'package:festival/performance.dart';
 import 'package:festival/performances.dart';
+import 'package:festival/scenes_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:google_fonts/google_fonts.dart';
+// ignore: unused_import
 import 'package:flutter/services.dart' show AssetManifest;
 import 'artistes_page.dart';
 import 'billetterie_page.dart';
@@ -62,6 +66,7 @@ class MyApp extends StatelessWidget {
         '/calendrier': (context) => const CalendarPage(),
         '/performances': (context) => const PerformancesPage(),
         '/performance/': (context) => const PerformanceDetailsPage(),
+        '/scenes': (context) => const ScenesPage(),
       },
     );
   }

@@ -1,4 +1,3 @@
-import 'package:festival/database.dart';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/scene.dart';
 

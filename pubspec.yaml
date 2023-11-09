@@ -47,9 +47,9 @@ dependencies:
   http: ^1.1.0
   url_launcher: ^6.2.1
   font_awesome_flutter: ^10.6.0
-  image_gallery_saver:
-  dio:
-  flutter_native_splash: 
+  image_gallery_saver: ^2.0.3
+  dio: ^5.3.3
+  flutter_native_splash: ^2.3.5
 
 
 dev_dependencies:

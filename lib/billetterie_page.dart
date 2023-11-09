@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:festival/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -16,10 +18,10 @@ class _BilletteriePageState extends State<BilletteriePage> {
       appBar: AppBar(
         title: const Text('Billetterie'),
       ),
-      drawer: const NavBar(),
       body: WebView(
         initialUrl: 'https://www.hoppophop.fr/billetterie/',
         onWebViewCreated: (controller) {},
+        javascriptMode: JavascriptMode.unrestricted, // Active JavaScript
         navigationDelegate: (NavigationRequest request) {
           if (request.isForMainFrame) {
             return NavigationDecision.navigate;

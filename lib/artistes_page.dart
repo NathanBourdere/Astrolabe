@@ -1,24 +1,20 @@
-import 'dart:io';
-
 import 'package:festival/artiste_page.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:festival/database.dart';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/performance.dart';
-import 'package:festival/navbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
 
 class ArtistesPage extends StatelessWidget {
   const ArtistesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Configuration configuration =
-        Provider.of<ValueNotifier<Configuration>>(context).value;
+    Configuration configuration = Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
-      drawer: const NavBar(),
       appBar: AppBar(
         title: const Text('Artistes'),
       ),
@@ -41,9 +37,8 @@ class ArtistesPage extends StatelessWidget {
                 final artiste = artistes[index];
                 return GestureDetector(
                   onTap: () async {
-                    List<Performance> performances = await DatabaseAstrolabe
-                        .instance
-                        .getPerformancesByArtiste(artiste);
+                    List<Performance> performances = await DatabaseAstrolabe.instance.getPerformancesByArtiste(artiste);
+                    // ignore: use_build_context_synchronously
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -60,14 +55,12 @@ class ArtistesPage extends StatelessWidget {
                         Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              // get the local image from the artiste.image string path
                               image: FileImage(File(artiste.image)),
-                              fit: BoxFit.cover, // Remplit l'espace disponible
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
                         Container(
-                          color: Colors.black.withOpacity(0.2),
                           alignment: Alignment.bottomCenter,
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Text(

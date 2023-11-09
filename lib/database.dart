@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, depend_on_referenced_packages
+
 import 'dart:async';
 import 'dart:io';
 import 'package:festival/models/artiste.dart';

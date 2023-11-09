@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/performance.dart';
@@ -9,13 +7,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:io';
 
 class PageArtiste extends StatelessWidget {
   final Artiste artiste;
   final List<Performance> performances;
 
-  const PageArtiste(
-      {Key? key, required this.artiste, required this.performances})
+  const PageArtiste({Key? key, required this.artiste, required this.performances})
       : super(key: key);
 
   @override
@@ -27,28 +25,13 @@ class PageArtiste extends StatelessWidget {
       future: DatabaseAstrolabe.instance.getPerformancesByArtiste(artiste),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(artiste.nom),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.home),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/');
-                  },
-                ),
-              ],
-            ),
-            body: const Center(
+          return const Scaffold(
+            body: Center(
               child: CircularProgressIndicator(),
             ),
           );
         } else if (snapshot.hasError) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text(artiste.nom,
-                  style: TextStyle(color: configuration.getFontColor)),
-            ),
             body: Center(
               child: Text('Error: ${snapshot.error}'),
             ),
@@ -57,45 +40,29 @@ class PageArtiste extends StatelessWidget {
           final performancesArtiste = snapshot.data!;
 
           return Scaffold(
-            body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Stack(
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: 250,
+                  backgroundColor: Colors.transparent,
+                  flexibleSpace: Stack(
                     children: [
-                      Container(
-                        height: 250,
-                        width: double.infinity,
+                      Positioned.fill(
                         child: Image.file(
                           File(artiste.image),
                           fit: BoxFit.cover,
-                          height: 250,
-                          width: double.infinity,
                         ),
                       ),
                       Container(
-                        height: 250,
-                        width: double.infinity,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
                               Colors.transparent,
-                              Colors.white,
+                              configuration.getBackgroundColor,
                             ],
                           ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 30,
-                        left: 10,
-                        child: IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          color: Colors.white,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
                         ),
                       ),
                       Positioned(
@@ -103,7 +70,7 @@ class PageArtiste extends StatelessWidget {
                         left: 10,
                         child: Text(
                           artiste.nom,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -112,16 +79,15 @@ class PageArtiste extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  Container(
+                ),
+                SliverToBoxAdapter(
+                  child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey.withOpacity(0.2),
-                      borderRadius:
-                          BorderRadius.circular(12), // Arrondir les bords
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
-                    width: double.infinity,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -146,10 +112,12 @@ class PageArtiste extends StatelessWidget {
                               subtitle: Text(
                                 '${performance.date} à ${performance.heure_debut} - ${performance.heure_fin}',
                                 style: GoogleFonts.getFont(
-                                    configuration.getpoliceEcriture,
-                                    textStyle: TextStyle(
-                                        fontSize: 14,
-                                        color: configuration.getFontColor)),
+                                  configuration.getpoliceEcriture,
+                                  textStyle: TextStyle(
+                                    fontSize: 14,
+                                    color: configuration.getFontColor,
+                                  ),
+                                ),
                               ),
                               onTap: () {
                                 Navigator.pushNamed(
@@ -164,22 +132,20 @@ class PageArtiste extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Container(
+                ),
+                SliverToBoxAdapter(
+                  child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey.withOpacity(0.2),
-                      borderRadius:
-                          BorderRadius.circular(12), // Arrondir les bords
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
-                    width: double.infinity,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Align(
-                          alignment:
-                              Alignment.topLeft, // Aligner en haut à gauche
+                          alignment: Alignment.topLeft,
                           child: Text(
                             "A propos :",
                             style: TextStyle(
@@ -200,10 +166,10 @@ class PageArtiste extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Container(
+                ),
+                SliverToBoxAdapter(
+                  child: Container(
                     margin: const EdgeInsets.all(10),
-                    width: double.infinity, // Pour prendre toute la largeur
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -243,8 +209,8 @@ class PageArtiste extends StatelessWidget {
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         }

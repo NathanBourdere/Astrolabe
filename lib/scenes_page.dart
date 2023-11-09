@@ -1,13 +1,13 @@
-import 'dart:io';
-
 import 'package:festival/database.dart';
 import 'package:festival/models/configuration.dart';
+// ignore: unused_import
 import 'package:festival/navbar.dart';
 import 'package:festival/scene_page.dart';
 import 'package:flutter/material.dart';
 import 'package:festival/models/scene.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
 
 class ScenesPage extends StatelessWidget {
   const ScenesPage({Key? key}) : super(key: key);
@@ -17,7 +17,6 @@ class ScenesPage extends StatelessWidget {
     Configuration configuration =
         Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
-        drawer: const NavBar(),
         appBar: AppBar(
           title: const Text('Scènes'),
         ),

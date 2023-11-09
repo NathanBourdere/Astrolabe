@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, non_constant_identifier_names
+
 import 'package:festival/database.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/navbar.dart';
@@ -30,7 +32,6 @@ class _CalendarPageState extends State<CalendarPage> {
   Future<List<Event>> _fetchPerformances() async {
     // Get performances from the database
     performances = await database.getPerformances();
-    print('pass');
 
     // Convert performances to events
     events = performances
@@ -51,7 +52,6 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const NavBar(),
       appBar: AppBar(
         title: const Text('Calendrie'),
       ),
