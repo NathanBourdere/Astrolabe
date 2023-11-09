@@ -243,31 +243,33 @@ def configuration_delete(request):
 # ARTISTES
 @configuration_required
 def artistes(request,page):
+    limit = 3
     artistes = Artiste.objects.all()
     logo = ConfigurationFestival.objects.all().first().logoFestival
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
         artistes = artistes.filter(nom__icontains=search_term)
-    artistes = artistes[(page-1)*50:page*50]
-
+    artistes = artistes[(page-1)*limit:]
+    print("avant:",artistes)
     render_right_arrow = False
     render_left_arrow = False
     # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
-    if len(Artiste.objects.all()) > 50:
+    if len(Artiste.objects.all()) > limit:
         # si on est à la première page, on affiche pas la flèche de gauche
         if page != 1:
             render_left_arrow = True
         # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
-        if len(artistes) == 50:
+        if (len(artistes)) > limit:
             render_right_arrow = True
-    
+    artistes = artistes[:limit]
 
     return render(request, 'artistes/artistes.html',{"logo":logo,"artistes": artistes,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
 @configuration_required
 def artiste_create(request):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     if request.method == 'POST':
         artiste_form = ArtisteForm(request.POST, request.FILES)
         if artiste_form.is_valid():
@@ -276,7 +278,7 @@ def artiste_create(request):
             if Artiste.objects.filter(nom__iexact=nom_lowered).exists():
                 # Si oui, affiche un message d'erreur à l'utilisateur
                 error_message = f"L'artiste '{nom_lowered}' existe déjà. Veuillez enregistrer un artiste avec un nom différent."
-                return render(request, 'artistes/artiste_create.html', {'form': artiste_form, 'error_message': error_message})
+                return render(request, 'artistes/artiste_create.html', {'logo':logo,'form': artiste_form, 'error_message': error_message})
             artiste_form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_artiste = date.today()
@@ -284,17 +286,19 @@ def artiste_create(request):
             return redirect('API_festivals:artistes', page=1)
     else:
         artiste_form = ArtisteForm()
-    return render(request, 'artistes/artiste_create.html', {'form': artiste_form})
+    return render(request, 'artistes/artiste_create.html', {'form': artiste_form,'logo':logo})
 
 @configuration_required
 def artiste_detail(request, id):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     artiste = Artiste.objects.get(id=id)
     template = "artistes/artiste_detail.html"
-    context = {'artiste': artiste}
+    context = {'artiste': artiste,'logo':logo}
     return render(request, template, context)
 
 @configuration_required
 def artiste_update(request, id):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     artiste = Artiste.objects.get(id=id)
     if request.method == 'POST':
         artiste_form = ArtisteForm(request.POST, request.FILES, instance=artiste)
@@ -305,7 +309,7 @@ def artiste_update(request, id):
             modif.save()
             return redirect('API_festivals:artiste_detail', id=id)
     artiste_form = ArtisteForm(instance=artiste)
-    return render(request, 'artistes/artiste_update.html', {'form': artiste_form, 'artiste': artiste})
+    return render(request, 'artistes/artiste_update.html', {'logo':logo,'form': artiste_form, 'artiste': artiste})
 
 @configuration_required
 def artiste_delete(request, id):
@@ -320,12 +324,14 @@ def artiste_delete(request, id):
 # PARTENAIRES
 @configuration_required
 def partenaires(request,page):
+    limit = 2
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     partenaires = Partenaire.objects.all()
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
         partenaires = partenaires.filter(nom__icontains=search_term)
-    partenaires = partenaires[(page-1)*50:page*50]
+    partenaires = partenaires[(page-1)*limit:page*limit]
     render_right_arrow = False
     render_left_arrow = False
     # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
@@ -338,11 +344,12 @@ def partenaires(request,page):
             render_right_arrow = True
     
 
-    return render(request, 'partenaires/partenaires.html',{"partenaires": partenaires,"form":form,
+    return render(request, 'partenaires/partenaires.html',{'logo':logo,"partenaires": partenaires,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
 @configuration_required
 def partenaire_create(request):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     if request.method == 'POST':
         partenaire_form = PartenaireForm(request.POST, request.FILES)
         if partenaire_form.is_valid():
@@ -351,7 +358,7 @@ def partenaire_create(request):
             if Partenaire.objects.filter(nom__iexact=nom_lowered).exists():
                 # Si oui, affiche un message d'erreur à l'utilisateur
                 error_message = f"Le partenaire '{nom_lowered}' existe déjà. Veuillez enregistrer un partenaire avec un nom différent."
-                return render(request, 'partenaires/partenaire_create.html', {'form': partenaire_form, 'error_message': error_message})
+                return render(request, 'partenaires/partenaire_create.html', {'logo':logo,'form': partenaire_form, 'error_message': error_message})
             partenaire_form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_partenaire = date.today()
@@ -359,17 +366,19 @@ def partenaire_create(request):
             return redirect('API_festivals:partenaire_create')
     else:
         partenaire_form = PartenaireForm()
-    return render(request, 'partenaires/partenaire_create.html', {'form': partenaire_form})
+    return render(request, 'partenaires/partenaire_create.html', {'logo':logo,'form': partenaire_form})
 
 @configuration_required
 def partenaire_detail(request, id):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     partenaire = Partenaire.objects.get(id=id)
     template = "partenaires/partenaire_detail.html"
-    context = {'partenaire': partenaire}
+    context = {'partenaire': partenaire,'logo':logo}
     return render(request, template, context)
 
 @configuration_required
 def partenaire_update(request, id):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     partenaire = Partenaire.objects.get(id=id)
     if request.method == 'POST':
         partenaire_form = PartenaireForm(request.POST, request.FILES, instance=partenaire)
@@ -380,7 +389,7 @@ def partenaire_update(request, id):
             modif.save()
             return redirect('API_festivals:partenaire_detail', id=id)
     partenaire_form = PartenaireForm(instance=partenaire)
-    return render(request, 'partenaires/partenaire_update.html', {'form': partenaire_form, 'partenaire': partenaire})
+    return render(request, 'partenaires/partenaire_update.html', {'logo':logo,'form': partenaire_form, 'partenaire': partenaire})
 
 @configuration_required
 def partenaire_delete(request, id):
@@ -395,12 +404,14 @@ def partenaire_delete(request, id):
 # PERFORMANCES
 @configuration_required
 def performances(request,page):
+    limit = 2
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     performances = Performance.objects.all().order_by('date')
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
         performances = performances.filter(nom__icontains=search_term).order_by('date')
-    performances = performances[(page-1)*50:page*50]
+    performances = performances[(page-1)*limit:page*limit]
     render_right_arrow = False
     render_left_arrow = False
     # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
@@ -413,19 +424,21 @@ def performances(request,page):
             render_right_arrow = True
     
 
-    return render(request, 'performances/performances.html',{"performances": performances,"form":form,
+    return render(request, 'performances/performances.html',{'logo':logo,"performances": performances,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
 @configuration_required
 def performance_detail(request, id):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     performance = Performance.objects.get(id=id)
     artistes = Artiste.objects.filter(performance=performance)
     template = "performances/performance_detail.html"
-    context = {'performance': performance, 'artistes': artistes}
+    context = {'performance': performance, 'artistes': artistes,'logo':logo}
     return render(request, template, context)
 
 @configuration_required
 def performance_update(request, id):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     performance = Performance.objects.get(id=id)
     if request.method == 'POST':
         performance_form = PerformanceForm(request.POST, instance=performance)
@@ -436,7 +449,7 @@ def performance_update(request, id):
             modif.save()
             return redirect('API_festivals:performance_detail', id=id)
     performance_form = PerformanceForm(instance=performance)
-    return render(request, 'performances/performance_update.html', {'form': performance_form, 'performance': performance})
+    return render(request, 'performances/performance_update.html', {'logo':logo,'form': performance_form, 'performance': performance})
 
 @configuration_required
 def performance_delete(request, id):
@@ -449,6 +462,7 @@ def performance_delete(request, id):
 
 @configuration_required
 def performance_create(request):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     if request.method == 'POST':
         performance_form = PerformanceForm(request.POST)
         if performance_form.is_valid():#
@@ -457,7 +471,7 @@ def performance_create(request):
             if Performance.objects.filter(nom__iexact=nom_lowered).exists():
                 # Si oui, affiche un message d'erreur à l'utilisateur
                 error_message = f"Le performance '{nom_lowered}' existe déjà. Veuillez enregistrer un performance avec un nom différent."
-                return render(request, 'performances/performance_create.html', {'form': performance_form, 'error_message': error_message})
+                return render(request, 'performances/performance_create.html', {'logo':logo,'form': performance_form, 'error_message': error_message})
             performance_form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_performance = date.today()
@@ -465,17 +479,19 @@ def performance_create(request):
             return redirect('API_festivals:performances', page=1)
     else:
         performance_form = PerformanceForm()
-    return render(request, 'performances/performance_create.html', {'form': performance_form})
+    return render(request, 'performances/performance_create.html', {'logo':logo,'form': performance_form})
 
 # SCENES
 @configuration_required
 def scenes(request,page):
+    limit = 2
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     scenes = Scene.objects.all()
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
         scenes = scenes.filter(nom__icontains=search_term)
-    scenes = scenes[(page-1)*50:page*50]
+    scenes = scenes[(page-1)*limit:page*limit]
     render_right_arrow = False
     render_left_arrow = False
     # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
@@ -486,20 +502,20 @@ def scenes(request,page):
         # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
         if len(scenes) == 50:
             render_right_arrow = True
-    
-
-    return render(request, 'scenes/scenes.html',{"scenes": scenes,"form":form,
+    return render(request, 'scenes/scenes.html',{'logo':logo,"scenes": scenes,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
 @configuration_required
 def scene_detail(request, id):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     scene = Scene.objects.get(id=id)
     template = "scenes/scene_detail.html"
-    context = {'scene': scene}
+    context = {'scene': scene,'logo':logo}
     return render(request, template, context)
 
 @configuration_required
 def scene_update(request, id):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     scene = Scene.objects.get(id=id)
     if request.method == 'POST':
         scene_form = SceneForm(request.POST, request.FILES, instance=scene)
@@ -510,7 +526,7 @@ def scene_update(request, id):
             modif.save()
             return redirect('API_festivals:scene_detail', id=id)
     scene_form = SceneForm(instance=scene)
-    return render(request, 'scenes/scene_update.html', {'form': scene_form, 'scene': scene})
+    return render(request, 'scenes/scene_update.html', {'logo':logo,'form': scene_form, 'scene': scene})
 
 @configuration_required
 def scene_delete(request, id):
@@ -524,6 +540,7 @@ def scene_delete(request, id):
 
 @configuration_required
 def scene_create(request):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     if request.method == 'POST':
         scene_form = SceneForm(request.POST, request.FILES)
         if scene_form.is_valid():#
@@ -532,7 +549,7 @@ def scene_create(request):
             if Scene.objects.filter(nom__iexact=nom_lowered).exists():
                 # Si oui, affiche un message d'erreur à l'utilisateur
                 error_message = f"Le scene '{nom_lowered}' existe déjà. Veuillez enregistrer un scene avec un nom différent."
-                return render(request, 'scenes/scene_create.html', {'form': scene_form, 'error_message': error_message})
+                return render(request, 'scenes/scene_create.html', {'logo':logo,'form': scene_form, 'error_message': error_message})
             scene_form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_scene = date.today()
@@ -540,17 +557,19 @@ def scene_create(request):
             return redirect('API_festivals:scenes', page=1)
     else:
         scene_form = SceneForm()
-    return render(request, 'scenes/scene_create.html', {'form': scene_form})
+    return render(request, 'scenes/scene_create.html', {'logo':logo,'form': scene_form})
 
 # NEWS
 @configuration_required
 def news(request,page):
+    limit = 2
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     news = News.objects.all()
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
         news = news.filter(titre__icontains=search_term)
-    news = news[(page-1)*50:page*50]
+    news = news[(page-1)*limit:page*limit]
     render_right_arrow = False
     render_left_arrow = False
     # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
@@ -563,18 +582,20 @@ def news(request,page):
             render_right_arrow = True
     
 
-    return render(request, 'news/news.html',{"news": news,"form":form,
+    return render(request, 'news/news.html',{'logo':logo,"news": news,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
 @configuration_required
 def news_detail(request, id):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     news = News.objects.get(id=id)
     template = "news/news_detail.html"
-    context = {'news': news}
+    context = {'news': news,'logo':logo}
     return render(request, template, context)
 
 @configuration_required
 def news_update(request, id):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     news = News.objects.get(id=id)
     if request.method == 'POST':
         news_form = NewsForm(request.POST, request.FILES, instance=news)
@@ -585,7 +606,7 @@ def news_update(request, id):
             modif.save()
             return redirect('API_festivals:news_detail', id=id)
     news_form = NewsForm(instance=news)
-    return render(request, 'news/news_update.html', {'form': news_form, 'news': news})
+    return render(request, 'news/news_update.html', {'logo':logo,'form': news_form, 'news': news})
 
 @configuration_required
 def news_delete(request, id):
@@ -599,6 +620,7 @@ def news_delete(request, id):
 
 @configuration_required
 def news_create(request):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     if request.method == 'POST':
         news_form = NewsForm(request.POST, request.FILES)
         if news_form.is_valid():#
@@ -607,7 +629,7 @@ def news_create(request):
             if News.objects.filter(titre__iexact=nom_lowered).exists():
                 # Si oui, affiche un message d'erreur à l'utilisateur
                 error_message = f"Le news '{nom_lowered}' existe déjà. Veuillez enregistrer un news avec un nom différent."
-                return render(request, 'news/news_create.html', {'form': news_form, 'error_message': error_message})
+                return render(request, 'news/news_create.html', {'logo':logo,'form': news_form, 'error_message': error_message})
             news_form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_news = date.today()
@@ -615,5 +637,5 @@ def news_create(request):
             return redirect('API_festivals:news', page=1)
     else:
         news_form = NewsForm()
-    return render(request, 'news/news_create.html', {'form': news_form})
+    return render(request, 'news/news_create.html', {'logo':logo,'form': news_form})
 
