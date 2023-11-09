@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:festival/performances.dart';
 import 'package:festival/scenes_page.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +20,10 @@ class NavBar extends StatelessWidget {
       child: ListView(
         children: [
           DrawerHeader(
-            child: Image.asset(
-              "assets/images/image_festival.png",
-              fit: BoxFit.cover,
-            ),
-          ),
+              child: Image.file(
+            File(configuration.logoFestival),
+            fit: BoxFit.cover,
+          )),
           ListTile(
             title: Text(
               "Accueil",

@@ -1,3 +1,5 @@
+import 'package:festival/database.dart';
+import 'package:festival/models/performance.dart';
 import 'package:festival/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -7,25 +9,43 @@ class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
 
   @override
-  _CalendarPageState createState() => _CalendarPageState();
+  State<CalendarPage> createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  // Liste des événements
+  // Liste des performances
+  List<Performance> performances = [];
   List<Event> events = [];
-
-  // Date sélectionnée
   DateTime selectedDate = DateTime.now();
+  DatabaseAstrolabe database = DatabaseAstrolabe.instance;
 
   @override
   void initState() {
     super.initState();
 
-    // Ajout d'un événement par défaut
-    events.add(Event(
-        title: "Rendez-vous",
-        start: DateTime(2023, 10, 25, 10, 0),
-        end: DateTime(2023, 10, 25, 12, 0)));
+    // Fetch performances from the database once
+    _fetchPerformances();
+  }
+
+  Future<List<Event>> _fetchPerformances() async {
+    // Get performances from the database
+    performances = await database.getPerformances();
+    print('pass');
+
+    // Convert performances to events
+    events = performances
+        .map((performance) => Event(
+            titre: performance.nom,
+            date: DateTime.parse(performance.date),
+            heure_debut: TimeOfDay(
+                hour: int.parse(performance.heure_debut.split(":")[0]),
+                minute: int.parse(performance.heure_debut.split(":")[1])),
+            heure_fin: TimeOfDay(
+                hour: int.parse(performance.heure_fin.split(":")[0]),
+                minute: int.parse(performance.heure_fin.split(":")[1]))))
+        .toList();
+
+    return events;
   }
 
   @override
@@ -33,80 +53,90 @@ class _CalendarPageState extends State<CalendarPage> {
     return Scaffold(
       drawer: const NavBar(),
       appBar: AppBar(
-        title: const Text('Calendrier Programmable'),
+        title: const Text('Calendrie'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TableCalendar(
-              focusedDay: selectedDate,
-              firstDay: DateTime(1990),
-              lastDay: DateTime(2050),
-              // Add an effect to the date selected to indicate it's been selected
-              selectedDayPredicate: (day) {
-                return isSameDay(selectedDate, day);
-              },
-              onDaySelected: (date, events) {
-                // Mettre à jour la date sélectionnée
-                setState(() {
-                  selectedDate = date;
-                });
-              },
-              eventLoader: (date) {
-                // Vérifier s'il y a des événements pour la date donnée
-                if (events
-                    .where((event) =>
-                        event.start.year == date.year &&
-                        event.start.month == date.month &&
-                        event.start.day == date.day)
-                    .isNotEmpty) {
-                  // Retourner un widget de point rouge
-                  return [
-                    Container(
-                      constraints: const BoxConstraints(
-                        minWidth: 10,
-                        minHeight: 10,
-                        maxWidth: 10,
-                        maxHeight: 10,
-                      ),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ];
-                } else {
-                  // Retourner une liste vide
-                  return [];
-                }
-              },
-            ),
-            // Afficher les événements pour la date sélectionnée
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: getEventsForDate(selectedDate).length,
-              itemBuilder: (context, index) {
-                Event event = getEventsForDate(selectedDate)[index];
-                return Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    children: [
-                      // Date de l'événement
-                      Text(
-                        DateFormat("dd/MM/yyyy").format(event.start),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      const SizedBox(width: 8),
-                      // Titre de l'événement
-                      Text(event.title),
-                    ],
+      body: FutureBuilder(
+        future: _fetchPerformances(), // Async data
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  TableCalendar(
+                    focusedDay: selectedDate,
+                    firstDay: DateTime(2023),
+                    lastDay: DateTime(2050),
+                    selectedDayPredicate: (day) {
+                      return isSameDay(selectedDate, day);
+                    },
+                    onDaySelected: (date, events) {
+                      // Mettre à jour la date sélectionnée
+                      setState(() {
+                        selectedDate = date;
+                      });
+                    },
+                    eventLoader: (date) {
+                      // Vérifier s'il y a des performances pour la date donnée
+                      if (events
+                          .where((event) =>
+                              event.date.year == date.year &&
+                              event.date.month == date.month &&
+                              event.date.day == date.day)
+                          .isNotEmpty) {
+                        // Retourner un widget de point rouge
+                        return [
+                          Container(
+                            constraints: const BoxConstraints(
+                              minWidth: 10,
+                              minHeight: 10,
+                              maxWidth: 10,
+                              maxHeight: 10,
+                            ),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ];
+                      } else {
+                        // Retourner une liste vide
+                        return [];
+                      }
+                    },
                   ),
-                );
-              },
-            ),
-          ],
-        ),
+                  // Afficher les performances pour la date sélectionnée
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: getEventsForDate(selectedDate).length,
+                    itemBuilder: (context, index) {
+                      Event event = getEventsForDate(selectedDate)[index];
+                      return Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Row(
+                          children: [
+                            // Date de l'événement
+                            Text(
+                              DateFormat("dd/MM/yyyy").format(event.date),
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            const SizedBox(width: 8),
+                            // Titre de l'événement
+                            Text(event.titre),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          }
+        },
       ),
     );
   }
@@ -115,27 +145,31 @@ class _CalendarPageState extends State<CalendarPage> {
   List<Event> getEventsForDate(DateTime date) {
     return events
         .where((event) =>
-            event.start.year == date.year &&
-            event.start.month == date.month &&
-            event.start.day == date.day)
+            event.date.year == date.year &&
+            event.date.month == date.month &&
+            event.date.day == date.day)
         .toList();
   }
 }
 
 class Event {
   // Titre de l'événement
-  String title;
+  String titre;
 
   // Date de début de l'événement
-  DateTime start;
+  DateTime date;
 
-  // Date de fin de l'événement
-  DateTime end;
+  // Heure de début de l'événement
+  TimeOfDay heure_debut;
+
+  // Heure de fin de l'événement
+  TimeOfDay heure_fin;
 
   // Constructeur
   Event({
-    required this.title,
-    required this.start,
-    required this.end,
+    required this.titre,
+    required this.date,
+    required this.heure_debut,
+    required this.heure_fin,
   });
 }

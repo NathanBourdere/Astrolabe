@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:festival/database.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/navbar.dart';
@@ -28,6 +30,10 @@ class ScenesPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final scene = snapshot.data![index];
                   return ListTile(
+                    leading: Image.file(
+                      File(scene.image),
+                      fit: BoxFit.cover,
+                    ),
                     title: Text(scene.nom,
                         style: GoogleFonts.getFont(
                             configuration.getpoliceEcriture,

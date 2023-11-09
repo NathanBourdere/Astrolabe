@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:festival/artiste_page.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,8 @@ class ArtistesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Configuration configuration = Provider.of<ValueNotifier<Configuration>>(context).value;
+    Configuration configuration =
+        Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
       drawer: const NavBar(),
       appBar: AppBar(
@@ -38,7 +41,9 @@ class ArtistesPage extends StatelessWidget {
                 final artiste = artistes[index];
                 return GestureDetector(
                   onTap: () async {
-                    List<Performance> performances = await DatabaseAstrolabe.instance.getPerformancesByArtiste(artiste);
+                    List<Performance> performances = await DatabaseAstrolabe
+                        .instance
+                        .getPerformancesByArtiste(artiste);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -55,7 +60,8 @@ class ArtistesPage extends StatelessWidget {
                         Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage('assets/images/${artiste.nom}.png'),
+                              // get the local image from the artiste.image string path
+                              image: FileImage(File(artiste.image)),
                               fit: BoxFit.cover, // Remplit l'espace disponible
                             ),
                           ),

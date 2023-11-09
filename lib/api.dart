@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:dio/dio.dart';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/partenaire.dart';
 import 'package:festival/models/performance.dart';
@@ -7,6 +10,8 @@ import 'package:festival/models/configuration.dart';
 import 'package:festival/models/news.dart';
 import 'package:festival/models/modifications.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FestivalApi {
   static const baseUrl = 'http://lseas.pythonanywhere.com/festivals/v0';
@@ -15,7 +20,22 @@ class FestivalApi {
     final response = await http.get(Uri.parse('$baseUrl/artistes/'));
     if (response.statusCode == 200) {
       final artistes = jsonDecode(utf8.decode(response.bodyBytes)) as List;
-      print(artistes);
+
+      for (var artiste in artistes) {
+        if (artiste['image'] != null) {
+          final imageResponse = await http.get(Uri.parse(artiste['image']));
+          if (imageResponse.statusCode == 200) {
+            final imageBytes = imageResponse.bodyBytes;
+            final imageUint8List = Uint8List.fromList(imageBytes);
+            final directory = await getApplicationDocumentsDirectory();
+            final imagePath =
+                await File('${directory.path}/artiste_${artiste['id']}.png')
+                    .create();
+            await imagePath.writeAsBytes(imageUint8List);
+            artiste['image'] = imagePath.path;
+          }
+        }
+      }
       return artistes.map((json) => Artiste.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load artistes');
@@ -38,6 +58,23 @@ class FestivalApi {
     final response = await http.get(Uri.parse('$baseUrl/scenes/'));
     if (response.statusCode == 200) {
       final scenes = jsonDecode(response.body) as List;
+
+      for (var scene in scenes) {
+        if (scene['image'] != null) {
+          final imageResponse = await http.get(Uri.parse(scene['image']));
+          if (imageResponse.statusCode == 200) {
+            final imageBytes = imageResponse.bodyBytes;
+            final imageUint8List = Uint8List.fromList(imageBytes);
+            final directory = await getApplicationDocumentsDirectory();
+            final imagePath =
+                await File('${directory.path}/scene_${scene['id']}.png')
+                    .create();
+            await imagePath.writeAsBytes(imageUint8List);
+            scene['image'] = imagePath.path;
+            print(scene['image']);
+          }
+        }
+      }
       return scenes.map((json) => Scene.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load scenes');
@@ -58,6 +95,19 @@ class FestivalApi {
     final response = await http.get(Uri.parse('$baseUrl/festivals/'));
     if (response.statusCode == 200) {
       final configuration = jsonDecode(response.body);
+      if (configuration[0]['logoFestival'] != null) {
+        final imageResponse =
+            await http.get(Uri.parse(configuration[0]['logoFestival']));
+
+        if (imageResponse.statusCode == 200) {
+          final imageBytes = imageResponse.bodyBytes;
+          final imageUint8List = Uint8List.fromList(imageBytes);
+          final directory = await getApplicationDocumentsDirectory();
+          final imagePath = await File('${directory.path}/logo.png').create();
+          await imagePath.writeAsBytes(imageUint8List);
+          configuration[0]['logo'] = imagePath.path;
+        }
+      }
       return Configuration.fromJson_api(configuration[0]);
     } else {
       throw Exception('Failed to load configuration');

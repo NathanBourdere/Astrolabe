@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:festival/models/configuration.dart';
 import 'package:festival/performance.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,6 @@ import 'package:festival/models/scene.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-@immutable
 class ScenePage extends StatelessWidget {
   final Scene scene;
   final List<Performance> performances;
@@ -31,7 +32,37 @@ class ScenePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(scene.image),
+            // Add the container with image and text
+            Stack(
+              children: [
+                Image.file(
+                  File(scene.image),
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    width: double.infinity,
+                    height: 50,
+                    color: Colors.black.withOpacity(0.5),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        scene.nom,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            // The rest of the page content
             Text(
               'Événements :',
               style: TextStyle(
@@ -59,6 +90,8 @@ class ScenePage extends StatelessWidget {
                     Navigator.pushNamed(context, '/performance/',
                         arguments: performance.id);
                   },
+
+                  // ...
                 );
               },
             ),

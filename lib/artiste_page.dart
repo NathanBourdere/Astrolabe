@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/performance.dart';
@@ -64,8 +66,8 @@ class PageArtiste extends StatelessWidget {
                       Container(
                         height: 250,
                         width: double.infinity,
-                        child: Image.asset(
-                          'assets/images/${artiste.image}.png',
+                        child: Image.file(
+                          File(artiste.image),
                           fit: BoxFit.cover,
                           height: 250,
                           width: double.infinity,
@@ -114,7 +116,8 @@ class PageArtiste extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.grey.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12), // Arrondir les bords
+                      borderRadius:
+                          BorderRadius.circular(12), // Arrondir les bords
                     ),
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
@@ -165,7 +168,8 @@ class PageArtiste extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.grey.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12), // Arrondir les bords
+                      borderRadius:
+                          BorderRadius.circular(12), // Arrondir les bords
                     ),
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
@@ -174,7 +178,8 @@ class PageArtiste extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Align(
-                          alignment: Alignment.topLeft, // Aligner en haut à gauche
+                          alignment:
+                              Alignment.topLeft, // Aligner en haut à gauche
                           child: Text(
                             "A propos :",
                             style: TextStyle(
@@ -235,7 +240,6 @@ class PageArtiste extends StatelessWidget {
                             ),
                           ],
                         ),
-
                       ],
                     ),
                   ),
