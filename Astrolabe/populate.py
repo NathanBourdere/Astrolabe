@@ -33,6 +33,17 @@ arial.save()
 hellfest.policeEcriture = arial
 hellfest.save()
 
+batards = Artiste()
+batards.nom = "Les Bâtards du Roi"
+batards.description = """
+Groupe orléanais de melodic black metal, au thème médiéval
+"""
+batards.youtube = "https://www.youtube.com/@lesbatardsduroi"
+batards.facebook = "https://www.facebook.com/profile.php?id=100083761466407"
+batards.instagram = "https://www.instagram.com/lesbatardsduroi/"
+batards.image = "static/model/artistes/les_batards_du_roi.png"
+batards.save()
+
 slipknot = Artiste()
 slipknot.nom = "Slipknot"
 slipknot.description = """
@@ -101,11 +112,12 @@ kvelertak.facebook = "https://www.facebook.com/Kvelertak"
 kvelertak.image = "static/model/artistes/kvelertak.jpg"
 kvelertak.save()
 
-slipknot.recommendations.add(behemoth,slayer)
-behemoth.recommendations.add(slipknot,kvelertak)
-cannibal_corpse.recommendations.add(kvelertak,slayer)
-slayer.recommendations.add(slipknot,behemoth)
+slipknot.recommendations.add(batards,slayer)
+behemoth.recommendations.add(slipknot,batards)
+cannibal_corpse.recommendations.add(kvelertak,batards)
+slayer.recommendations.add(slipknot,batards)
 kvelertak.recommendations.add(slayer,cannibal_corpse)
+batards.recommendations.add(slipknot,slayer)
 
 yeps = Partenaire()
 yeps.nom = "Yeps"
@@ -133,6 +145,15 @@ scene1 = Scene()
 scene1.nom = "Mainstage 1"
 scene1.image = "static/model/scenes/scene1.png"
 scene1.save()
+
+performance0 = Performance()
+performance0.nom = "Les Bâtards Du Roi"
+performance0.date = "2024-06-18"
+performance0.heure_debut = "11:00:00"
+performance0.heure_fin = "13:00:00"
+performance0.scene = scene1
+performance0.save()
+performance0.artistes.add(batards)
 
 performance1 = Performance()
 performance1.nom = "Slipknot"

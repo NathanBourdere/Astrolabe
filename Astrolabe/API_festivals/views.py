@@ -189,7 +189,7 @@ def accueil(request):
             performances_par_jour[perf.date] = [(perf,artistes[0])]
         else :
             performances_par_jour[perf.date].append((perf,artistes[0]))
-    return render(request, 'accueil.html', {'nom_festival':festival.nomFestival,'performances_par_jour':performances_par_jour})
+    return render(request, 'accueil.html', {'nom_festival':festival.nomFestival,'performances_par_jour':performances_par_jour,'logo':festival.logoFestival})
 
 # CONFIGURATION
 def configuration(request):
@@ -244,6 +244,7 @@ def configuration_delete(request):
 @configuration_required
 def artistes(request,page):
     artistes = Artiste.objects.all()
+    logo = ConfigurationFestival.objects.all().first().logoFestival
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
@@ -262,7 +263,7 @@ def artistes(request,page):
             render_right_arrow = True
     
 
-    return render(request, 'artistes/artistes.html',{"artistes": artistes,"form":form,
+    return render(request, 'artistes/artistes.html',{"logo":logo,"artistes": artistes,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
 @configuration_required

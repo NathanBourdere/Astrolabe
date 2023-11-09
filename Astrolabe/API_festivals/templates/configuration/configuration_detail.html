@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}{{ artiste.nom }}{% endblock %}
+{% block logo %}
+<img src="/{{configuration.logoFestival}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
+{% endblock %}
 {% block content %}
 <h4>{{ configuration.nomFestival }}</h4>
 <p>{{ configuration.descriptionFestival }}</p>

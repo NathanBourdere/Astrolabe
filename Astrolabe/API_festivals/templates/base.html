@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.rtl.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.rtl.min.css' %}">
-    </style>
     {% endblock %}
 </head>
 
@@ -26,43 +25,16 @@
     <header>
         <nav class="navbar shadow navbar-expand-lg bg-primary" data-bs-theme="dark">
             <div class="container-fluid">
-              <a class="navbar-brand" href="#">Navbar</a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarColor01">
-                <ul class="navbar-nav me-auto">
-                  <li class="nav-item">
-                    <a class="nav-link active" href="#">Home
-                      <span class="visually-hidden">(current)</span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                  </li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Separated link</a>
-                    </div>
-                  </li>
-                </ul>
+              <a class="navbar-brand" href="{% url 'API_festivals:accueil'%}" style="margin-right:8%">Astrolabe</a>
+                <div class="container-fluid-nav center">
+                    {% block logo %}
+                    {% endblock %}
+                  </div>
                 <form class="d-flex">
-                  <input class="form-control me-sm-2" type="search" placeholder="Search">
-                  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                  <input class="form-control me-sm-2" type="search" placeholder="Rechercher une page...">
+                  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Recherche</button>
                 </form>
               </div>
-            </div>
           </nav>
         </header>
         <div class="container-fluid">
@@ -72,45 +44,31 @@
                     <div class="position-sticky rounded">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <i class="bi-house"></i> Accueil
-                                </a>
+                                <a class="nav-link" href="{% url 'API_festivals:accueil' %}">Accueil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <i class="bi-gear"></i> Configuration
-                                </a>
+                                <a class="nav-link" href="{% url 'API_festivals:configuration' %}">Configuration</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <i class="bi-music-note"></i> Artistes
-                                </a>
+                                <a class="nav-link" href="{% url 'API_festivals:artistes' page=1 %}">Artistes</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <i class="bi-megaphone"></i> Performances
-                                </a>
+                                <a class="nav-link" href="{% url 'API_festivals:performances' page=1 %}">Performances</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <i class="bi-layout-split"></i> Scènes
-                                </a>
+                                <a class="nav-link" href="{% url 'API_festivals:scenes' page=1 %}">Scènes</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <i class="bi-person"></i> Partenaires
-                                </a>
+                                <a class="nav-link" href="{% url 'API_festivals:partenaires' page=1 %}">Partenaires</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <i class="bi-newspaper"></i> News
-                                </a>
+                                <a class="nav-link" href="{% url 'API_festivals:news' page=1 %}">News</a>
                             </li>
                         </ul>
                     </div>
             </aside>
                 <!-- Content -->
-                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom:2rem">
                     <div class="container mt-4 ">
                         <section>
                             {% block content %}
@@ -120,7 +78,7 @@
                 </main>
             </div>
         </div>
-    <footer class="footer bg-dark fixed-bottom">
+    <footer class="footer shadow fixed-bottom" style="background-color: rgb(33,150,243);">
         <div class="container">
             <p class="text-white text-center">Créé par Nathan Bourdere Andreou et Constantin Loszach</p>
         </div>
