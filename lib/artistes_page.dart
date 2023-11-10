@@ -13,7 +13,9 @@ class ArtistesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Configuration configuration = Provider.of<ValueNotifier<Configuration>>(context).value;
+    Configuration configuration =
+        Provider.of<ValueNotifier<Configuration>>(context).value;
+    print(configuration.couleurBackground);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Artistes'),
@@ -37,7 +39,9 @@ class ArtistesPage extends StatelessWidget {
                 final artiste = artistes[index];
                 return GestureDetector(
                   onTap: () async {
-                    List<Performance> performances = await DatabaseAstrolabe.instance.getPerformancesByArtiste(artiste);
+                    List<Performance> performances = await DatabaseAstrolabe
+                        .instance
+                        .getPerformancesByArtiste(artiste);
                     // ignore: use_build_context_synchronously
                     Navigator.push(
                       context,

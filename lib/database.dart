@@ -11,6 +11,7 @@ import 'package:festival/models/scene.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'models/news.dart';
 
@@ -292,56 +293,130 @@ class DatabaseAstrolabe {
     });
   }
 
-  Future<int> updateDatabase(
-      List<Artiste> artistes,
-      List<Performance> performances,
-      List<Scene> scenes,
-      List<News> news,
-      List<Partenaire> partenaires,
-      Modifications modifications,
-      Configuration configuration,
-      Map<int, List<int>> artistesPerformances,
-      Map<int, List<int>> artistesRecommandations) async {
-    // delete tout et refill les tables
+  Future<List<Artiste>> getArtistesRecos(Artiste artiste) {
     final db = database;
-    await db.then((database) async {
-      await database!.delete('ARTISTE');
-      await database.delete('PERFORMANCE');
-      await database.delete('SCENE');
-      await database.delete('NEWS');
-      await database.delete('PARTENAIRE');
-      await database.delete('MODIFICATIONS');
-      await database.delete('CONFIGURATION');
-      await database.insert('MODIFICATIONS', modifications.toJson());
-      for (Partenaire partenaire in partenaires) {
-        await database.insert('PARTENAIRE', partenaire.toJson());
-      }
-      await database.insert('CONFIGURATION', configuration.toJson());
-      for (Artiste artiste in artistes) {
-        await database.insert('ARTISTE', artiste.toJson());
-      }
-      for (Scene scene in scenes) {
-        await database.insert('SCENE', scene.toJson());
-      }
-      for (Performance performance in performances) {
-        await database.insert('PERFORMANCE', performance.toJson_database());
-      }
-      for (News news in news) {
-        await database.insert('NEWS', news.toJson());
-      }
-      for (int idArtiste in artistesPerformances.keys) {
-        for (int idPerformance in artistesPerformances[idArtiste]!) {
-          await database.insert('PERF_ARTISTE',
-              {'performanceId': idPerformance, 'artisteId': idArtiste});
-        }
-      }
-      for (int idArtiste1 in artistesRecommandations.keys) {
-        for (int idArtiste2 in artistesRecommandations[idArtiste1]!) {
-          await database.insert('RECO_ARTISTE',
-              {'artisteId1': idArtiste1, 'artisteId2': idArtiste2});
-        }
-      }
+    return db.then((database) async {
+      final List<Map<String, dynamic>> artistes = await database!.rawQuery(
+          'SELECT ARTISTE.id, ARTISTE.nom, ARTISTE.description, ARTISTE.site_web, ARTISTE.youtube, ARTISTE.instagram, ARTISTE.facebook, ARTISTE.image FROM ARTISTE INNER JOIN RECO_ARTISTE ON ARTISTE.id = RECO_ARTISTE.artisteId2 WHERE RECO_ARTISTE.artisteId1 = ?',
+          [artiste.id]);
+      return artistes.map((data) => Artiste.fromJson(data)).toList();
     });
+  }
+
+  Future<void> deleteAndRecreateDatabase() async {
+    // Get the path to the database file
+    final databasesPath = await getDatabasesPath();
+    final path = join(databasesPath, 'your_database_name.db');
+
+    // Delete the existing database file
+    await deleteDatabase(path);
+
+    // Recreate the database by calling the init function
+    await initDB();
+  }
+
+  Future<int> updateDatabase(
+    List<Artiste> artistes,
+    List<Performance> performances,
+    List<Scene> scenes,
+    List<News> news,
+    List<Partenaire> partenaires,
+    Modifications modifications,
+    Configuration configuration,
+    Map<int, List<int>> artistesPerformances,
+    Map<int, List<int>> artistesRecommandations,
+  ) async {
+    final db = await database;
+
+    // Update or insert MODIFICATIONS
+    await db?.insert(
+      'MODIFICATIONS',
+      modifications.toJson(),
+      conflictAlgorithm:
+          ConflictAlgorithm.replace, // Use replace to update on conflict
+    );
+
+    // Update or insert PARTENAIRE
+    for (Partenaire partenaire in partenaires) {
+      await db?.insert(
+        'PARTENAIRE',
+        partenaire.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    // Update or insert CONFIGURATION
+    print('update config');
+    await db?.insert(
+      'CONFIGURATION',
+      configuration.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    // Update or insert ARTISTE
+    for (Artiste artiste in artistes) {
+      await db?.insert(
+        'ARTISTE',
+        artiste.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    // Update or insert SCENE
+    for (Scene scene in scenes) {
+      await db?.insert(
+        'SCENE',
+        scene.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    // Update or insert PERFORMANCE
+    for (Performance performance in performances) {
+      await db?.insert(
+        'PERFORMANCE',
+        performance.toJson_database(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    // Update or insert NEWS
+    for (News newsItem in news) {
+      await db?.insert(
+        'NEWS',
+        newsItem.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    // Update or insert PERF_ARTISTE
+    for (int idArtiste in artistesPerformances.keys) {
+      for (int idPerformance in artistesPerformances[idArtiste]!) {
+        await db?.insert(
+          'PERF_ARTISTE',
+          {
+            'performanceId': idPerformance,
+            'artisteId': idArtiste,
+          },
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+    }
+
+    // Update or insert RECO_ARTISTE
+    for (int idArtiste1 in artistesRecommandations.keys) {
+      for (int idArtiste2 in artistesRecommandations[idArtiste1]!) {
+        await db?.insert(
+          'RECO_ARTISTE',
+          {
+            'artisteId1': idArtiste1,
+            'artisteId2': idArtiste2,
+          },
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+    }
+
     return await Future.value(1);
   }
 }

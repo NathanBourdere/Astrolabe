@@ -50,43 +50,38 @@ class Modifications {
     };
   }
 
-  static Future<int> updateModifications() async {
+  static Future<Configuration> updateModifications() async {
     // Requete API pour modifier les données
+
     FestivalApi festivalApi = FestivalApi();
     DatabaseAstrolabe database = DatabaseAstrolabe.instance;
     Modifications newModifs = await festivalApi.getModifications();
     Modifications modifications = await database.getModifications();
     // Si les modifications ne sont pas les mêmes que celles enregistrées en local alors on met à jour la base de données
-    if (modifications.getdate_modif_artiste !=
-            newModifs.getdate_modif_artiste ||
-        modifications.getdate_modif_performance !=
-            newModifs.getdate_modif_performance ||
-        modifications.getdate_modif_scene != newModifs.getdate_modif_scene ||
-        modifications.getdate_modif_config != newModifs.getdate_modif_config ||
-        modifications.getdate_modif_news != newModifs.getdate_modif_news) {
-      // On récupère les données de l'API
-      List<Artiste> artistes = await festivalApi.getArtistes();
-      List<Scene> scenes = await festivalApi.getScenes();
-      List<News> news = await festivalApi.getNews();
-      List<Performance> performances = await festivalApi.getPerformances();
-      List<Partenaire> partenaires = []; //await festivalApi.getPartenaires();
-      Configuration configuration = await festivalApi.getConfiguration();
-      // Il faudrait la liste des artistes participants à chaque performance ainsi que les recommandations d'artistes
-      Map<int, List<int>> artistesPerformances =
-          await festivalApi.getArtistesPerformances();
-      Map<int, List<int>> artistesRecommandations =
-          await festivalApi.getArtistesRecommandations();
-      await database.updateDatabase(
-          artistes,
-          performances,
-          scenes,
-          news,
-          partenaires,
-          newModifs,
-          configuration,
-          artistesPerformances,
-          artistesRecommandations);
-    }
-    return Future.value(1);
+    // On récupère les données de l'API
+    List<Artiste> artistes = await festivalApi.getArtistes();
+    List<Scene> scenes = await festivalApi.getScenes();
+    List<News> news = await festivalApi.getNews();
+    List<Performance> performances = await festivalApi.getPerformances();
+    List<Partenaire> partenaires = []; //await festivalApi.getPartenaires();
+    Configuration configuration = await festivalApi.getConfiguration();
+    print('getconfig');
+    print(configuration.couleurBackground);
+    // Il faudrait la liste des artistes participants à chaque performance ainsi que les recommandations d'artistes
+    Map<int, List<int>> artistesPerformances =
+        await festivalApi.getArtistesPerformances();
+    Map<int, List<int>> artistesRecommandations =
+        await festivalApi.getArtistesRecommandations();
+    await database.updateDatabase(
+        artistes,
+        performances,
+        scenes,
+        news,
+        partenaires,
+        newModifs,
+        configuration,
+        artistesPerformances,
+        artistesRecommandations);
+    return Configuration.fromJson_database(configuration.toJson());
   }
 }

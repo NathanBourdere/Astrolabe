@@ -1,10 +1,13 @@
 // ignore_for_file: unused_import, non_constant_identifier_names
 
 import 'package:festival/database.dart';
+import 'package:festival/models/configuration.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -51,10 +54,9 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    final configuration =
+        Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Calendrie'),
-      ),
       body: FutureBuilder(
         future: _fetchPerformances(), // Async data
         builder: (context, snapshot) {
@@ -68,6 +70,11 @@ class _CalendarPageState extends State<CalendarPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   TableCalendar(
+                    // Changer la couleur
+                    calendarStyle: CalendarStyle(
+                      defaultTextStyle:
+                          TextStyle(color: configuration.getMainColor),
+                    ),
                     focusedDay: selectedDate,
                     firstDay: DateTime(2023),
                     lastDay: DateTime(2050),
@@ -114,21 +121,44 @@ class _CalendarPageState extends State<CalendarPage> {
                     shrinkWrap: true,
                     itemCount: getEventsForDate(selectedDate).length,
                     itemBuilder: (context, index) {
-                      Event event = getEventsForDate(selectedDate)[index];
-                      return Container(
-                        padding: const EdgeInsets.all(8),
-                        child: Row(
-                          children: [
-                            // Date de l'événement
-                            Text(
-                              DateFormat("dd/MM/yyyy").format(event.date),
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                            const SizedBox(width: 8),
-                            // Titre de l'événement
-                            Text(event.titre),
-                          ],
-                        ),
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: getEventsForDate(selectedDate).length,
+                        itemBuilder: (context, index) {
+                          Event event = getEventsForDate(selectedDate)[index];
+                          // Create a list of widgets for each performance
+                          List<Widget> performanceWidgets =
+                              performances.map((performance) {
+                            return ListTile(
+                              title: Text(
+                                "${event.titre} - ${DateFormat("dd/MM/yyyy").format(event.date)}",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: configuration.getFontColor,
+                                ),
+                              ),
+                              subtitle: Text(
+                                "${event.heure_debut.hour}:${event.heure_debut.minute} - ${event.heure_fin.hour}:${event.heure_fin.minute}",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: configuration.getFontColor,
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/performance/',
+                                  arguments: performance.id,
+                                );
+                              },
+                            );
+                          }).toList();
+
+                          // Return the list of performance widgets
+                          return Column(
+                            children: performanceWidgets,
+                          );
+                        },
                       );
                     },
                   ),

@@ -1,3 +1,5 @@
+import 'package:festival/models/performance.dart';
+
 class Artiste {
   int id;
   String nom;
@@ -37,11 +39,11 @@ class Artiste {
       nom: json['nom'],
       recommendations: [],
       description: json['description'],
-      site_web: json['site_web'],
-      youtube: json['youtube'],
-      instagram: json['instagram'],
-      facebook: json['facebook'],
-      image: json['image'],
+      site_web: json['site_web'] ?? '',
+      youtube: json['youtube'] ?? '',
+      instagram: json['instagram'] ?? '',
+      facebook: json['facebook'] ?? '',
+      image: json['image'] ?? '',
     );
   }
 
@@ -56,5 +58,37 @@ class Artiste {
       'facebook': facebook,
       'image': image,
     };
+  }
+
+  String getTimeLeftBeforePerformance(List<Performance> performances) {
+    DateTime now = DateTime.now();
+    DateTime nextPerformance = DateTime(9999, 12, 31, 23, 59, 59);
+    for (var performance in performances) {
+      DateTime performanceDate = DateTime.parse(performance.date);
+      DateTime performanceHeureDebut = DateTime(
+        performanceDate.year,
+        performanceDate.month,
+        performanceDate.day,
+        int.parse(performance.heure_debut.split(':')[0]),
+      );
+      if (performanceHeureDebut.isAfter(now) &&
+          performanceHeureDebut.isBefore(nextPerformance)) {
+        nextPerformance = performanceHeureDebut;
+      }
+    }
+    if (nextPerformance == DateTime(9999, 12, 31, 23, 59, 59)) {
+      return 'Pas de performances annoncés';
+    } else if (now.isAfter(nextPerformance)) {
+      return 'En cours !';
+    } else {
+      Duration difference = nextPerformance.difference(now);
+      if (difference.inHours > 24) {
+        return 'Dans ${difference.inDays} jours';
+      } else if (difference.inHours > 1) {
+        return 'Dans ${difference.inHours} heures';
+      } else {
+        return 'Dans ${difference.inMinutes} minutes';
+      }
+    }
   }
 }

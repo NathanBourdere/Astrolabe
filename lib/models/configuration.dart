@@ -112,7 +112,7 @@ class Configuration {
       couleurPrincipale: json['couleurPrincipale'],
       couleurSecondaire: json['couleurSecondaire'],
       couleurBackground: json['couleurBackground'],
-      video_promo: json['video_promo'],
+      video_promo: json['video_promo'] ?? '',
     );
   }
 
@@ -130,7 +130,7 @@ class Configuration {
       couleurPrincipale: json['couleurPrincipale'],
       couleurSecondaire: json['couleurSecondaire'],
       couleurBackground: json['couleurBackground'],
-      video_promo: json['video_promo'],
+      video_promo: json['video_promo'] ?? '',
     );
   }
 

@@ -1,5 +1,3 @@
-// ignore_for_file: unused_import
-
 import 'package:festival/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -23,10 +21,15 @@ class _BilletteriePageState extends State<BilletteriePage> {
         onWebViewCreated: (controller) {},
         javascriptMode: JavascriptMode.unrestricted, // Active JavaScript
         navigationDelegate: (NavigationRequest request) {
-          if (request.isForMainFrame) {
-            return NavigationDecision.navigate;
+          // Check if the navigation request is for a trusted domain
+          String domain = Uri.parse(request.url).host;
+          if (domain != 'hoppophop.fr') {
+            // Prevent the navigation request if it is not for a trusted domain
+            return NavigationDecision.prevent;
           }
-          return NavigationDecision.prevent;
+
+          // If the navigation request is for a trusted domain, allow it
+          return NavigationDecision.navigate;
         },
       ),
     );

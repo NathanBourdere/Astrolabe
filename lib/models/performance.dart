@@ -100,4 +100,11 @@ class Performance {
       'scene': scene.id,
     };
   }
+
+  Duration getTimeLeftBeforePerformance(List<Performance> performances) {
+    DateTime now = DateTime.now();
+    DateTime performanceDate = DateTime.parse(date);
+    Duration timeLeft = performanceDate.difference(now);
+    return timeLeft;
+  }
 }

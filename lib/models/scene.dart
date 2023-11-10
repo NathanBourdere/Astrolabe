@@ -31,7 +31,7 @@ class Scene {
     return Scene(
       id: json['id'],
       nom: json['nom'],
-      image: json['image'],
+      image: json['image'] ?? '',
     );
   }
 

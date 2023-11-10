@@ -1,3 +1,4 @@
+import 'package:festival/calendrier.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const CarouselSliderWidget(),
     const BilletteriePage(),
     const Center(child: Text('Likes')),
+    const CalendarPage(),
     const MenuPage(),
   ];
 
@@ -78,14 +80,18 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Likes',
           ),
           BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.calendar),
+            label: 'Calendrier',
+          ),
+          BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.bars),
             label: 'Menu',
           ),
-
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.only(bottom: 16.0), // Ajustez la valeur selon vos besoins
+        padding: const EdgeInsets.only(
+            bottom: 16.0), // Ajustez la valeur selon vos besoins
         child: IndexedStack(
           index: _currentIndex,
           children: _pages,
