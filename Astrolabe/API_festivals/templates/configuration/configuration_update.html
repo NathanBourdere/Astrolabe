@@ -1,13 +1,19 @@
 {% extends 'base.html' %}
-{% block title %}{{configuration.nomFestival}}{% endblock %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}{{ configuration.nomFestival }}{% endblock %}
 {% block logo %}
-<img src="/{{configuration.logoFestival}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
+<img src="/{{ configuration.logoFestival }}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
 {% endblock %}
 {% block content %}
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Enregistrer">
-</form>
-{{form.errors}}
+<h2>Modifier la configuration actuelle</h2>
+<div class="card bg-grey">
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% crispy form %}
+        </form>
+        {{ form.errors }}
+    </div>
+</div>
 {% endblock %}

@@ -1,11 +1,10 @@
 from .serializers import *
 from .models import *
+from .forms import *
 from rest_framework import viewsets
 from django.shortcuts import redirect, render
-from datetime import date,timedelta, timezone
-from django.forms import ModelForm, CharField,ChoiceField,CheckboxInput ,Form, ValidationError, FileInput,FileField,TextInput, DateField, DateInput
-import datetime
 import os
+from django.utils import timezone
 
 # --------------------------------------------------------------- DECORATEURS ---------------------------------------------------------------------
 def configuration_required(view_func):
@@ -16,92 +15,14 @@ def configuration_required(view_func):
                 return view_func(request, *args, **kwargs)
             else:
                 configuration_form = ConfigurationFestivalForm()
-                return render(request, 'configuration/configuration_create.html', {'configuration_form': configuration_form, 'nom_festival': "Ajouter le festival"})
+                return redirect('API_festivals:configuration')
 
         # Si la méthode HTTP n'est pas GET, laissez la vue originale gérer la requête.
         return view_func(request, *args, **kwargs)
 
     return wrapped_view
 
-# --------------------------------------------------------------- FORMULAIRES ---------------------------------------------------------------------
-
-class ArtisteForm(ModelForm):
-    class Meta:
-        model = Artiste
-        fields = '__all__'
-    
-    def clean(self):
-        recommendations = self.cleaned_data.get('recommendations')     
-        if len(recommendations) > len(set(recommendations)) :
-            raise ValidationError("vous recommandez plusieurs fois le même artiste")
-                
-
-class SearchForm(Form):
-    search = CharField(label='Recherche', max_length=100, required=False)   
-
-class PerformanceForm(ModelForm):
-    class Meta:
-        model = Performance
-        fields = '__all__'
-    date = DateField(widget=DateInput)
-        
-    def clean(self):
-        date = self.cleaned_data.get('date')
-        if self.is_valid():
-            if date < datetime.date.today():
-                raise ValidationError("Vous ne pouvez pas ajouter une performance dans le passé !")
-            
-            heure_debut = self.cleaned_data.get('heure_debut')
-            if date == datetime.date.today() and heure_debut < datetime.date.today().hour:
-                raise ValidationError("Vous ne pouvez pas ajouter une performance dans le passé !")
-            
-            heure_fin = self.cleaned_data.get('heure_fin')
-            if date == datetime.date.today() and heure_fin < datetime.date.today().hour:
-                raise ValidationError("Vous ne pouvez pas ajouter une performance dans le passé !")
-            
-            artistes = self.cleaned_data.get('artistes')
-            # on vérifie si il n'y a aucun doublon d'artistes
-            if len(artistes) > len(set(artistes)):
-                raise ValidationError("Vous ne pouvez pas ajouter deux fois le même artiste pour la même performance ! ")
-            
-            scene = self.cleaned_data.get('scene')
-            perfs = Performance.objects.filter(date=date,scene=scene)
-            if len(perfs) > 0:
-                for perf in perfs:
-                    # on regarde si elles se chevauchent pas
-                    if not(heure_debut >= perf.heure_fin or heure_fin <= perf.heure_debut):
-                        raise ValidationError("La scène est déjà occupée ce jour là")
-
-class SceneForm(ModelForm):
-    class Meta:
-        model = Scene
-        fields = '__all__'
-
-class ColorPickerWidget(TextInput):
-    class Media:
-        css = {
-            'all': ('node_modules/spectrum-colorpicker/dist/css/spectrum.css',)
-        }
-        js = ('node_modules/spectrum-colorpicker/dist/js/spectrum.js',)
-
-class ConfigurationFestivalForm(ModelForm):
-    class Meta:
-        model = ConfigurationFestival
-        fields = '__all__'
-    # couleurPrincipale = CharField(widget=ColorPickerWidget)
-    # couleurSecondaire = CharField(widget=ColorPickerWidget)
-    # couleurBackground = CharField(widget=ColorPickerWidget)
-    # mode = ChoiceField(widget=CheckboxInput)
-
-class PartenaireForm(ModelForm):
-    class Meta:
-        model = Partenaire
-        fields = '__all__'
-
-class NewsForm(ModelForm):
-    class Meta:
-        model = News
-        fields = '__all__'
+# --------------------------------------------------------------- VIEWSETS ---------------------------------------------------------------------
 
 class ArtisteViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ArtisteSerializer
@@ -162,7 +83,7 @@ class ModificationViewSet(viewsets.ReadOnlyModelViewSet):
         if id_modification :
             queryset = queryset.filter(id=id_modification)
         return queryset
-      
+    
 class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = NewsSerializer
 
@@ -172,17 +93,23 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
         if id_news :
             queryset = queryset.filter(id=id_news)
         return queryset
+    
+class TagsViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = TagsSerializer
+
+    def get_queryset(self):
+        queryset = Tag.objects.all()
+        id_tag = self.request.GET.get("id")
+        if id_tag :
+            queryset = queryset.filter(id=id_tag)
+        return queryset
+    
 
 @configuration_required
 def accueil(request):  
-    festival = ConfigurationFestival.objects.all()
-    if festival.exists():
-        festival = festival.first()
-    else :
-        configuration_form = ConfigurationFestivalForm()
-        return render(request,'configuration/configuration_create.html',{'configuration_form':configuration_form})
+    festival = ConfigurationFestival.objects.all().first()
     performances_par_jour = dict()
-    performances_jour = Performance.objects.all().order_by('date')
+    performances_jour = Performance.objects.all().order_by('date','heure_debut')
     for perf in performances_jour:
         artistes = Artiste.objects.filter(performance=perf)
         if perf.date not in performances_par_jour.keys():
@@ -205,10 +132,11 @@ def configuration(request):
         return render(request,'configuration/configuration_create.html',{'configuration_form':configuration_form})
     elif request.method == "POST":
         configuration_form = ConfigurationFestivalForm(request.POST, request.FILES)
+        print(configuration_form.errors)
         if configuration_form.is_valid():
             configuration_form.save()
             modif = Modification.objects.all().first()
-            modif.date_modif_config = date.today()
+            modif.date_modif_config = timezone.now()
             modif.save()
             return redirect('API_festivals:configuration')
     configuration_form = ConfigurationFestivalForm()
@@ -217,13 +145,15 @@ def configuration(request):
 @configuration_required
 def configuration_update(request):
     configuration = ConfigurationFestival.objects.all().first()
+    chemin_logo = str(configuration.logoFestival)
     if request.method == 'POST':
         configuration_form = ConfigurationFestivalForm(request.POST, request.FILES, instance=configuration)
-        print(configuration_form.errors)
         if configuration_form.has_changed() and configuration_form.is_valid():
+            if "logoFestival" in configuration_form.changed_data:
+                os.remove(chemin_logo)
             configuration_form.save()
             modif = Modification.objects.all().first()
-            modif.date_modif_config = date.today()
+            modif.date_modif_config = timezone.now()
             modif.save()
             return redirect('API_festivals:configuration')
     configuration_form = ConfigurationFestivalForm(instance=configuration)
@@ -236,7 +166,7 @@ def configuration_delete(request):
     os.remove(str(configuration.video_promo))
     configuration.delete()
     modif = Modification.objects.all().first()
-    modif.date_modif_config = date.today()
+    modif.date_modif_config = timezone.now()
     modif.save()
     return redirect("API_festivals:configuration")
 
@@ -251,7 +181,6 @@ def artistes(request,page):
         search_term = form.cleaned_data['search']
         artistes = artistes.filter(nom__icontains=search_term)
     artistes = artistes[(page-1)*limit:]
-    print("avant:",artistes)
     render_right_arrow = False
     render_left_arrow = False
     # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
@@ -281,7 +210,7 @@ def artiste_create(request):
                 return render(request, 'artistes/artiste_create.html', {'logo':logo,'form': artiste_form, 'error_message': error_message})
             artiste_form.save()
             modif = Modification.objects.all().first()
-            modif.date_modif_artiste = date.today()
+            modif.date_modif_artiste = timezone.now()
             modif.save()
             return redirect('API_festivals:artistes', page=1)
     else:
@@ -292,20 +221,24 @@ def artiste_create(request):
 def artiste_detail(request, id):
     logo = ConfigurationFestival.objects.all().first().logoFestival
     artiste = Artiste.objects.get(id=id)
+    artistes = artiste.recommendations.all()
     template = "artistes/artiste_detail.html"
-    context = {'artiste': artiste,'logo':logo}
+    context = {'artiste': artiste,'logo':logo,'artistes':artistes}
     return render(request, template, context)
 
 @configuration_required
 def artiste_update(request, id):
     logo = ConfigurationFestival.objects.all().first().logoFestival
     artiste = Artiste.objects.get(id=id)
+    chemin_image = str(artiste.image)
     if request.method == 'POST':
         artiste_form = ArtisteForm(request.POST, request.FILES, instance=artiste)
         if artiste_form.has_changed() and artiste_form.is_valid():
+            if "image" in artiste_form.changed_data:
+                os.remove(chemin_image)
             artiste_form.save()
             modif = Modification.objects.all().first()
-            modif.date_modif_artiste = date.today()
+            modif.date_modif_artiste = timezone.now()
             modif.save()
             return redirect('API_festivals:artiste_detail', id=id)
     artiste_form = ArtisteForm(instance=artiste)
@@ -317,7 +250,7 @@ def artiste_delete(request, id):
     os.remove(str(artiste.image))
     artiste.delete()
     modif = Modification.objects.all().first()
-    modif.date_modif_artiste = date.today()
+    modif.date_modif_artiste = timezone.now()
     modif.save()
     return redirect("API_festivals:accueil")
 
@@ -331,17 +264,18 @@ def partenaires(request,page):
     if form.is_valid():
         search_term = form.cleaned_data['search']
         partenaires = partenaires.filter(nom__icontains=search_term)
-    partenaires = partenaires[(page-1)*limit:page*limit]
+    partenaires = partenaires[(page-1)*limit:]
     render_right_arrow = False
     render_left_arrow = False
     # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
-    if len(Partenaire.objects.all()) > 50:
+    if len(Partenaire.objects.all()) > limit:
         # si on est à la première page, on affiche pas la flèche de gauche
         if page != 1:
             render_left_arrow = True
         # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
-        if len(partenaires) == 50:
+        if (len(partenaires)) > limit:
             render_right_arrow = True
+    partenaires = partenaires[:limit]
     
 
     return render(request, 'partenaires/partenaires.html',{'logo':logo,"partenaires": partenaires,"form":form,
@@ -361,9 +295,9 @@ def partenaire_create(request):
                 return render(request, 'partenaires/partenaire_create.html', {'logo':logo,'form': partenaire_form, 'error_message': error_message})
             partenaire_form.save()
             modif = Modification.objects.all().first()
-            modif.date_modif_partenaire = date.today()
+            modif.date_modif_partenaire = timezone.now()
             modif.save()
-            return redirect('API_festivals:partenaire_create')
+            return redirect('API_festivals:partenaires', page=1)
     else:
         partenaire_form = PartenaireForm()
     return render(request, 'partenaires/partenaire_create.html', {'logo':logo,'form': partenaire_form})
@@ -380,12 +314,15 @@ def partenaire_detail(request, id):
 def partenaire_update(request, id):
     logo = ConfigurationFestival.objects.all().first().logoFestival
     partenaire = Partenaire.objects.get(id=id)
+    chemin_banniere = str(partenaire.banniere)
     if request.method == 'POST':
         partenaire_form = PartenaireForm(request.POST, request.FILES, instance=partenaire)
         if partenaire_form.has_changed() and partenaire_form.is_valid():
+            if "banniere" in partenaire_form.changed_data:
+                os.remove(chemin_banniere)
             partenaire_form.save()
             modif = Modification.objects.all().first()
-            modif.date_modif_partenaire = date.today()
+            modif.date_modif_partenaire = timezone.now()
             modif.save()
             return redirect('API_festivals:partenaire_detail', id=id)
     partenaire_form = PartenaireForm(instance=partenaire)
@@ -397,7 +334,7 @@ def partenaire_delete(request, id):
     os.remove(str(partenaire.banniere))
     partenaire.delete()
     modif = Modification.objects.all().first()
-    modif.date_modif_partenaire = date.today()
+    modif.date_modif_partenaire = timezone.now()
     modif.save()
     return redirect("API_festivals:accueil")
 
@@ -411,17 +348,18 @@ def performances(request,page):
     if form.is_valid():
         search_term = form.cleaned_data['search']
         performances = performances.filter(nom__icontains=search_term).order_by('date')
-    performances = performances[(page-1)*limit:page*limit]
+    performances = performances[(page-1)*limit:]
     render_right_arrow = False
     render_left_arrow = False
     # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
-    if len(Performance.objects.all()) > 50:
+    if len(Performance.objects.all()) > limit:
         # si on est à la première page, on affiche pas la flèche de gauche
         if page != 1:
             render_left_arrow = True
         # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
-        if len(performances) == 50:
+        if (len(performances)) > limit:
             render_right_arrow = True
+    performances = performances[:limit]
     
 
     return render(request, 'performances/performances.html',{'logo':logo,"performances": performances,"form":form,
@@ -442,10 +380,11 @@ def performance_update(request, id):
     performance = Performance.objects.get(id=id)
     if request.method == 'POST':
         performance_form = PerformanceForm(request.POST, instance=performance)
+        print(performance_form.errors)
         if performance_form.has_changed() and performance_form.is_valid():
             performance_form.save()
             modif = Modification.objects.all().first()
-            modif.date_modif_performance = date.today()
+            modif.date_modif_performance = timezone.now()
             modif.save()
             return redirect('API_festivals:performance_detail', id=id)
     performance_form = PerformanceForm(instance=performance)
@@ -456,7 +395,7 @@ def performance_delete(request, id):
     performance = Performance.objects.get(id=id)
     performance.delete()
     modif = Modification.objects.all().first()
-    modif.date_modif_performance = date.today()
+    modif.date_modif_performance = timezone.now()
     modif.save()
     return redirect("API_festivals:accueil")
 
@@ -474,7 +413,7 @@ def performance_create(request):
                 return render(request, 'performances/performance_create.html', {'logo':logo,'form': performance_form, 'error_message': error_message})
             performance_form.save()
             modif = Modification.objects.all().first()
-            modif.date_modif_performance = date.today()
+            modif.date_modif_performance = timezone.now()
             modif.save()
             return redirect('API_festivals:performances', page=1)
     else:
@@ -491,17 +430,18 @@ def scenes(request,page):
     if form.is_valid():
         search_term = form.cleaned_data['search']
         scenes = scenes.filter(nom__icontains=search_term)
-    scenes = scenes[(page-1)*limit:page*limit]
+    scenes = scenes[(page-1)*limit:]
     render_right_arrow = False
     render_left_arrow = False
     # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
-    if len(Scene.objects.all()) > 50:
+    if len(Scene.objects.all()) > limit:
         # si on est à la première page, on affiche pas la flèche de gauche
         if page != 1:
             render_left_arrow = True
         # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
-        if len(scenes) == 50:
+        if (len(scenes)) > limit:
             render_right_arrow = True
+    scenes = scenes[:limit]
     return render(request, 'scenes/scenes.html',{'logo':logo,"scenes": scenes,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
@@ -517,12 +457,15 @@ def scene_detail(request, id):
 def scene_update(request, id):
     logo = ConfigurationFestival.objects.all().first().logoFestival
     scene = Scene.objects.get(id=id)
+    scene_image = str(scene.image)
     if request.method == 'POST':
         scene_form = SceneForm(request.POST, request.FILES, instance=scene)
         if scene_form.has_changed() and scene_form.is_valid():
+            if "image" in scene_form.changed_data:
+                os.remove(scene_image)
             scene_form.save()
             modif = Modification.objects.all().first()
-            modif.date_modif_scene = date.today()
+            modif.date_modif_scene = timezone.now()
             modif.save()
             return redirect('API_festivals:scene_detail', id=id)
     scene_form = SceneForm(instance=scene)
@@ -534,7 +477,7 @@ def scene_delete(request, id):
     os.remove(str(scene.image))
     scene.delete()
     modif = Modification.objects.all().first()
-    modif.date_modif_scene = date.today()
+    modif.date_modif_scene = timezone.now()
     modif.save()
     return redirect("API_festivals:accueil")
 
@@ -552,7 +495,7 @@ def scene_create(request):
                 return render(request, 'scenes/scene_create.html', {'logo':logo,'form': scene_form, 'error_message': error_message})
             scene_form.save()
             modif = Modification.objects.all().first()
-            modif.date_modif_scene = date.today()
+            modif.date_modif_scene = timezone.now()
             modif.save()
             return redirect('API_festivals:scenes', page=1)
     else:
@@ -569,17 +512,18 @@ def news(request,page):
     if form.is_valid():
         search_term = form.cleaned_data['search']
         news = news.filter(titre__icontains=search_term)
-    news = news[(page-1)*limit:page*limit]
+    news = news[(page-1)*limit:]
     render_right_arrow = False
     render_left_arrow = False
     # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
-    if len(News.objects.all()) > 50:
+    if len(News.objects.all()) > limit:
         # si on est à la première page, on affiche pas la flèche de gauche
         if page != 1:
             render_left_arrow = True
         # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
-        if len(news) == 50:
+        if (len(news)) > limit:
             render_right_arrow = True
+    news = news[:limit]
     
 
     return render(request, 'news/news.html',{'logo':logo,"news": news,"form":form,
@@ -597,12 +541,15 @@ def news_detail(request, id):
 def news_update(request, id):
     logo = ConfigurationFestival.objects.all().first().logoFestival
     news = News.objects.get(id=id)
+    news_image = str(news.image)
     if request.method == 'POST':
         news_form = NewsForm(request.POST, request.FILES, instance=news)
         if news_form.has_changed() and news_form.is_valid():
+            if "image" in news_form.changed_data:
+                os.remove(news_image)
             news_form.save()
             modif = Modification.objects.all().first()
-            modif.date_modif_news = date.today()
+            modif.date_modif_news = timezone.now()
             modif.save()
             return redirect('API_festivals:news_detail', id=id)
     news_form = NewsForm(instance=news)
@@ -614,7 +561,7 @@ def news_delete(request, id):
     os.remove(str(news.image))
     news.delete()
     modif = Modification.objects.all().first()
-    modif.date_modif_news = date.today()
+    modif.date_modif_news = timezone.now()
     modif.save()
     return redirect("API_festivals:accueil")
 

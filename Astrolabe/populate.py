@@ -9,11 +9,7 @@ from API_festivals.models import Artiste, Performance, Scene, ConfigurationFesti
 hellfest = ConfigurationFestival()
 hellfest.nomFestival = "Hellfest"
 hellfest.logoFestival = "static/model/configuration/logo/hellfest.png"
-hellfest.descriptionFestival = """
-    Le Hellfest est un festival de musique français spécialisé dans les musiques extrêmes, 
-    annuellement organisé au mois de juin à Clisson en Loire-Atlantique. Il est l'un des plus 
-    importants festivals de son genre en Europe et le premier en France.
-"""
+hellfest.descriptionFestival = "Le Hellfest est un festival de musique français spécialisé dans les musiques extrêmes, annuellement organisé au mois de juin à Clisson en Loire-Atlantique. Il est l'un des plus importants festivals de son genre en Europe et le premier en France."
 hellfest.siteWebFestival = "http://hellfest.fr"
 hellfest.youtubeFestival = "https://www.youtube.com/user/HellfestFestival"
 hellfest.facebookFestival = "https://www.facebook.com/hellfest"
@@ -26,9 +22,84 @@ hellfest.video_promo = "static/model/configuration/video/HELLFEST 2024.mp4"
 hellfest.mode = True
 
 arial = PoliceEcriture()
-arial.nom = "Arial"
+arial.nom = "Roboto"
 arial.save()
 
+open_sans = PoliceEcriture()
+open_sans.nom = "Open Sans"
+open_sans.save()
+
+lato = PoliceEcriture()
+lato.nom = "Lato"
+lato.save()
+
+monserrat = PoliceEcriture()
+monserrat.nom = "Montserrat"
+monserrat.save()
+
+poppins = PoliceEcriture()
+poppins.nom = "Poppins"
+poppins.save()
+
+noto_sans = PoliceEcriture()
+noto_sans.nom = "Noto Sans"
+noto_sans.save()
+
+source_sans_pro = PoliceEcriture()
+source_sans_pro.nom = "Source Sans Pro"
+source_sans_pro.save()
+
+merriweather = PoliceEcriture()
+merriweather.nom = "Merriweather"
+merriweather.save()
+
+crimson_text = PoliceEcriture()
+crimson_text.nom = "Crimson Text"
+crimson_text.save()
+
+raleway = PoliceEcriture()
+raleway.nom = "Raleway"
+raleway.save()
+
+playfair_display = PoliceEcriture()
+playfair_display.nom = "Playfair Display"
+playfair_display.save()
+
+ubuntu = PoliceEcriture()
+ubuntu.nom = "Ubuntu"
+ubuntu.save()
+
+cabin = PoliceEcriture()
+cabin.nom = "Cabin"
+cabin.save()
+
+incosolata = PoliceEcriture()
+incosolata.nom = "Incosolata"
+incosolata.save()
+
+quick_sand = PoliceEcriture()
+quick_sand.nom = "Quicksand"
+quick_sand.save()
+
+droit_sans = PoliceEcriture()
+droit_sans.nom = "Droit Sans"
+droit_sans.save()
+
+fira_sans = PoliceEcriture()
+fira_sans.nom = "Fira Sans"
+fira_sans.save()
+
+pacifico = PoliceEcriture()
+pacifico.nom = "Pacifico"
+pacifico.save()
+
+arimo = PoliceEcriture()
+arimo.nom = "Arimo"
+arimo.save()
+
+cormorrant_garamond = PoliceEcriture()
+cormorrant_garamond.nom = "Cormorant Garamond"
+cormorrant_garamond.save()
 
 hellfest.policeEcriture = arial
 hellfest.save()
@@ -46,11 +117,7 @@ batards.save()
 
 slipknot = Artiste()
 slipknot.nom = "Slipknot"
-slipknot.description = """
-    Slipknot est un groupe de heavy metal américain, originaire de Des Moines, dans l'Iowa. 
-    Formé en 1995, le groupe est actuellement composé de huit membres, ayant tous des pseudonymes : 
-    Sid Wilson, Joey Jordison, Paul Gray, Chris Fehn, Jim Root, Craig Jones, Shawn Crahan et Mick Thomson.
-"""
+slipknot.description = "Slipknot est un groupe de heavy metal américain, originaire de Des Moines, dans l'Iowa. Formé en 1995, le groupe est actuellement composé de huit membres, ayant tous des pseudonymes : Sid Wilson, Joey Jordison, Paul Gray, Chris Fehn, Jim Root, Craig Jones, Shawn Crahan et Mick Thomson."
 slipknot.site_web = "https://slipknot1.com/"
 slipknot.youtube = "https://www.youtube.com/user/slipknot"
 slipknot.instagram = "https://www.instagram.com/slipknot/"
@@ -60,10 +127,7 @@ slipknot.save()
 
 behemoth = Artiste()
 behemoth.nom = "Behemoth"
-behemoth.description = """
-    Behemoth est un groupe de blackened death metal polonais, originaire de Gdańsk. 
-    Formé en 1991 par Nergal, le groupe est considéré comme l'un des plus importants de la scène metal extrême polonaise.
-"""
+behemoth.description = "Behemoth est un groupe de blackened death metal polonais, originaire de Gdańsk. Formé en 1991 par Nergal, le groupe est considéré comme l'un des plus importants de la scène metal extrême polonaise."
 behemoth.site_web = "https://behemoth.pl/"
 behemoth.youtube = "https://www.youtube.com/user/Behemothofficial"
 behemoth.instagram = "https://www.instagram.com/behemothofficial/"
@@ -73,11 +137,7 @@ behemoth.save()
 
 slayer = Artiste()
 slayer.nom = "Slayer"
-slayer.description = """
-    Slayer est un groupe de thrash metal américain, originaire de Huntington Park, en Californie. 
-    Formé en 1981 par les guitaristes Jeff Hanneman et Kerry King, le groupe connaît le succès 
-    international à la fin des années 1980 et au début des années 1990. 
-"""
+slayer.description = "Slayer est un groupe de thrash metal américain, originaire de Huntington Park, en Californie. Formé en 1981 par les guitaristes Jeff Hanneman et Kerry King, le groupe connaît le succès international à la fin des années 1980 et au début des années 1990."
 slayer.site_web = "http://www.slayer.net/"
 slayer.youtube = "https://www.youtube.com/user/slayer"
 slayer.instagram = "https://www.instagram.com/slayerbandofficial/"
@@ -87,11 +147,7 @@ slayer.save()
 
 cannibal_corpse = Artiste()
 cannibal_corpse.nom = "Cannibal Corpse"
-cannibal_corpse.description = """
-    Cannibal Corpse est un groupe de death metal américain, originaire de Buffalo, dans l'État de New York. 
-    Il est formé en 1988 par le chanteur Chris Barnes, le guitariste Bob Rusay, le bassiste Alex Webster et le batteur Paul Mazurkiewicz. 
-    Le groupe est connu pour ses paroles violentes et controversées.
-"""
+cannibal_corpse.description = "Cannibal Corpse est un groupe de death metal américain, originaire de Buffalo, dans l'État de New York. Il est formé en 1988 par le chanteur Chris Barnes, le guitariste Bob Rusay, le bassiste Alex Webster et le batteur Paul Mazurkiewicz. Le groupe est connu pour ses paroles violentes et controversées."
 cannibal_corpse.site_web = "https://cannibalcorpse.net/"
 cannibal_corpse.youtube = "https://www.youtube.com/user/cannibalcorpse"
 cannibal_corpse.instagram = "https://www.instagram.com/cannibalcorpseofficial/"
@@ -101,10 +157,7 @@ cannibal_corpse.save()
 
 kvelertak = Artiste()
 kvelertak.nom = "Kvelertak"
-kvelertak.description = """
-    Kvelertak est un groupe de punk hardcore et de black metal norvégien, originaire de Stavanger. 
-    Formé en 2007, le groupe est composé de Erlend Hjelvik, Vidar Landa, Bjarte Lund Rolland, Maciek Ofstad, Marvin Nygaard et Kjetil Gjermundrød.
-"""
+kvelertak.description = "Kvelertak est un groupe de punk hardcore et de black metal norvégien, originaire de Stavanger. Formé en 2007, le groupe est composé de Erlend Hjelvik, Vidar Landa, Bjarte Lund Rolland, Maciek Ofstad, Marvin Nygaard et Kjetil Gjermundrød."
 kvelertak.site_web = "https://www.kvelertak.com/"
 kvelertak.youtube = "https://www.youtube.com/user/KvelertakOfficial"
 kvelertak.instagram = "https://www.instagram.com/kvelertakofficial/"
@@ -206,12 +259,6 @@ performance5.artistes.add(kvelertak)
 
 
 modif = Modification()
-modif.date_modif_artiste = "2023-10-25"
-modif.date_modif_performance = "2023-10-25"
-modif.date_modif_scene = "2023-10-25"
-modif.date_modif_config = "2023-10-25"
-modif.date_modif_partenaire = "2023-10-25"
-modif.date_modif_news = "2023-10-25"
 modif.save()
 
 news = News()

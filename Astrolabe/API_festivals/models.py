@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import date
+from django.utils import timezone
 
 class Artiste(models.Model):
     nom = models.CharField(max_length=200)
@@ -8,9 +8,14 @@ class Artiste(models.Model):
     youtube = models.URLField(null=True, blank=True)
     instagram = models.URLField(null=True, blank=True)
     facebook = models.URLField(null=True, blank=True)
-    image = models.ImageField(upload_to='static/model/artistes/', null=True, blank=True)
+    image = models.ImageField(upload_to='static/model/artistes/', unique=True,default='static/model/artistes/default.jpg')
     recommendations = models.ManyToManyField('self',blank=True)
 
+    def description_tronquee(self,max_len=60):
+        if len(self.description) > max_len:
+            return self.description[:max_len] + "..."
+        return self.description
+    
     def __str__(self):
         return self.nom
 
@@ -42,13 +47,13 @@ class ConfigurationFestival(models.Model):
     couleurPrincipale = models.CharField(max_length=30)
     couleurSecondaire = models.CharField(max_length=30)
     couleurBackground = models.CharField(max_length=30)
-    video_promo = models.FileField(upload_to="static/model/configuration/video/",null=True,blank=True)
+    video_promo = models.FileField(upload_to="static/model/configuration/video/", null=True, blank=True)
     partenaires = models.ManyToManyField(Partenaire)
-    mode = models.BooleanField(null=True,blank=True)
+    mode_festival = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nomFestival
-
+    
 class Performance(models.Model):
     nom = models.CharField(max_length=200)
     date = models.DateField()
@@ -60,20 +65,28 @@ class Performance(models.Model):
     def __str__(self):
         return self.nom
 
+class Tag(models.Model):
+    visible = models.BooleanField(default=True)
+    nom = models.CharField(max_length=50)
+    performances = models.ManyToManyField(Performance)
+
+    def __str__(self):
+        return self.nom
+
 class Scene(models.Model):
     nom = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='static/model/scenes/', null=True, blank=True)
+    image = models.ImageField(upload_to='static/model/scenes/', unique=True,default='static/model/scenes/default.jpg')
 
     def __str__(self):
         return self.nom
     
 class Modification(models.Model):
-    date_modif_artiste = models.DateField(default=date.today)
-    date_modif_performance = models.DateField(default=date.today)
-    date_modif_scene = models.DateField(default=date.today)
-    date_modif_config = models.DateField(default=date.today)
-    date_modif_partenaire = models.DateField(default=date.today)
-    date_modif_news = models.DateField(default=date.today)
+    date_modif_artiste = models.DateTimeField(default=timezone.now)
+    date_modif_performance = models.DateTimeField(default=timezone.now)
+    date_modif_scene = models.DateTimeField(default=timezone.now)
+    date_modif_config = models.DateTimeField(default=timezone.now)
+    date_modif_partenaire = models.DateTimeField(default=timezone.now)
+    date_modif_news = models.DateTimeField(default=timezone.now)
 
     def __str__(self) -> str:
         return self.date_modif_artiste
@@ -81,7 +94,7 @@ class Modification(models.Model):
 class News(models.Model):
     titre = models.CharField(max_length=254)
     corps = models.TextField(max_length=254)
-    image = models.ImageField(max_length=254)
+    image = models.ImageField(upload_to='static/model/news', max_length=254)
 
     def __str__(self):
         return self.titre

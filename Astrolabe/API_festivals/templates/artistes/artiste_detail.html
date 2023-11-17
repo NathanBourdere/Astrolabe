@@ -4,25 +4,53 @@
 <img src="/{{logo}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
 {% endblock %}
 {% block content %}
-<h4>{{ artiste.nom }}</h4>
-<p>{{ artiste.description }}</p>
-<ul class="list-group" >
-    <li class="list-group-item">
-        Site : <a href="{{ artiste.site_web }}">{{ artiste.site_web }}</a>
-    </li>
-    <li class="list-group-item">
-        Youtube : <a href="{{ artiste.youtube }}">{{ artiste.youtube }}</a>
-    </li>
-    <li class="list-group-item">
-        Facebook : <a href="{{ artiste.facebook }}">{{ artiste.facebook }}</a>
-    </li>
-</ul>
-<a href="{% url 'API_festivals:artiste_update' id=artiste.id %}">
-    <button>Modifier</button>
-</a>
+<h4>{{artiste.nom}}</h4>
+<p>{{artiste.description}}</p>
+<table class="table table-hover table-bordered shadow-lg table-rounded">
+    <thead>
+      <tr>
+        <th scope="col">Paramètre</th>
+        <th scope="col">Valeur</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="table-light">
+        <th scope="row">Site Web</th>
+        {% if artiste.site_web != None %}
+        <td><a href="{{ artiste.site_web }}">{{ artiste.site_web }}</a></td>
+        {% else %}
+            <td><p>Pas de site web</p></td> 
+        {% endif %}
+      </tr>
+      <tr class="table-light">
+        <th scope="row">Youtube</th>
+        <td><a href="{{ artiste.youtube }}">{{ artiste.youtube }}</a></td>
+      </tr>
+      <tr class="table-light">
+        <th scope="row">Instagram</th>
+        <td><a href="{{ artiste.instagram }}">{{ artiste.instagram }}</a></td>
+      </tr>
+      <tr class="table-light">
+        <th scope="row">Facebook</th>
+        <td><a href="{{ artiste.facebook }}">{{ artiste.facebook }}</a></td>
+      </tr>
+      <tr class="table-light">
+        <th scope="row">Image de fond</th>
+        <td><img src="/{{ artiste.image }}" style=" max-width: 30vw; /* Adjust the max-width as needed */
+            max-height: 30vh;"></td>
+      </tr>
+      <tr class="table-light">
+        <th scope="row">Recommendations</th>
+        <td>
+        {% for reco in artistes %}
+        <a href="{% url 'API_festivals:artiste_update' reco.id %}">{{ reco.nom }}</a>
+        {% endfor %}
+      </td>
+      </tr>
+    </tbody>
+</table>
+<button class="btn btn-warning"><a href="{% url 'API_festivals:artiste_update' artiste.id %}">Modifier</a></button>
 
-<a href="{% url 'API_festivals:artiste_delete' id=artiste.id %}">
-    <button>Supprimer</button>
-</a>
+<button class="btn btn-danger"><a href="{% url 'API_festivals:artiste_delete' artiste.id %}">Supprimer</a></button>
 
 {% endblock %}

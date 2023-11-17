@@ -68,7 +68,7 @@
                     </div>
             </aside>
                 <!-- Content -->
-                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom:2rem">
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom:5rem">
                     <div class="container mt-4 ">
                         <section>
                             {% block content %}
@@ -84,5 +84,19 @@
         </div>
     </footer>
 </body>
+<style>
+div[class="input-group mb-2"] {
+    display: none;
+}
+label.form-label {
+    font-weight: bold; /* Rend le texte en gras */
+    font-size: 1.2em; /* Ajuste la taille de la police */
+}
+button>a {
+    text-decoration: none;
+    color:inherit;
+}
+span.asteriskField { color: red; }
 
+</style>
 </html>

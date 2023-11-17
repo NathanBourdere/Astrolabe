@@ -11,7 +11,6 @@ class PoliceEcritureSerializer(ModelSerializer):
     class Meta:
         model = PoliceEcriture
         fields = '__all__'
-
 class SceneSerializer(ModelSerializer):
     class Meta:
         model = Scene
@@ -24,6 +23,11 @@ class PerformanceSerializer(ModelSerializer):
         model = Performance
         fields = '__all__'
 
+class TagsSerializer(ModelSerializer):
+    performances = PerformanceSerializer(many=True)
+    class Meta:
+        model = Tag
+        fields = '__all__'
 class ModificationSerializer(ModelSerializer):
     class Meta:
         model = Modification

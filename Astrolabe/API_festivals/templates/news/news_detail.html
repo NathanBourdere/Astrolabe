@@ -6,10 +6,10 @@
 {% block content %}
 <h4>{{ news.titre }}</h4>
 <p>{{ news.corps }}</p>
-<button>
-    <a href="{% url 'API_festivals:news_update' id=news.id %}">Modifier</a>
-</button>
-<button>
-    <a href="{% url 'API_festivals:news_delete' id=news.id %}">Supprimer</a>
-</button>
+<a href="{% url 'API_festivals:news_update' id=news.id %}">
+    <button>Modifier</button>
+</a>
+<a href="{% url 'API_festivals:news_delete' id=news.id %}">
+    <button>Supprimer</button>
+</a>
 {% endblock %}

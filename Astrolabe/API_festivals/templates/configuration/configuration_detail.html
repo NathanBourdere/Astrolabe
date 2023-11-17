@@ -6,44 +6,49 @@
 {% block content %}
 <h4>{{ configuration.nomFestival }}</h4>
 <p>{{ configuration.descriptionFestival }}</p>
-<ul class="list-group">
-    <li class="list-group-item">
-        Site : <a href="{{ configuration.siteWebFestival }}">{{ configuration.siteWebFestival }}</a>
-    </li>
-    <li class="list-group-item">
-        Youtube : <a href="{{ configuration.youtubeFestival }}">{{ configuration.youtubeFestival }}</a>
-    </li>
-    <li class="list-group-item">
-        Facebook : <a href="{{ configuration.facebookFestival }}">{{ configuration.facebookFestival }}</a>
-    </li>
-    <li class="list-group-item">
-        Instagram : <a href="{{ configuration.instagramFestival }}">{{ configuration.instagramFestival }}</a>
-    </li>
-    <li class="list-group-item">
-        Mentions légales : {{ configuration.mentionsLegales }}
-    </li>
-    <li class="list-group-item">
-        Police d'écriture : {{ configuration.policeEcriture }}
-    </li>
-    <li class="list-group-item">
-        Couleur principale : {{ configuration.couleurPrincipale }}
-    </li>
-    <li class="list-group-item">
-        Couleur secondaire : {{ configuration.couleurSecondaire }}
-    </li>
-    <li class="list-group-item">
-        Couleur de fond : {{ configuration.couleurBackground }}
-    </li>
-    <li class="list-group-item">
-        Vidéo promotionnelle : <a href="{{ configuration.video_prommo }}">{{ configuration.video_prommo }}</a>
-    </li>
-</ul>
-<a href="{% url 'API_festivals:configuration_update' %}">
-    <button>Modifier</button>
-</a>
+<table class="table table-hover table-bordered shadow-lg table-rounded">
+    <thead>
+      <tr>
+        <th scope="col">Nom</th>
+        <th scope="col">Valeur</th>
+      </tr>
+    </thead>
+      <tr class="table-light">
+        <th scope="row">Site</th>
+        <td><a href="{{ configuration.siteWebFestival }}">{{ configuration.siteWebFestival }}</a></td>
+      </tr>
+      <tr class="table-light">
+        <th scope="row">Youtube</th>
+        <td><a href="{{ configuration.youtubeFestival }}">{{ configuration.youtubeFestival }}</a></td>
+    <tr class="table-light">
+        <th scope="row">Facebook</th>
+        <td><a href="{{ configuration.facebookFestival }}">{{ configuration.facebookFestival }}</a></td>
+    <tr class="table-light">
+        <th scope="row">Instagram</th>
+        <td><a href="{{ configuration.instagramFestival }}">{{ configuration.instagramFestival }}</a></td>
+    <tr class="table-light">
+        <th scope="row">Mentions légales</th>
+        <td><a href="{{ configuration.mentionsLegales }}">{{ configuration.mentionsLegales }}</a></td>
+    <tr class="table-light">
+        <th scope="row">Police d'écriture</th>
+        <td><a href="{{ configuration.policeEcriture }}">{{ configuration.policeEcriture }}</a></td>
+    <tr class="table-light">
+        <th scope="row">Couleur Principale</th>
+        <td><a href="{{ configuration.couleurPrincipale }}">{{ configuration.couleurPrincipale }}</a></td>
+    <tr class="table-light">
+            <th scope="row">Couleur Secondaire</th>
+            <td><a href="{{ configuration.couleurSecondaire }}">{{ configuration.couleurSecondaire }}</a></td>
+    <tr class="table-light">
+                <th scope="row">Couleur de fond</th>
+                <td><a href="{{ configuration.couleurBackground }}">{{ configuration.couleurBackground }}</a></td>
+    <tr class="table-light">
+        <th scope="row">Vidéo promotionnelle</th>
+        <td><video class="rounded border shadow-lg" style="width: 100%; max-width: 800px;" src="/{{ configuration.video_promo }}" controls></video></td>
+    </tbody>
+</table>
+<button class="btn btn-warning"><a href="{% url 'API_festivals:configuration_update' %}">Modifier</a></button>
 
-<a href="{% url 'API_festivals:configuration_delete' %}">
-    <button>Supprimer</button>
-</a>
+<button class="btn btn-danger"><a href="{% url 'API_festivals:configuration_delete' %}">Supprimer</a></button>
+
 
 {% endblock %}
