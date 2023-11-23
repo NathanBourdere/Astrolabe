@@ -605,3 +605,29 @@ def news_create(request):
         news_form = NewsForm()
     return render(request, 'news/news_create.html', {'logo':logo,'form': news_form})
 
+@configuration_required
+def tags(request):
+    tags = Tag.objects.all()
+    logo = ConfigurationFestival.objects.all().first().logoFestival
+    form = SearchForm(request.GET)
+    if form.is_valid():
+        search_term = form.cleaned_data['search']
+        tags = tags.filter(nom__icontains=search_term)
+    return render(request, 'tags/tags.html', {'tags': tags, 'logo': logo, 'form': form})
+    
+
+@configuration_required
+def tag_detail(request, id):
+    ...
+
+@configuration_required
+def tag_create(request):
+    ...
+
+@configuration_required
+def tag_update(request, id):
+    ...
+
+@configuration_required
+def tag_delete(request, id):
+    ...

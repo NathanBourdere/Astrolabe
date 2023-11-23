@@ -44,4 +44,9 @@ urlpatterns = [
     path('news/update/<int:id>', news_update, name='news_update'),
     path('news/delete/<int:id>', news_delete, name='news_delete'),
     path('news/create/', news_create, name='news_create'),
+    path('tags/', tags, name='tags'),
+    path('tags/detail/<int:id>', tag_detail, name='tag_detail'),
+    path('tags/create/', tag_create, name='tag_create'),
+    path('tags/update/<int:id>', tag_update, name='tag_update'),
+    path('tags/delete/<int:id>', tag_delete, name='tag_delete')
 ]
