@@ -76,6 +76,7 @@ class Tag(models.Model):
 class Scene(models.Model):
     nom = models.CharField(max_length=200)
     image = models.ImageField(upload_to='static/model/scenes/', unique=True,default='static/model/scenes/default.jpg')
+    lieu = models.CharField(max_length=200, default="Astrolabe")
 
     def __str__(self):
         return self.nom
@@ -87,6 +88,7 @@ class Modification(models.Model):
     date_modif_config = models.DateTimeField(default=timezone.now)
     date_modif_partenaire = models.DateTimeField(default=timezone.now)
     date_modif_news = models.DateTimeField(default=timezone.now)
+    date_modif_tags = models.DateTimeField(default=timezone.now)
 
     def __str__(self) -> str:
         return self.date_modif_artiste
@@ -95,6 +97,7 @@ class News(models.Model):
     titre = models.CharField(max_length=254)
     corps = models.TextField(max_length=254)
     image = models.ImageField(upload_to='static/model/news', max_length=254)
+    date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.titre

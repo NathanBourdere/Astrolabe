@@ -197,6 +197,7 @@ hellfest.partenaires.add(passculture)
 scene1 = Scene()
 scene1.nom = "Mainstage 1"
 scene1.image = "static/model/scenes/scene1.png"
+scene1.lieu = "Astrolabe"
 scene1.save()
 
 performance0 = Performance()

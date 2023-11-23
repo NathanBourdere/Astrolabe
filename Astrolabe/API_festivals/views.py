@@ -247,12 +247,31 @@ def artiste_update(request, id):
 @configuration_required
 def artiste_delete(request, id):
     artiste = Artiste.objects.get(id=id)
-    os.remove(str(artiste.image))
-    artiste.delete()
-    modif = Modification.objects.all().first()
+    perfs = Performance.objects.filter(artistes=artiste)
+    confirmation = request.GET.get('confirmation',False)
+    print("here")
+    if confirmation:
+        for perf in perfs:
+            perf.delete()
+    if perfs.exists():
+        # If there are performances, show a confirmation message
+        error_message = f"L'artiste a déjà des performances enregistrées. Voulez-vous supprimer les performances associées ?"
+        logo = ConfigurationFestival.objects.first().logoFestival
+        artistes = artiste.recommendations.all()
+        return render(request, 'artistes/artiste_detail.html', {'logo': logo, 'artistes': artistes, 'artiste': artiste, 'error_message': error_message})
+
+    try :
+        os.remove(str(artiste.image.path)) 
+    except FileNotFoundError:
+        pass
+    finally:
+        artiste.delete()
+    # Update modification date
+    modif = Modification.objects.first()
     modif.date_modif_artiste = timezone.now()
     modif.save()
-    return redirect("API_festivals:accueil")
+
+    return redirect("API_festivals:artistes", page=1)
 
 # PARTENAIRES
 @configuration_required

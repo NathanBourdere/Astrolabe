@@ -51,6 +51,35 @@
 </table>
 <button class="btn btn-warning"><a href="{% url 'API_festivals:artiste_update' artiste.id %}">Modifier</a></button>
 
-<button class="btn btn-danger"><a href="{% url 'API_festivals:artiste_delete' artiste.id %}">Supprimer</a></button>
+<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal"><a href="{% url 'API_festivals:artiste_delete' artiste.id %}">Supprimer</a></button>
 
+{% if error_message %}
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+      <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+              <h4 class="modal-title">Attention</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal Body -->
+          <div class="modal-body">
+              <p>{{error_message}}</p>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                <a href="{% url 'API_festivals:artiste_delete' artiste.id %}?confirmation=True">
+                Oui, tout supprimer
+                </a>
+              </button>
+              <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Non, je modifierai manuellement</button>
+          </div>
+      </div>
+  </div>
+</div>
+{% endif %}
 {% endblock %}
