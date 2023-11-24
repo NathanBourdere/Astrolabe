@@ -639,7 +639,7 @@ def tag_create(request):
                 return render(request, 'tags/tag_create.html', {'logo':logo,'form': tags_form, 'error_message': error_message})
             tags_form.save()
             modif = Modification.objects.all().first()
-            modif.date_modif_news = date.today()
+            modif.date_modif_tags = date.today()
             modif.save()
             return redirect('API_festivals:tags')
     else:
@@ -648,7 +648,18 @@ def tag_create(request):
 
 @configuration_required
 def tag_update(request, id):
-    ...
+    logo = ConfigurationFestival.objects.all().first().logoFestival
+    tag = Tag.objects.get(id=id)
+    if request.method == 'POST':
+        tags_form = TagsForm(request.POST, request.FILES, instance=tag)
+        if tags_form.has_changed() and tags_form.is_valid():
+            tags_form.save()
+            modif = Modification.objects.all().first()
+            modif.date_modif_tags = timezone.now()
+            modif.save()
+            return redirect('API_festivals:tag_detail', id=id)
+    tags_form = TagsForm(instance=tag)
+    return render(request, 'tags/tag_update.html', {'logo':logo,'form': tags_form, 'tag': tag})
 
 @configuration_required
 def tag_delete(request, id):
