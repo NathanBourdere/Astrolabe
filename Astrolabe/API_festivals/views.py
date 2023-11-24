@@ -582,7 +582,7 @@ def news_delete(request, id):
     modif = Modification.objects.all().first()
     modif.date_modif_news = timezone.now()
     modif.save()
-    return redirect("API_festivals:accueil")
+    return redirect("API_festivals:news", page=1)
 
 @configuration_required
 def news_create(request):
@@ -663,4 +663,9 @@ def tag_update(request, id):
 
 @configuration_required
 def tag_delete(request, id):
-    ...
+    tag = Tag.objects.get(id=id)
+    tag.delete()
+    modif = Modification.objects.all().first()
+    modif.date_modif_tags = timezone.now()
+    modif.save()
+    return redirect("API_festivals:tags")
