@@ -618,7 +618,12 @@ def tags(request):
 
 @configuration_required
 def tag_detail(request, id):
-    ...
+    logo = ConfigurationFestival.objects.all().first().logoFestival
+    tag = Tag.objects.get(id=id)
+    performances = Performance.objects.filter(tag=tag)
+    template = "tags/tag_detail.html"
+    context = {'tag': tag,'logo':logo, 'performances': performances}
+    return render(request, template, context)
 
 @configuration_required
 def tag_create(request):
