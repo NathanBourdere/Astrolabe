@@ -622,7 +622,24 @@ def tag_detail(request, id):
 
 @configuration_required
 def tag_create(request):
-    ...
+    logo = ConfigurationFestival.objects.all().first().logoFestival
+    if request.method == 'POST':
+        tags_form = TagsForm(request.POST, request.FILES)
+        if tags_form.is_valid():
+            nom = tags_form.cleaned_data['nom']
+            nom_lowered = nom.lower()
+            if Tag.objects.filter(nom__iexact=nom_lowered).exists():
+                # Si oui, affiche un message d'erreur à l'utilisateur
+                error_message = f"Le tag '{nom_lowered}' existe déjà. Veuillez enregistrer un tag avec un nom différent."
+                return render(request, 'tags/tag_create.html', {'logo':logo,'form': tags_form, 'error_message': error_message})
+            tags_form.save()
+            modif = Modification.objects.all().first()
+            modif.date_modif_news = date.today()
+            modif.save()
+            return redirect('API_festivals:tags')
+    else:
+        tags_form = TagsForm()
+    return render(request, 'tags/tag_create.html', {'logo':logo,'form': tags_form})
 
 @configuration_required
 def tag_update(request, id):
