@@ -46,9 +46,13 @@
         <td><video class="rounded border shadow-lg" style="width: 100%; max-width: 800px;" src="/{{ configuration.video_promo }}" controls></video></td>
     </tbody>
 </table>
-<button class="btn btn-warning"><a href="{% url 'API_festivals:configuration_update' %}">Modifier</a></button>
 
-<button class="btn btn-danger"><a href="{% url 'API_festivals:configuration_delete' %}">Supprimer</a></button>
+<a href="{% url 'API_festivals:configuration_update' %}">
+  <button class="btn btn-warning">Modifier</button>
+</a>
 
+<a href="{% url 'API_festivals:configuration_delete' %}">
+  <button class="btn btn-danger">Supprimer</button>
+</a>
 
 {% endblock %}

@@ -1,0 +1,20 @@
+label.form-check-label {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.form-check-label {
+    margin-bottom: .5rem;
+}
+
+.mb-3 {
+    margin-top: 1em;
+}
+
+metal.form-check {
+    padding-left: 0em;
+}
+
+.form-select {
+    --bs-form-select-bg-img: url();
+}
