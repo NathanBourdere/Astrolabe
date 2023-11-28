@@ -15,6 +15,6 @@ metal.form-check {
     padding-left: 0em;
 }
 
-.form-select {
-    --bs-form-select-bg-img: url();
+select.form-select {
+    background-attachment: fixed;
 }
