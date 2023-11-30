@@ -1,9 +1,9 @@
 from .models import *
-from django.forms import ModelForm, CharField,ChoiceField,CheckboxInput ,Form, ValidationError, FileInput,FileField,TextInput, DateField, DateInput
+from django.forms import ModelForm, CharField,ChoiceField,CheckboxInput ,Form, MultipleChoiceField, ValidationError, FileInput,FileField,TextInput, DateField, DateInput
 from datetime import date
-import datetime
+from django_select2.forms import Select2MultipleWidget
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column,Fieldset,Div,Field,ButtonHolder
+from crispy_forms.layout import Layout, Submit, Row, Column,Fieldset,Div,Field,ButtonHolder,HTML
 from django.utils import timezone
 
 class ArtisteForm(ModelForm):
@@ -84,10 +84,15 @@ class ConfigurationFestivalForm(ModelForm):
         'couleurBackground',
         'video_promo',
         'partenaires',
+        HTML("""
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPartnerModal">
+                    Ajouter un nouveau partenaire
+                </button>
+                """),
         'mode_festival',
     ),
     ButtonHolder(
-        Submit('submit', 'Confirmer', css_class='btn-primary btn-lg mx-auto mt-3'),
+        Submit('submit','Confirmer', css_class='btn-primary btn-lg mx-auto mt-3'),
         css_class="text-center"
     ),
         )

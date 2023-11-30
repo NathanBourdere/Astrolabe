@@ -126,8 +126,11 @@ def configuration(request):
     """
     if request.method == "GET":
         configuration = ConfigurationFestival.objects.all()
+        print(configuration.first())
         if configuration.exists():
-            return render(request,'configuration/configuration_detail.html',{'configuration':configuration.first()})
+            config_instance = configuration.first()
+            partenaires = Partenaire.objects.filter(id__in=config_instance.partenaires.all()).all()
+            return render(request,'configuration/configuration_detail.html',{'configuration':config_instance,'partenaires':partenaires})
         configuration_form = ConfigurationFestivalForm()
         return render(request,'configuration/configuration_create.html',{'configuration_form':configuration_form})
     elif request.method == "POST":
@@ -157,13 +160,17 @@ def configuration_update(request):
             modif.save()
             return redirect('API_festivals:configuration')
     configuration_form = ConfigurationFestivalForm(instance=configuration)
-    return render(request, 'configuration/configuration_update.html', {'form': configuration_form, 'configuration': configuration})
+    partenaire_form =PartenaireForm()
+    return render(request, 'configuration/configuration_update.html', {'form': configuration_form, 'partenaire_form':partenaire_form, 'configuration': configuration})
 
 @configuration_required
 def configuration_delete(request):
     configuration = ConfigurationFestival.objects.all().first()
-    os.remove(str(configuration.logoFestival))
-    os.remove(str(configuration.video_promo))
+    try:
+        os.remove(str(configuration.logoFestival))
+        os.remove(str(configuration.video_promo))
+    except FileNotFoundError:
+        pass
     configuration.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_config = timezone.now()
@@ -259,7 +266,6 @@ def artiste_delete(request, id):
         logo = ConfigurationFestival.objects.first().logoFestival
         artistes = artiste.recommendations.all()
         return render(request, 'artistes/artiste_detail.html', {'logo': logo, 'artistes': artistes, 'artiste': artiste, 'error_message': error_message})
-
     try :
         os.remove(str(artiste.image.path)) 
     except FileNotFoundError:

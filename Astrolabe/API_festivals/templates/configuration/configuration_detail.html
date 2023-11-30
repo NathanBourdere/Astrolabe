@@ -44,6 +44,13 @@
     <tr class="table-light">
         <th scope="row">Vidéo promotionnelle</th>
         <td><video class="rounded border shadow-lg" style="width: 100%; max-width: 800px;" src="/{{ configuration.video_promo }}" controls></video></td>
+        <tr class="table-light">
+          <th scope="row">Partenaires</th>
+          <td>
+            {% for partenaire in partenaires%}
+            <a href="{% url 'API_festivals:partenaire_detail' partenaire.id %}">{{ partenaire.nom }}</a>
+            {% endfor %}
+          </td>
     </tbody>
 </table>
 <button class="btn btn-warning"><a href="{% url 'API_festivals:configuration_update' %}">Modifier</a></button>

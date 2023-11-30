@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load static %}
 {% load crispy_forms_tags %}
 {% block title %}{{ configuration.nomFestival }}{% endblock %}
 {% block logo %}
@@ -12,8 +11,29 @@
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {% crispy form %}
+            {{ form.errors }}
         </form>
-        {{ form.errors }}
+    </div>
+</div>
+<div class="modal fade" id="createPartnerModal" tabindex="-1" aria-labelledby="createPartnerModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createPartnerModalLabel">Ajouter un nouveau partenaire</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% crispy partenaire_form %}
+                    {{ form.errors }}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary"><a href="{% url 'API_festivals:partenaire_create'%}">Créer le partenaire</a></button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
