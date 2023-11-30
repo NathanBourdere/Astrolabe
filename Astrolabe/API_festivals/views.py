@@ -309,9 +309,13 @@ def partenaires(request,page):
 @configuration_required
 def partenaire_create(request):
     logo = ConfigurationFestival.objects.all().first().logoFestival
+    modal = request.GET.get('modal',False)
+    print(modal,request.method)
     if request.method == 'POST':
+        print("post")
         partenaire_form = PartenaireForm(request.POST, request.FILES)
         if partenaire_form.is_valid():
+            print("valide")
             nom = partenaire_form.cleaned_data['nom']
             nom_lowered = nom.lower()
             if Partenaire.objects.filter(nom__iexact=nom_lowered).exists():
@@ -322,9 +326,11 @@ def partenaire_create(request):
             modif = Modification.objects.all().first()
             modif.date_modif_partenaire = timezone.now()
             modif.save()
-            return redirect('API_festivals:partenaires', page=1)
+            if not modal : 
+                return redirect('API_festivals:partenaires', page=1)
+            return redirect('API_festivals:configuration_update')
     else:
-        partenaire_form = PartenaireForm()
+        partenaire_form = PartenaireForm()    
     return render(request, 'partenaires/partenaire_create.html', {'logo':logo,'form': partenaire_form})
 
 @configuration_required
