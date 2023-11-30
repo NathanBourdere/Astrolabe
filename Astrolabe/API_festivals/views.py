@@ -588,7 +588,7 @@ def news_delete(request, id):
     modif = Modification.objects.all().first()
     modif.date_modif_news = timezone.now()
     modif.save()
-    return redirect("API_festivals:accueil")
+    return redirect("API_festivals:news", page=1)
 
 @configuration_required
 def news_create(request):
@@ -611,3 +611,67 @@ def news_create(request):
         news_form = NewsForm()
     return render(request, 'news/news_create.html', {'logo':logo,'form': news_form})
 
+@configuration_required
+def tags(request):
+    tags = Tag.objects.all()
+    logo = ConfigurationFestival.objects.all().first().logoFestival
+    form = SearchForm(request.GET)
+    if form.is_valid():
+        search_term = form.cleaned_data['search']
+        tags = tags.filter(nom__icontains=search_term)
+    return render(request, 'tags/tags.html', {'tags': tags, 'logo': logo, 'form': form})
+    
+
+@configuration_required
+def tag_detail(request, id):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
+    tag = Tag.objects.get(id=id)
+    performances = Performance.objects.filter(tag=tag)
+    template = "tags/tag_detail.html"
+    context = {'tag': tag,'logo':logo, 'performances': performances}
+    return render(request, template, context)
+
+@configuration_required
+def tag_create(request):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
+    if request.method == 'POST':
+        tags_form = TagsForm(request.POST, request.FILES)
+        if tags_form.is_valid():
+            nom = tags_form.cleaned_data['nom']
+            nom_lowered = nom.lower()
+            if Tag.objects.filter(nom__iexact=nom_lowered).exists():
+                # Si oui, affiche un message d'erreur à l'utilisateur
+                error_message = f"Le tag '{nom_lowered}' existe déjà. Veuillez enregistrer un tag avec un nom différent."
+                return render(request, 'tags/tag_create.html', {'logo':logo,'form': tags_form, 'error_message': error_message})
+            tags_form.save()
+            modif = Modification.objects.all().first()
+            modif.date_modif_tags = date.today()
+            modif.save()
+            return redirect('API_festivals:tags')
+    else:
+        tags_form = TagsForm()
+    return render(request, 'tags/tag_create.html', {'logo':logo,'form': tags_form})
+
+@configuration_required
+def tag_update(request, id):
+    logo = ConfigurationFestival.objects.all().first().logoFestival
+    tag = Tag.objects.get(id=id)
+    if request.method == 'POST':
+        tags_form = TagsForm(request.POST, request.FILES, instance=tag)
+        if tags_form.has_changed() and tags_form.is_valid():
+            tags_form.save()
+            modif = Modification.objects.all().first()
+            modif.date_modif_tags = timezone.now()
+            modif.save()
+            return redirect('API_festivals:tag_detail', id=id)
+    tags_form = TagsForm(instance=tag)
+    return render(request, 'tags/tag_update.html', {'logo':logo,'form': tags_form, 'tag': tag})
+
+@configuration_required
+def tag_delete(request, id):
+    tag = Tag.objects.get(id=id)
+    tag.delete()
+    modif = Modification.objects.all().first()
+    modif.date_modif_tags = timezone.now()
+    modif.save()
+    return redirect("API_festivals:tags")

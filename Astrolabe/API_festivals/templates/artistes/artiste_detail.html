@@ -49,9 +49,14 @@
       </tr>
     </tbody>
 </table>
-<button class="btn btn-warning"><a href="{% url 'API_festivals:artiste_update' artiste.id %}">Modifier</a></button>
 
-<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal"><a href="{% url 'API_festivals:artiste_delete' artiste.id %}">Supprimer</a></button>
+<a href="{% url 'API_festivals:artiste_update' artiste.id %}">
+  <button class="btn btn-warning">Modifier</button>
+</a>
+
+<a href="{% url 'API_festivals:artiste_delete' artiste.id %}">
+  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">Supprimer</button>
+</a>
 
 {% if error_message %}
 <div class="modal" id="myModal"  data-bs-backdrop="static" data-bs-keyboard="false">

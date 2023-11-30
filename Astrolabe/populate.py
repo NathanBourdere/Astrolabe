@@ -4,7 +4,7 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Astrolabe.settings')
 django.setup()
 
-from API_festivals.models import Artiste, Performance, Scene, ConfigurationFestival, Partenaire, Modification, PoliceEcriture,News
+from API_festivals.models import *
 
 hellfest = ConfigurationFestival()
 hellfest.nomFestival = "Hellfest"
@@ -24,6 +24,9 @@ hellfest.mode = True
 arial = PoliceEcriture()
 arial.nom = "Roboto"
 arial.save()
+
+hellfest.policeEcriture = arial
+hellfest.save()
 
 open_sans = PoliceEcriture()
 open_sans.nom = "Open Sans"
@@ -100,9 +103,6 @@ arimo.save()
 cormorrant_garamond = PoliceEcriture()
 cormorrant_garamond.nom = "Cormorant Garamond"
 cormorrant_garamond.save()
-
-hellfest.policeEcriture = arial
-hellfest.save()
 
 batards = Artiste()
 batards.nom = "Les Bâtards du Roi"
@@ -257,6 +257,12 @@ performance5.heure_fin = "20:30:00"
 performance5.scene = scene1
 performance5.save()
 performance5.artistes.add(kvelertak)
+
+metal = Tag()
+metal.nom = "Metal"
+metal.visible = True
+metal.save()
+metal.performances.add(performance0,performance1,performance2,performance3,performance4,performance5)
 
 
 modif = Modification()

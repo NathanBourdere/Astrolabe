@@ -12,6 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% endblock %}
     {% block styles %}
+    <link rel="stylesheet" href="{% static 'css/personnalisation.css' %}">
     <link rel="stylesheet" href="{% static 'css/_bootswatch.scss' %}">
     <link rel="stylesheet" href="{% static 'css/_variables.scss' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
@@ -64,6 +65,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'API_festivals:news' page=1 %}">News</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'API_festivals:tags' %}">Tags</a>
                             </li>
                         </ul>
                     </div>

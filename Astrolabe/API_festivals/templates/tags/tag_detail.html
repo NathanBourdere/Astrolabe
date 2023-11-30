@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}{{tag.nom}}{% endblock %}
+{% block logo %}
+<img src="/{{logo}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
+{% endblock %}
+{% block content %}
+<h4>{{ tag.nom }}</h4>
+{% if tag.visible %}
+<p>Visibilité : visible</p>
+{% else %}
+<p>Visibilité : non visible</p>
+{% endif %}
+<ul class="list-group">
+    {% for performance in performances %}
+    <li class="list-group-item">
+        <a href="{% url 'API_festivals:performance_detail' id=performance.id %}">{{performance.nom}}</a>
+    </li>
+    {% endfor %}
+</ul>
+    <a href="{% url 'API_festivals:tag_update' id=tag.id %}">
+        <button>Modifier</button>
+    </a>
+    <a href="{% url 'API_festivals:tag_delete' id=tag.id %}">
+        <button>Supprimer</button>
+    </a>
+{% endblock %}
