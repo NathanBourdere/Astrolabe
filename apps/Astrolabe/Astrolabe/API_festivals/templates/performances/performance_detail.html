@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}{{performance.nom}}{% endblock %}
+{% block logo %}
+<img src="/{{logo}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
+{% endblock %}
+{% block content %}
+<h4>{{ performance.nom }}</h4>
+<h5>{{performance.date}} - {{performance.heure_debut}}/{{performance.heure_fin}}</h5>
+<p>Scène : {{performance.scene.nom}}</p>
+{% for artiste in artistes %}
+<p>{{artiste.nom}}</p>
+{% endfor %}
+    <a href="{% url 'API_festivals:performance_update' id=performance.id %}">
+        <button>Modifier</button>
+    </a>
+    <a href="{% url 'API_festivals:performance_delete' id=performance.id %}">
+        <button>Supprimer</button>
+    </a>
+{% endblock %}
