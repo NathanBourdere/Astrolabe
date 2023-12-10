@@ -12,7 +12,7 @@
 <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for scene in scenes %}
     <div class="col">
-        <div class="card">
+        <div class="card" style="margin-bottom: 1rem;">
             <div class="card-body">
                 <h5 class="card-title" >{{ scene.nom }}</h5>
                 <a href="{% url 'API_festivals:scene_detail' scene.id %}">Détail</a>
@@ -24,16 +24,16 @@
 <div>
     {% if render_left_arrow %}
     <a href="{% url 'API_festivals:scenes' page=page_precedente %}">
-        <button>Page précédente</button>
+        <button class="btn btn-secondary">Page précédente</button>
     </a>
     {% endif %}
     {% if render_right_arrow %}
     <a href="{% url 'API_festivals:scenes' page=page_suivante %}">
-        <button>Page suivante</button>
+        <button class="btn btn-secondary">Page suivante</button>
     </a>
     {% endif %}
     <a href="{% url 'API_festivals:scene_create' %}">
-        <button>Nouvelle scène</button>
+        <button class="btn btn-primary">Nouvelle scène</button>
     </a>
 </div>
 {% endblock %}

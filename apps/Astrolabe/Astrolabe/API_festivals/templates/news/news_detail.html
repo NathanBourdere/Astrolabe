@@ -7,9 +7,9 @@
 <h4>{{ news.titre }}</h4>
 <p>{{ news.corps }}</p>
 <a href="{% url 'API_festivals:news_update' id=news.id %}">
-    <button>Modifier</button>
+    <button class="btn btn-warning">Modifier</button>
 </a>
 <a href="{% url 'API_festivals:news_delete' id=news.id %}">
-    <button>Supprimer</button>
+    <button class="btn btn-danger">Supprimer</button>
 </a>
 {% endblock %}

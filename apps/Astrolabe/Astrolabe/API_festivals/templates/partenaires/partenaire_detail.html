@@ -7,9 +7,9 @@
 <h4>{{ partenaire.nom }}</h4>
 <p>{{ partenaire.site }}</p>
     <a href="{% url 'API_festivals:partenaire_update' id=partenaire.id %}">
-        <button>Modifier</button>
+        <button class="btn btn-warning">Modifier</button>
     </a>
     <a href="{% url 'API_festivals:partenaire_delete' id=partenaire.id %}">
-        <button>Supprimer</button>
+        <button class="btn btn-danger">Supprimer</button>
     </a>
 {% endblock %}

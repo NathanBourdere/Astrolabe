@@ -9,29 +9,29 @@
     {% csrf_token %}
     {{ form.search|as_crispy_field }}
 </form>
-<table class="table">
+<table class="table table-bordered">
     <thead>
         <tr>
-            <th scope="col">Visible</th>
-            <th scope="col">Nom</th>
+            <th scope="col" style="width: 10%;">Visible</th>
+            <th scope="col" style="width: 90%;">Nom</th>
         </tr>
     </thead>
     <tbody>
         {% for tag in tags %}
-        <tr>
+            <tr>
             {% if tag.visible %}
-            <td>🟦</td>
+                <th scope="row">🟦</th>
             {% else %}
-            <td>🟥</td>
+                <th scope="row">🟥</th>
             {% endif %}
-            <td><a href="{% url 'API_festivals:tag_detail' id=tag.id %}">{{tag.nom}}</a></td>
-        </tr>
+            <td><a href="{% url 'API_festivals:tag_detail' id=tag.id %}">{{ tag.nom }}</a></td>
+            </tr>
         {% endfor %}
     </tbody>
 </table>
 <div>
     <a href="{% url 'API_festivals:tag_create' %}">
-        <button>Nouveau tag</button>
+        <button class="btn btn-primary">Nouveau tag</button>
     </a>
 </div>
 {% endblock %}

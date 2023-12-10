@@ -12,7 +12,7 @@
 <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for partenaire in partenaires %}
     <div class="col">
-        <div class="card">
+        <div class="card" style="margin-bottom: 1rem;">
             <div class="card-body">
                 <h5 class="card-title" >{{ partenaire.nom }}</h5>
                 <a href="{% url 'API_festivals:partenaire_detail' partenaire.id %}">Détail</a>
@@ -24,16 +24,16 @@
 <div>
     {% if render_left_arrow %}
     <a href="{% url 'API_festivals:partenaires' page=page_precedente %}">
-        <button>Page précédente</button>
+        <button class="btn btn-secondary">Page précédente</button>
     </a>
     {% endif %}
     {% if render_right_arrow %}
     <a href="{% url 'API_festivals:partenaires' page=page_suivante %}">
-        <button>Page suivante</button>
+        <button class="btn btn-secondary">Page suivante</button>
     </a>
     {% endif %}
     <a href="{% url 'API_festivals:partenaire_create' %}">
-        <button>Nouveau partenaire</button>
+        <button class="btn btn-primary">Nouveau partenaire</button>
     </a>
 </div>
 {% endblock %}

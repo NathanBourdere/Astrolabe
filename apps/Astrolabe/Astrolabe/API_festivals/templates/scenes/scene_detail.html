@@ -6,9 +6,9 @@
 {% block content %}
 <h4>{{ scene.nom }}</h4>
     <a href="{% url 'API_festivals:scene_update' id=scene.id %}">
-        <button>Modifier</button>
+        <button class="btn btn-warning">Modifier</button>
     </a>
     <a href="{% url 'API_festivals:scene_delete' id=scene.id %}">
-        <button>Supprimer</button>
+        <button class="btn btn-danger">Supprimer</button>
     </a>
 {% endblock %}
