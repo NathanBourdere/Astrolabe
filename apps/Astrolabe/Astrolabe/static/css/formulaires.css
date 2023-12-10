@@ -58,3 +58,11 @@ input[type="checkbox"] {
     outline: none;
     cursor: pointer;
 }
+
+input[type="checkbox"]:checked {
+    background-color: #ff5500;
+    border: 2px solid #ff5500;
+    background-image: url("../../static/images/check2.svg");
+    background-size: 100% 100%;
+    filter: invert(100%);
+}
