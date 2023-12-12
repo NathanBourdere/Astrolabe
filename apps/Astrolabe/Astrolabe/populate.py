@@ -18,7 +18,7 @@ hellfest.mentionsLegales = "Hellfest est une marque déposée de Hellfest Produc
 hellfest.couleurPrincipale = "#000000"
 hellfest.couleurSecondaire = "#FF00FF"
 hellfest.couleurBackground = "#FF0000"
-hellfest.video_promo = "static/model/configuration/video/HELLFEST 2024.mp4"
+hellfest.video_promo = "static/model/configuration/video/hellfest.mp4"
 hellfest.mode = True
 
 arial = PoliceEcriture()

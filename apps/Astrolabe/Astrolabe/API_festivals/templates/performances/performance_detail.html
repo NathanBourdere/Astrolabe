@@ -4,16 +4,42 @@
 <img src="/{{logo}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
 {% endblock %}
 {% block content %}
-<h4>{{ performance.nom }}</h4>
-<h5>{{performance.date}} - {{performance.heure_debut}}/{{performance.heure_fin}}</h5>
-<p>Scène : {{performance.scene.nom}}</p>
-{% for artiste in artistes %}
-<p>{{artiste.nom}}</p>
-{% endfor %}
-    <a href="{% url 'API_festivals:performance_update' id=performance.id %}">
-        <button class="btn btn-warning">Modifier</button>
-    </a>
-    <a href="{% url 'API_festivals:performance_delete' id=performance.id %}">
-        <button class="btn btn-danger">Supprimer</button>
-    </a>
+<table class="table table-bordered shadow-lg table-rounded">
+    <thead>
+        <tr>
+            <th scope="col" style="width: 30%;">Paramètre</th>
+            <th scope="col" style="width: 70%;">Valeur</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="table-light">
+            <th scope="row">Nom</th>
+            <td>{{ performance.nom }}</td>
+        </tr>
+        <tr class="table-light">
+            <th scope="row">Date</th>
+            <td>{{performance.date}}</td>
+        </tr>
+        <tr class="table-light">
+            <th scope="row">Heure de début - Heure de fin</th>
+            <td>{{performance.heure_debut}} - {{performance.heure_fin}}</td>
+        </tr>
+        <tr class="table-light">
+            <th scope="row">Scène</th>
+            <td>
+                <a href="{% url 'API_festivals:scene_detail' performance.scene.id %}">{{performance.scene.nom}}</a>
+            </td>
+        </tr>
+        <tr class="table-light">
+            <th scope="row">Artiste(s)</th>
+            <td>
+                {% for artiste in artistes %}
+                <a href="{% url 'API_festivals:artiste_detail' artiste.id %}">{{artiste.nom}}</a>
+                {% endfor %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+    <a href="{% url 'API_festivals:performance_update' id=performance.id %}" class="btn btn-warning">Modifier</a>
+    <a href="{% url 'API_festivals:performance_delete' id=performance.id %}" class="btn btn-danger">Supprimer</a>
 {% endblock %}

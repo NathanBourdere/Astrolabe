@@ -123,7 +123,6 @@ def accueil(request):
             news_par_jours[news.date] = [news]
         else :
             news_par_jours[news.date].append(news)
-    print(news_par_jours)
     return render(request, 'accueil.html', {'nom_festival':festival.nomFestival,'performances_par_jour':performances_par_jour,'logo':festival.logoFestival, 'news_par_jours':news_par_jours})
 
 # CONFIGURATION
@@ -134,7 +133,6 @@ def configuration(request):
     """
     if request.method == "GET":
         configuration = ConfigurationFestival.objects.all()
-        print(configuration.first())
         if configuration.exists():
             config_instance = configuration.first()
             partenaires = Partenaire.objects.filter(id__in=config_instance.partenaires.all()).all()
@@ -487,8 +485,9 @@ def scenes(request,page):
 def scene_detail(request, id):
     logo = ConfigurationFestival.objects.all().first().logoFestival
     scene = Scene.objects.get(id=id)
+    performances = Performance.objects.filter(scene=scene)
     template = "scenes/scene_detail.html"
-    context = {'scene': scene,'logo':logo}
+    context = {'scene': scene,'logo':logo, 'performances': performances}
     return render(request, template, context)
 
 @configuration_required

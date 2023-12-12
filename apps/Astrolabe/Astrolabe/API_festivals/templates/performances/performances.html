@@ -16,7 +16,7 @@
             <div class="card-body">
                 <h5 class="card-title" >{{ performance.nom }}</h5>
                 <p class="card-text">{{performance.date}}</p>
-                <a href="{% url 'API_festivals:performance_detail' performance.id %}">Détail</a>
+                <a href="{% url 'API_festivals:performance_detail' performance.id %}" class="btn btn-primary">Détails</a>
             </div>
         </div>
     </div>
@@ -24,17 +24,11 @@
 </div>
 <div>
     {% if render_left_arrow %}
-    <a href="{% url 'API_festivals:performances' page=page_precedente %}">
-        <button class="btn btn-secondary">Page précédente</button>
-    </a>
+    <a href="{% url 'API_festivals:performances' page=page_precedente %}" class="btn btn-secondary">Page précédente</a>
     {% endif %}
     {% if render_right_arrow %}
-    <a href="{% url 'API_festivals:performances' page=page_suivante %}">
-        <button class="btn btn-secondary">Page suivante</button>
-    </a>
+    <a href="{% url 'API_festivals:performances' page=page_suivante %}" class="btn btn-secondary">Page suivante</a>
     {% endif %}
-    <a href="{% url 'API_festivals:performance_create' %}">
-        <button class="btn btn-primary">Nouvelle performance</button>
-    </a>
+    <a href="{% url 'API_festivals:performance_create' %}" class="btn btn-primary">Nouvelle performance</a>
 </div>
 {% endblock %}

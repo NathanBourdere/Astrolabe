@@ -6,7 +6,7 @@
 {% block content %}
 <h4>{{ configuration.nomFestival }}</h4>
 <p>{{ configuration.descriptionFestival }}</p>
-<table class="table table-hover table-bordered shadow-lg table-rounded">
+<table class="table table-bordered shadow-lg table-rounded">
     <thead>
       <tr>
         <th scope="col">Nom</th>
@@ -15,32 +15,32 @@
     </thead>
       <tr class="table-light">
         <th scope="row">Site</th>
-        <td><a href="{{ configuration.siteWebFestival }}">{{ configuration.siteWebFestival }}</a></td>
+        <td><a href="{{ configuration.siteWebFestival }}" target="_blank">{{ configuration.siteWebFestival }}</a></td>
       </tr>
       <tr class="table-light">
         <th scope="row">Youtube</th>
-        <td><a href="{{ configuration.youtubeFestival }}">{{ configuration.youtubeFestival }}</a></td>
+        <td><a href="{{ configuration.youtubeFestival }}" target="_blank">{{ configuration.youtubeFestival }}</a></td>
     <tr class="table-light">
         <th scope="row">Facebook</th>
-        <td><a href="{{ configuration.facebookFestival }}">{{ configuration.facebookFestival }}</a></td>
+        <td><a href="{{ configuration.facebookFestival }}" target="_blank">{{ configuration.facebookFestival }}</a></td>
     <tr class="table-light">
         <th scope="row">Instagram</th>
-        <td><a href="{{ configuration.instagramFestival }}">{{ configuration.instagramFestival }}</a></td>
+        <td><a href="{{ configuration.instagramFestival }}" target="_blank">{{ configuration.instagramFestival }}</a></td>
     <tr class="table-light">
         <th scope="row">Mentions légales</th>
-        <td><a href="{{ configuration.mentionsLegales }}">{{ configuration.mentionsLegales }}</a></td>
+        <td>{{ configuration.mentionsLegales }}</td>
     <tr class="table-light">
         <th scope="row">Police d'écriture</th>
-        <td><a href="{{ configuration.policeEcriture }}">{{ configuration.policeEcriture }}</a></td>
+        <td>{{ configuration.policeEcriture }}</td>
     <tr class="table-light">
         <th scope="row">Couleur Principale</th>
-        <td><a href="{{ configuration.couleurPrincipale }}">{{ configuration.couleurPrincipale }}</a></td>
+        <td>{{ configuration.couleurPrincipale }}</td>
     <tr class="table-light">
             <th scope="row">Couleur Secondaire</th>
-            <td><a href="{{ configuration.couleurSecondaire }}">{{ configuration.couleurSecondaire }}</a></td>
+            <td>{{ configuration.couleurSecondaire }}</td>
     <tr class="table-light">
                 <th scope="row">Couleur de fond</th>
-                <td><a href="{{ configuration.couleurBackground }}">{{ configuration.couleurBackground }}</a></td>
+                <td>{{ configuration.couleurBackground }}</td>
     <tr class="table-light">
         <th scope="row">Vidéo promotionnelle</th>
         <td><video class="rounded border shadow-lg" style="width: 100%; max-width: 800px;" src="/{{ configuration.video_promo }}" controls></video></td>
@@ -54,12 +54,8 @@
     </tbody>
 </table>
 
-<a href="{% url 'API_festivals:configuration_update' %}">
-  <button class="btn btn-warning">Modifier</button>
-</a>
+<a href="{% url 'API_festivals:configuration_update' %}" class="btn btn-warning">Modifier</a>
 
-<a href="{% url 'API_festivals:configuration_delete' %}">
-  <button class="btn btn-danger">Supprimer</button>
-</a>
+<a href="{% url 'API_festivals:configuration_delete' %}" class="btn btn-danger">Supprimer</a>
 
 {% endblock %}

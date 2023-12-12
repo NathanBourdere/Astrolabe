@@ -4,12 +4,32 @@
 <img src="/{{logo}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
 {% endblock %}
 {% block content %}
-<h4>{{ news.titre }}</h4>
-<p>{{ news.corps }}</p>
-<a href="{% url 'API_festivals:news_update' id=news.id %}">
-    <button class="btn btn-warning">Modifier</button>
-</a>
-<a href="{% url 'API_festivals:news_delete' id=news.id %}">
-    <button class="btn btn-danger">Supprimer</button>
-</a>
+<table class="table table-bordered shadow-lg table-rounded">
+    <thead>
+        <tr>
+            <th scope="col" style="width: 20%;">Paramètre</th>
+            <th scope="col" style="width: 80%;">Valeur</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="table-light">
+            <th scope="row">Titre</th>
+            <td>{{news.titre}}</td>
+        </tr>
+        <tr class="table-light">
+            <th scope="row">Corps</th>
+            <td>{{news.corps}}</td>
+        </tr>
+        <tr class="table-light">
+            <th scope="row">Image</th>
+            <td><img src="/{{news.image}}" alt="{{news.titre}}" style="width: 40%;"></td>
+        </tr>
+        <tr class="table-light">
+            <th scope="row">Date</th>
+            <td>{{news.date}}</td>
+        </tr>
+    </tbody>
+</table>
+<a href="{% url 'API_festivals:news_update' id=news.id %}" class="btn btn-warning">Modifier</a>
+<a href="{% url 'API_festivals:news_delete' id=news.id %}" class="btn btn-danger">Supprimer</a>
 {% endblock %}
