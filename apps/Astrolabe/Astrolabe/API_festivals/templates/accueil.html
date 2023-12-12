@@ -4,7 +4,22 @@
 <img src="/{{logo}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
 {% endblock %}
 {% block content %}
-<h1>Prochaines performances du {{ nom_festival }}</h1>
+<h2>Prochaines news du {{ nom_festival }}</h2>
+{% for date, news in news_par_jours.items %}
+<h3>{{date}}</h3>
+{% for nouvelle in news %}
+<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+<div class="card" style="margin-bottom: 1rem;">
+  <img src="/{{ nouvelle.image }}" alt="{{nouvelle.titre}}">
+  <div class="card-body">
+    <h5 class="card-title">{{nouvelle.titre}}</h5>
+    <a href="{% url 'API_festivals:news_detail' id=nouvelle.id %}" class="btn btn-primary">Voir en détails</a>
+  </div>
+</div>
+</div>
+{% endfor %}
+{% endfor %}
+<h2>Prochaines performances du {{ nom_festival }}</h2>
 {% for date, performances in performances_par_jour.items %}
 <h3>{{ date }}</h3>
 <div class="row">
