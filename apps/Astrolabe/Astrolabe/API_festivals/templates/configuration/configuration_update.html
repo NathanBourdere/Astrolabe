@@ -11,6 +11,9 @@
         <form class="persoForm" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPartnerModal">
+                Ajouter un nouveau partenaire
+            </button>
             <input type="submit" value="Enregistrer">
         </form>
     </div>
@@ -25,7 +28,7 @@
             <form method="POST" enctype="multipart/form-data" id="partnerForm" action="{% url 'API_festivals:partenaire_create'%}?modal=True">
             <div class="modal-body">
                 {% csrf_token %}
-                    {% crispy partenaire_form %}
+                    {{ partenaire_form.as_p }}
                     {{ partenaire_form.errors }}
             </div>
             <div class="modal-footer">
