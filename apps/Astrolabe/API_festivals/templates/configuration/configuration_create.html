@@ -6,9 +6,10 @@
 <h2>Création de la configuration du festival</h2>
 <div class="card bg-grey">
     <div class="card-body">
-        <form method="POST" enctype="multipart/form-data">
+        <form class="persoForm" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {% crispy configuration_form %}
+            {{ configuration_form.as_p }}
+            <input type="submit" value="Enregistrer">
         </form>
         {{ configuration_form.errors }}
     </div>

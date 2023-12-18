@@ -106,7 +106,7 @@ class TagsViewSet(viewsets.ReadOnlyModelViewSet):
     
 
 @configuration_required
-def accueil(request):  
+def accueil(request):
     festival = ConfigurationFestival.objects.all().first()
     performances_par_jour = dict()
     performances_jour = Performance.objects.all().order_by('date','heure_debut')
@@ -116,7 +116,14 @@ def accueil(request):
             performances_par_jour[perf.date] = [(perf,artistes[0])]
         else :
             performances_par_jour[perf.date].append((perf,artistes[0]))
-    return render(request, 'accueil.html', {'nom_festival':festival.nomFestival,'performances_par_jour':performances_par_jour,'logo':festival.logoFestival})
+    news_par_jours = dict()
+    news_jour = News.objects.all().order_by('date')
+    for news in news_jour:
+        if news.date not in news_par_jours.keys():
+            news_par_jours[news.date] = [news]
+        else :
+            news_par_jours[news.date].append(news)
+    return render(request, 'accueil.html', {'nom_festival':festival.nomFestival,'performances_par_jour':performances_par_jour,'logo':festival.logoFestival, 'news_par_jours':news_par_jours})
 
 # CONFIGURATION
 def configuration(request):
@@ -126,7 +133,6 @@ def configuration(request):
     """
     if request.method == "GET":
         configuration = ConfigurationFestival.objects.all()
-        print(configuration.first())
         if configuration.exists():
             config_instance = configuration.first()
             partenaires = Partenaire.objects.filter(id__in=config_instance.partenaires.all()).all()
@@ -135,7 +141,6 @@ def configuration(request):
         return render(request,'configuration/configuration_create.html',{'configuration_form':configuration_form})
     elif request.method == "POST":
         configuration_form = ConfigurationFestivalForm(request.POST, request.FILES)
-        print(configuration_form.errors)
         if configuration_form.is_valid():
             configuration_form.save()
             modif = Modification.objects.all().first()
@@ -480,8 +485,9 @@ def scenes(request,page):
 def scene_detail(request, id):
     logo = ConfigurationFestival.objects.all().first().logoFestival
     scene = Scene.objects.get(id=id)
+    performances = Performance.objects.filter(scene=scene)
     template = "scenes/scene_detail.html"
-    context = {'scene': scene,'logo':logo}
+    context = {'scene': scene,'logo':logo, 'performances': performances}
     return render(request, template, context)
 
 @configuration_required

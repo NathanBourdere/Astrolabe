@@ -6,7 +6,7 @@
 {% block content %}
 <h4>{{artiste.nom}}</h4>
 <p>{{artiste.description}}</p>
-<table class="table table-hover table-bordered shadow-lg table-rounded">
+<table class="table table-bordered shadow-lg table-rounded">
     <thead>
       <tr>
         <th scope="col">Paramètre</th>
@@ -17,22 +17,22 @@
       <tr class="table-light">
         <th scope="row">Site Web</th>
         {% if artiste.site_web != None %}
-        <td><a href="{{ artiste.site_web }}">{{ artiste.site_web }}</a></td>
+        <td><a href="{{ artiste.site_web }}" target="_blank">{{ artiste.site_web }}</a></td>
         {% else %}
-            <td><p>Pas de site web</p></td> 
+            <td><p>Pas de site web.</p></td> 
         {% endif %}
       </tr>
       <tr class="table-light">
         <th scope="row">Youtube</th>
-        <td><a href="{{ artiste.youtube }}">{{ artiste.youtube }}</a></td>
+        <td><a href="{{ artiste.youtube }}" target="_blank">{{ artiste.youtube }}</a></td>
       </tr>
       <tr class="table-light">
         <th scope="row">Instagram</th>
-        <td><a href="{{ artiste.instagram }}">{{ artiste.instagram }}</a></td>
+        <td><a href="{{ artiste.instagram }}" target="_blank">{{ artiste.instagram }}</a></td>
       </tr>
       <tr class="table-light">
         <th scope="row">Facebook</th>
-        <td><a href="{{ artiste.facebook }}">{{ artiste.facebook }}</a></td>
+        <td><a href="{{ artiste.facebook }}" target="_blank">{{ artiste.facebook }}</a></td>
       </tr>
       <tr class="table-light">
         <th scope="row">Image de fond</th>
@@ -43,20 +43,16 @@
         <th scope="row">Recommendations</th>
         <td>
         {% for reco in artistes %}
-        <a href="{% url 'API_festivals:artiste_update' reco.id %}">{{ reco.nom }}</a>
+        <a href="{% url 'API_festivals:artiste_detail' reco.id %}">{{ reco.nom }}</a>
         {% endfor %}
       </td>
       </tr>
     </tbody>
 </table>
 
-<a href="{% url 'API_festivals:artiste_update' artiste.id %}">
-  <button class="btn btn-warning">Modifier</button>
-</a>
+<a href="{% url 'API_festivals:artiste_update' artiste.id %}" class="btn btn-warning">Modifier</a>
 
-<a href="{% url 'API_festivals:artiste_delete' artiste.id %}">
-  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">Supprimer</button>
-</a>
+<a href="{% url 'API_festivals:artiste_delete' artiste.id %}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">Supprimer</a>
 
 {% if error_message %}
 <div class="modal" id="myModal"  data-bs-backdrop="static" data-bs-keyboard="false">

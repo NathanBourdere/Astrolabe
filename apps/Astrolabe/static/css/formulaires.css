@@ -1,0 +1,68 @@
+form, input, textarea, select {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+form.persoForm {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input[required], textarea[required], select[required] {
+    border: 1px solid #ffffff;
+    background-color: #f0f8ff;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+input[type="submit"] {
+    background-color: #87CEEB;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 15px;
+    font-size: 16px;
+}
+
+input[type="submit"]:hover {
+    background-color: #4682B4;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #00aaff;
+    background-color: #fff;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #ff5500;
+    border: 2px solid #ff5500;
+    background-image: url("../../static/images/check2.svg");
+    background-size: 100% 100%;
+    filter: invert(100%);
+}
