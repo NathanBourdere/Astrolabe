@@ -127,7 +127,7 @@ slipknot.save()
 
 behemoth = Artiste()
 behemoth.nom = "Behemoth"
-behemoth.description = "Behemoth est un groupe de blackened death metal polonais, originaire de Gdańsk. Formé en 1991 par Nergal, le groupe est considéré comme l'un des plus importants de la scène metal extrême polonaise."
+behemoth.description = "Behemoth est un groupe de blackened death metal polonais, originaire de Gdansk. Formé en 1991 par Nergal, le groupe est considéré comme l'un des plus importants de la scène metal extrême polonaise."
 behemoth.site_web = "https://behemoth.pl/"
 behemoth.youtube = "https://www.youtube.com/user/Behemothofficial"
 behemoth.instagram = "https://www.instagram.com/behemothofficial/"
