@@ -1,5 +1,5 @@
 from .models import *
-from django.forms import ModelForm, CharField,ChoiceField,CheckboxInput ,Form, MultipleChoiceField, ValidationError, FileInput,FileField,TextInput, DateField, DateInput
+from django.forms import ModelForm, CheckboxSelectMultiple,CharField,ChoiceField,CheckboxInput ,Form, MultipleChoiceField, ValidationError, FileInput,FileField,TextInput, DateField, DateInput
 from datetime import date
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column,Fieldset,Div,Field,ButtonHolder,HTML
@@ -9,7 +9,9 @@ class ArtisteForm(ModelForm):
     class Meta:
         model = Artiste
         fields = '__all__'
-    
+        widgets = {
+            'recommendations': CheckboxSelectMultiple
+        }
     def clean(self):
         recommendations = self.cleaned_data.get('recommendations')     
         if len(recommendations) > len(set(recommendations)) :
@@ -62,39 +64,6 @@ class ConfigurationFestivalForm(ModelForm):
         model = ConfigurationFestival
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super(ConfigurationFestivalForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper(self)
-        self.helper.form_method = 'post'
-        self.helper.layout = Layout(
-    Fieldset(
-        '',
-        'nomFestival',
-        'logoFestival',
-        'descriptionFestival',
-        'siteWebFestival',
-        'youtubeFestival',
-        'facebookFestival',
-        'instagramFestival',
-        'mentionsLegales',
-        'policeEcriture',
-        'couleurPrincipale',
-        'couleurSecondaire',
-        'couleurBackground',
-        'video_promo',
-        'partenaires',
-        HTML("""
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPartnerModal">
-                    Ajouter un nouveau partenaire
-                </button>
-                """),
-        'mode_festival',
-    ),
-    ButtonHolder(
-        Submit('submit','Confirmer', css_class='btn-primary btn-lg mx-auto mt-3'),
-        css_class="text-center"
-    ),
-        )
 
 class PartenaireForm(ModelForm):
     class Meta:

@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.rtl.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.rtl.min.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="{% static 'js/swup.js' %}"></script>
     {% endblock %}
 </head>
 
@@ -34,7 +35,7 @@
                   </div>
                 <form class="d-flex">
                   <input class="form-control me-sm-2" type="search" placeholder="Rechercher une page...">
-                  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Recherche</button>
+                  <button class="btn btn-secondary my-2 my-sm-0 rounded-pill" type="submit">Recherche</button>
                 </form>
               </div>
           </nav>
@@ -73,8 +74,8 @@
                     </div>
             </aside>
                 <!-- Content -->
-                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom:5rem">
-                    <div class="container mt-4 ">
+                <main id="swup" class="col-md-9 ms-sm-auto col-lg-10 px-md-4 transition-fade" style="margin-bottom:5rem">
+                    <div class="container mt-4">
                         <section>
                             {% block content %}
                             {% endblock %}
@@ -102,8 +103,38 @@ label.form-label {
 button>a {
     text-decoration: none;
     color:inherit;
+}body {
+  overflow-x: hidden;
 }
+
+.transition-fade {
+  opacity: 1;
+  transition: 500ms;
+  transform: translateX(0);
+  transform-origin: left;
+}
+
+html.is-animating .transition-fade {
+  opacity: 1;
+  transform: translateX(100%);
+}
+
+html.is-leaving .transition-fade {
+  opacity: 0;
+  transform: translateX(0);
+}
+
+.transition-swipe {
+  transition: 500ms;
+  transform: translateY(0);
+}
+
+html.is-animating .transition-swipe {
+  transform: translateY(100px);
+}
+
 span.asteriskField { color: red; }
 
 </style>
+
 </html>

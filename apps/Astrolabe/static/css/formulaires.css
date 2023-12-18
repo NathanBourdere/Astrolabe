@@ -35,7 +35,7 @@ input, textarea, select {
 }
 
 input[type="submit"] {
-    background-color: #87CEEB;
+    background: linear-gradient(90deg, rgb(8, 3, 103) 0%, rgb(14, 14, 184) 35%, rgb(0, 234, 255) 100%);
     color: #fff;
     cursor: pointer;
     border: none;
@@ -43,6 +43,21 @@ input[type="submit"] {
     padding: 10px 15px;
     font-size: 16px;
 }
+
+input::file-selector-button {
+    background : linear-gradient(90deg, rgb(5, 146, 177) 0%, rgb(14, 14, 184) 35%, rgb(0, 234, 255) 100%);
+    background-position-x: 0%;
+    background-size: 200%;
+    border: 0;
+    border-radius: 8px;
+    color: #fff;
+    padding: 1rem 1.25rem;
+    text-shadow: 0 1px 1px #333;
+    transition: all 0.25s;
+  }
+input::file-selector-button:hover {
+    background-position-x: 100%;
+  }
 
 input[type="submit"]:hover {
     background-color: #4682B4;
