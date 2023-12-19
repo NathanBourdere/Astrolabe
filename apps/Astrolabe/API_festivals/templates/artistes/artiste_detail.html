@@ -56,37 +56,5 @@
 <a href="{% url 'API_festivals:artiste_delete' artiste.id %}" id="deleteArtistButton" 
 class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">Supprimer</a>
 
-
-<div class="modal fade" id="myModal"  data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog">
-      <div class="modal-content">
-
-          <!-- Modal Header -->
-          <div class="modal-header">
-              <h4 class="modal-title">Attention</h4>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-
-          <!-- Modal Body -->
-          <div class="modal-body">
-              <p>L'artiste a déjà des performances enregistrées. Voulez-vous supprimer les performances associées ?</p>
-          </div>
-
-          <!-- Modal Footer -->
-          <div class="modal-footer">
-            {% if perf_exist %}
-              <button type="button" class="btn btn-danger rounded-pill" data-bs-dismiss="modal">
-                <a href="{% url 'API_festivals:artiste_delete' artiste.id %}?confirmation=True">
-                Oui, supprimer les performances avec
-                </a>
-              </button>
-              {% endif %}
-              <button type="button" class="btn btn-danger rounded-pill" data-bs-dismiss="modal">
-                <a href="{% url 'API_festivals:artiste_delete' artiste.id %}">Supprimer {{artiste.nom}}</a>
-              </button>
-              <button type="button" class="btn btn-primary rounded-pill" data-bs-dismiss="modal">Annuler</button>
-          </div>
-      </div>
-  </div>
-</div>
+{% include '../modal/artistes/artiste_delete.html' %}
 {% endblock %}

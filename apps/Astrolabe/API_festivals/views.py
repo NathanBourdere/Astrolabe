@@ -185,7 +185,7 @@ def configuration_delete(request):
 # ARTISTES
 @configuration_required
 def artistes(request,page):
-    limit = 3
+    limit = 50
     artistes = Artiste.objects.all()
     logo = ConfigurationFestival.objects.all().first().logoFestival
     form = SearchForm(request.GET)

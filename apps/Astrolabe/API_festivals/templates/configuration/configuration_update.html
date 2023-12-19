@@ -18,25 +18,5 @@
         </form>
     </div>
 </div>
-<div class="modal fade" id="createPartnerModal" tabindex="-1" aria-labelledby="createPartnerModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createPartnerModalLabel">Ajouter un nouveau partenaire</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form method="POST" enctype="multipart/form-data" id="partnerForm" action="{% url 'API_festivals:partenaire_create'%}?modal=True">
-            <div class="modal-body">
-                {% csrf_token %}
-                    {{ partenaire_form.as_p }}
-                    {{ partenaire_form.errors }}
-            </div>
-            <div class="modal-footer">
-                <input type="submit" id="submitBtn" class="btn btn-primary" form="partnerForm">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-            </div>
-        </form>            
-        </div>
-    </div>
-</div>
+{% include '../modal/partenaires/partenaire_create.html' %}
 {% endblock %}
