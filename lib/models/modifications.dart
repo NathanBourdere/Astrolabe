@@ -15,6 +15,7 @@ class Modifications {
   String date_modif_performance;
   String date_modif_scene;
   String date_modif_config;
+  String date_modif_partenaire;
   String date_modif_news;
   String date_modif_tags;
 
@@ -23,6 +24,7 @@ class Modifications {
     required this.date_modif_performance,
     required this.date_modif_scene,
     required this.date_modif_config,
+    required this.date_modif_partenaire,
     required this.date_modif_news,
     required this.date_modif_tags,
   });
@@ -31,6 +33,7 @@ class Modifications {
   String get getdate_modif_performance => date_modif_performance;
   String get getdate_modif_scene => date_modif_scene;
   String get getdate_modif_config => date_modif_config;
+  String get getdate_modif_partenaire => date_modif_partenaire;
   String get getdate_modif_news => date_modif_news;
   String get getdate_modif_tags => date_modif_tags;
 
@@ -40,6 +43,7 @@ class Modifications {
       date_modif_performance: json['date_modif_performance'],
       date_modif_scene: json['date_modif_scene'],
       date_modif_config: json['date_modif_config'],
+      date_modif_partenaire: json['date_modif_partenaire'],
       date_modif_news: json['date_modif_news'],
       date_modif_tags: json['date_modif_tags'],
     );
@@ -51,6 +55,7 @@ class Modifications {
       'date_modif_performance': date_modif_performance,
       'date_modif_scene': date_modif_scene,
       'date_modif_config': date_modif_config,
+      'date_modif_partenaire': date_modif_partenaire,
       'date_modif_news': date_modif_news,
       'date_modif_tags': date_modif_tags,
     };
@@ -66,6 +71,7 @@ class Modifications {
     List<Performance> performances = [];
     List<Scene> scenes = [];
     List<Tag> tags = [];
+    List<Partenaire> partenaires = [];
     Configuration configuration;
 
     if (newModifs.date_modif_artiste != modifications.date_modif_artiste) {
@@ -89,18 +95,22 @@ class Modifications {
     if (newModifs.date_modif_tags != modifications.date_modif_tags) {
       tags = await festivalApi.getTags();
     }
+    if (newModifs.date_modif_partenaire !=
+        modifications.date_modif_partenaire) {
+      partenaires = await festivalApi.getPartenaires();
+    }
 
     List<News> news = [];
     if (newModifs.date_modif_news != modifications.date_modif_news) {
       news = await festivalApi.getNews();
     }
-    List<Partenaire> partenaires = await festivalApi.getPartenaires();
 
     database.setModifications(Modifications(
       date_modif_artiste: newModifs.date_modif_artiste,
       date_modif_performance: newModifs.date_modif_performance,
       date_modif_scene: newModifs.date_modif_scene,
       date_modif_config: newModifs.date_modif_config,
+      date_modif_partenaire: newModifs.date_modif_partenaire,
       date_modif_news: newModifs.date_modif_news,
       date_modif_tags: newModifs.date_modif_tags,
     ));

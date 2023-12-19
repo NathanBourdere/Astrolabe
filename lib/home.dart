@@ -1,4 +1,3 @@
-
 import 'package:festival/models/configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +43,12 @@ class _MyHomePageState extends State<MyHomePage> {
               fontWeight: FontWeight.bold,
             ),
           ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/informations');
+          },
+          icon: const Icon(Icons.info),
         ),
         actions: [
           IconButton(

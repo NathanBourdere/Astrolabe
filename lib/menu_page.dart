@@ -1,6 +1,7 @@
 import 'package:festival/database.dart';
 import 'package:festival/models/tag.dart';
 import 'package:flutter/material.dart';
+
 class MenuPage extends StatelessWidget {
   const MenuPage({Key? key});
 

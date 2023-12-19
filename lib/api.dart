@@ -126,6 +126,23 @@ class FestivalApi {
     final response = await http.get(Uri.parse('$baseUrl/partenaires/'));
     if (response.statusCode == 200) {
       final partenaires = jsonDecode(utf8.decode(response.bodyBytes)) as List;
+
+      for (var partenaire in partenaires) {
+        if (partenaire['banniere'] != null) {
+          final imageResponse =
+              await http.get(Uri.parse(partenaire['banniere']));
+          if (imageResponse.statusCode == 200) {
+            final imageBytes = imageResponse.bodyBytes;
+            final imageUint8List = Uint8List.fromList(imageBytes);
+            final directory = await getApplicationDocumentsDirectory();
+            final imagePath = await File(
+                    '${directory.path}/partenaire_${partenaire['id']}.png')
+                .create();
+            await imagePath.writeAsBytes(imageUint8List);
+            partenaire['banniere'] = imagePath.path;
+          }
+        }
+      }
       return partenaires.map((json) => Partenaire.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load partenaires');

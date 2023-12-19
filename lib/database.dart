@@ -135,11 +135,12 @@ class DatabaseAstrolabe {
         date_modif_performance TEXT NOT NULL,
         date_modif_scene TEXT NOT NULL,
         date_modif_config TEXT NOT NULL,
+        date_modif_partenaire TEXT NOT NULL,
         date_modif_news TEXT NOT NULL,
         date_modif_tags TEXT NOT NULL
         );
 
-        INSERT INTO MODIFICATIONS (date_modif_artiste, date_modif_performance, date_modif_scene, date_modif_config, date_modif_news, date_modif_tags) VALUES ('zerferzf', 'ezgezg', 'zegrezg', 'zgegzzeg', 'zegrezg', 'indf');
+        INSERT INTO MODIFICATIONS (date_modif_artiste, date_modif_performance, date_modif_scene, date_modif_config, date_modif_partenaire, date_modif_news, date_modif_tags) VALUES ('zerferzf', 'ezgezg', 'zegrezg', 'zgegzzeg', 'zegrezg', 'azead', 'indf');
 
         ''');
         },
@@ -220,7 +221,7 @@ class DatabaseAstrolabe {
       final List<
           Map<String,
               dynamic>> performancesData = await database!.rawQuery(
-          'SELECT PERFORMANCE.id, PERFORMANCE.nom, PERFORMANCE.date, PERFORMANCE.heure_debut, PERFORMANCE.heure_fin, PERFORMANCE.scene FROM PERFORMANCE INNER JOIN PERF_ARTISTE ON PERFORMANCE.id = PERF_ARTISTE.performanceId WHERE PERF_ARTISTE.artisteId = ?',
+          'SELECT DISTINCT PERFORMANCE.id, PERFORMANCE.nom, PERFORMANCE.date, PERFORMANCE.heure_debut, PERFORMANCE.heure_fin, PERFORMANCE.scene FROM PERFORMANCE INNER JOIN PERF_ARTISTE ON PERFORMANCE.id = PERF_ARTISTE.performanceId WHERE PERF_ARTISTE.artisteId = ?',
           [artiste.id]);
       // Convertir les données des performances en objets Performance
       final List<Performance> performances = performancesData
@@ -267,7 +268,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> artistes = await database!.rawQuery(
-          'SELECT ARTISTE.id, ARTISTE.nom, ARTISTE.description, ARTISTE.site_web, ARTISTE.youtube, ARTISTE.instagram, ARTISTE.facebook, ARTISTE.image FROM ARTISTE INNER JOIN PERF_ARTISTE ON ARTISTE.id = PERF_ARTISTE.artisteId WHERE PERF_ARTISTE.performanceId = ?',
+          'SELECT DISTINCT ARTISTE.id, ARTISTE.nom, ARTISTE.description, ARTISTE.site_web, ARTISTE.youtube, ARTISTE.instagram, ARTISTE.facebook, ARTISTE.image FROM ARTISTE INNER JOIN PERF_ARTISTE ON ARTISTE.id = PERF_ARTISTE.artisteId WHERE PERF_ARTISTE.performanceId = ?',
           [id]);
       return artistes.map((data) => Artiste.fromJson(data)).toList();
     });
@@ -277,7 +278,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> scenes = await database!.rawQuery(
-          'SELECT SCENE.id, SCENE.nom, SCENE.image FROM SCENE INNER JOIN PERFORMANCE ON SCENE.id = PERFORMANCE.scene WHERE PERFORMANCE.id = ?',
+          'SELECT DISTINCT SCENE.id, SCENE.nom, SCENE.image FROM SCENE INNER JOIN PERFORMANCE ON SCENE.id = PERFORMANCE.scene WHERE PERFORMANCE.id = ?',
           [id]);
       return Scene.fromJson(scenes.first);
     });
@@ -321,7 +322,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> artistes = await database!.rawQuery(
-          'SELECT ARTISTE.id, ARTISTE.nom, ARTISTE.description, ARTISTE.site_web, ARTISTE.youtube, ARTISTE.instagram, ARTISTE.facebook, ARTISTE.image FROM ARTISTE INNER JOIN RECO_ARTISTE ON ARTISTE.id = RECO_ARTISTE.artisteId2 WHERE RECO_ARTISTE.artisteId1 = ?',
+          'SELECT DISTINCT ARTISTE.id, ARTISTE.nom, ARTISTE.description, ARTISTE.site_web, ARTISTE.youtube, ARTISTE.instagram, ARTISTE.facebook, ARTISTE.image FROM ARTISTE INNER JOIN RECO_ARTISTE ON ARTISTE.id = RECO_ARTISTE.artisteId2 WHERE RECO_ARTISTE.artisteId1 = ?',
           [artiste.id]);
       return artistes.map((data) => Artiste.fromJson(data)).toList();
     });
@@ -331,7 +332,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> partenaires =
-          await database!.query('PARTENAIRE');
+          await database!.rawQuery('SELECT DISTINCT * FROM PARTENAIRE');
       return partenaires.map((data) => Partenaire.fromJson(data)).toList();
     });
   }
@@ -348,7 +349,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> tags = await database!.rawQuery(
-          'SELECT TAG.idTag, TAG.nom, TAG.visible FROM TAG INNER JOIN TAG_PERFORMANCE ON TAG.idTag = TAG_PERFORMANCE.tagId WHERE TAG_PERFORMANCE.performanceId = ?',
+          'SELECT DISTINCT TAG.idTag, TAG.nom, TAG.visible FROM TAG INNER JOIN TAG_PERFORMANCE ON TAG.idTag = TAG_PERFORMANCE.tagId WHERE TAG_PERFORMANCE.performanceId = ?',
           [id]);
       return tags.map((data) => Tag.fromJson(data)).toList();
     });
@@ -358,7 +359,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> performances = await database!.rawQuery(
-          'SELECT PERFORMANCE.id, PERFORMANCE.nom, PERFORMANCE.date, PERFORMANCE.heure_debut, PERFORMANCE.heure_fin, PERFORMANCE.scene FROM PERFORMANCE INNER JOIN TAG_PERFORMANCE ON PERFORMANCE.id = TAG_PERFORMANCE.performanceId WHERE TAG_PERFORMANCE.tagId = ?',
+          'SELECT DISTINCT PERFORMANCE.id, PERFORMANCE.nom, PERFORMANCE.date, PERFORMANCE.heure_debut, PERFORMANCE.heure_fin, PERFORMANCE.scene FROM PERFORMANCE INNER JOIN TAG_PERFORMANCE ON PERFORMANCE.id = TAG_PERFORMANCE.performanceId WHERE TAG_PERFORMANCE.tagId = ?',
           [tag]);
       // Convertir les données des performances en objets Performance
       final List<Performance> performancesList = performances
@@ -412,6 +413,7 @@ class DatabaseAstrolabe {
 
     // Update or insert PARTENAIRE
     for (Partenaire partenaire in partenaires) {
+      print(partenaire.nom);
       await db?.insert(
         'PARTENAIRE',
         partenaire.toJson(),

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -13,9 +12,6 @@ class _BilletteriePageState extends State<BilletteriePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Billetterie'),
-      ),
       body: WebView(
         initialUrl: 'https://www.hoppophop.fr/',
         onWebViewCreated: (controller) {},

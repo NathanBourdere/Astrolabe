@@ -3,6 +3,7 @@
 import 'package:festival/database.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/modifications.dart';
+import 'package:festival/page_informations.dart';
 import 'package:festival/performance.dart';
 import 'package:festival/performances.dart';
 import 'package:festival/performances_tags.dart';
@@ -67,6 +68,7 @@ class MyApp extends StatelessWidget {
         '/performance/': (context) => const PerformanceDetailsPage(),
         '/performances_tags': (context) => const PerformancesTagPage(),
         '/scenes': (context) => const ScenesPage(),
+        '/informations': (context) => const InformationsPage(),
       },
     );
   }
