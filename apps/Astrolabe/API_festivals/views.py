@@ -231,11 +231,15 @@ def artiste_create(request):
 
 @configuration_required
 def artiste_detail(request, id):
+    perf_exist = False
     logo = ConfigurationFestival.objects.all().first().logoFestival
     artiste = Artiste.objects.get(id=id)
+    perfs = Performance.objects.filter(artistes=artiste)
+    if perfs.exists():
+        perf_exist = True
     artistes = artiste.recommendations.all()
     template = "artistes/artiste_detail.html"
-    context = {'artiste': artiste,'logo':logo,'artistes':artistes}
+    context = {'artiste': artiste,'logo':logo,'artistes':artistes,'perf_exist':perf_exist}
     return render(request, template, context)
 
 @configuration_required
@@ -259,18 +263,11 @@ def artiste_update(request, id):
 @configuration_required
 def artiste_delete(request, id):
     artiste = Artiste.objects.get(id=id)
-    perfs = Performance.objects.filter(artistes=artiste)
     confirmation = request.GET.get('confirmation',False)
-    print("here")
+    perfs = Performance.objects.filter(artistes=artiste)
     if confirmation:
         for perf in perfs:
             perf.delete()
-    if perfs.exists():
-        # If there are performances, show a confirmation message
-        error_message = f"L'artiste a déjà des performances enregistrées. Voulez-vous supprimer les performances associées ?"
-        logo = ConfigurationFestival.objects.first().logoFestival
-        artistes = artiste.recommendations.all()
-        return render(request, 'artistes/artiste_detail.html', {'logo': logo, 'artistes': artistes, 'artiste': artiste, 'error_message': error_message})
     try :
         os.remove(str(artiste.image.path)) 
     except FileNotFoundError:
@@ -281,7 +278,6 @@ def artiste_delete(request, id):
     modif = Modification.objects.first()
     modif.date_modif_artiste = timezone.now()
     modif.save()
-
     return redirect("API_festivals:artistes", page=1)
 
 # PARTENAIRES
