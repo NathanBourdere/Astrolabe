@@ -1,11 +1,11 @@
 class Partenaire {
   String nom;
-  String image;
+  String banniere;
   String site;
 
   Partenaire({
     required this.nom,
-    required this.image,
+    required this.banniere,
     required this.site,
   });
 
@@ -14,9 +14,9 @@ class Partenaire {
     nom = value;
   }
 
-  String get getImage => image;
-  set setImage(String value) {
-    image = value;
+  String get getbanniere => banniere;
+  set setbanniere(String value) {
+    banniere = value;
   }
 
   String get getSite => site;
@@ -27,14 +27,14 @@ class Partenaire {
   factory Partenaire.fromJson(Map<String, dynamic> json) {
     return Partenaire(
       nom: json['nom'],
-      image: json['image'],
+      banniere: json['banniere'],
       site: json['site'],
     );
   }
 
   Map<String, dynamic> toJson() => {
         'nom': nom,
-        'image': image,
+        'banniere': banniere,
         'site': site,
       };
 }

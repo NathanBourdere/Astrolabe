@@ -8,6 +8,7 @@ import 'package:festival/models/modifications.dart';
 import 'package:festival/models/partenaire.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/models/scene.dart';
+import 'package:festival/models/tag.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
@@ -36,6 +37,7 @@ class DatabaseAstrolabe {
 
     // If the database does not exist, create it
     if (!exists) {
+      print('exist');
       await openDatabase(
         path,
         version: 1,
@@ -107,22 +109,37 @@ class DatabaseAstrolabe {
         FOREIGN KEY (artisteId2) REFERENCES ARTISTE(id)
         );
 
-        CREATE TABLE PARTENAIRE (
-        idPartenaire INTEGER PRIMARY KEY AUTOINCREMENT,
-        nomPartenaire TEXT NOT NULL,
-        logoPartenaire TEXT NOT NULL,
-        lienPartenaire TEXT NOT NULL
+        CREATE TABLE TAG_PERFORMANCE(
+        tagId INTEGER NOT NULL,
+        performanceId INTEGER NOT NULL,
+        FOREIGN KEY (tagId) REFERENCES TAG(id),
+        FOREIGN KEY (performanceId) REFERENCES PERFORMANCE(id)
         );
         
-        CREATE TABLE MODIFICATIONS (
+
+        CREATE TABLE PARTENAIRE (
+        idPartenaire INTEGER PRIMARY KEY AUTOINCREMENT,
+        nom TEXT NOT NULL,
+        banniere TEXT NOT NULL,
+        site TEXT NOT NULL
+        );
+
+        CREATE TABLE TAG (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nom TEXT NOT NULL,
+        visible INT NOT NULL
+        );
+        
+        CREATE TABLE MODIFICATIONS (  
         date_modif_artiste TEXT NOT NULL,
         date_modif_performance TEXT NOT NULL,
         date_modif_scene TEXT NOT NULL,
         date_modif_config TEXT NOT NULL,
-        date_modif_news TEXT NOT NULL
+        date_modif_news TEXT NOT NULL,
+        date_modif_tags TEXT NOT NULL
         );
 
-        INSERT INTO MODIFICATIONS (date_modif_artiste, date_modif_performance, date_modif_scene, date_modif_config, date_modif_news) VALUES ('zerferzf', 'ezgezg', 'zegrezg', 'zgegzzeg', 'zegrezg');
+        INSERT INTO MODIFICATIONS (date_modif_artiste, date_modif_performance, date_modif_scene, date_modif_config, date_modif_news, date_modif_tags) VALUES ('zerferzf', 'ezgezg', 'zegrezg', 'zgegzzeg', 'zegrezg', 'indf');
 
         ''');
         },
@@ -303,6 +320,55 @@ class DatabaseAstrolabe {
     });
   }
 
+  Future<List<Partenaire>> getPartenaires() {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> partenaires =
+          await database!.query('PARTENAIRE');
+      return partenaires.map((data) => Partenaire.fromJson(data)).toList();
+    });
+  }
+
+  Future<List<Tag>> getTags() {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> tags = await database!.query('TAG');
+      return tags.map((data) => Tag.fromJson(data)).toList();
+    });
+  }
+
+  Future<List<Tag>> getTagsByPerformance(int id) {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> tags = await database!.rawQuery(
+          'SELECT TAG.idTag, TAG.nom, TAG.visible FROM TAG INNER JOIN TAG_PERFORMANCE ON TAG.idTag = TAG_PERFORMANCE.tagId WHERE TAG_PERFORMANCE.performanceId = ?',
+          [id]);
+      return tags.map((data) => Tag.fromJson(data)).toList();
+    });
+  }
+
+  Future<List<Performance>> getPerformancesByTag(int tag) {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> performances = await database!.rawQuery(
+          'SELECT PERFORMANCE.id, PERFORMANCE.nom, PERFORMANCE.date, PERFORMANCE.heure_debut, PERFORMANCE.heure_fin, PERFORMANCE.scene FROM PERFORMANCE INNER JOIN TAG_PERFORMANCE ON PERFORMANCE.id = TAG_PERFORMANCE.performanceId WHERE TAG_PERFORMANCE.tagId = ?',
+          [tag]);
+      // Convertir les données des performances en objets Performance
+      final List<Performance> performancesList = performances
+          .map((data) => Performance.fromJson_database(data))
+          .toList();
+      // Parcourir chaque performance et obtenir les artistes correspondants
+      for (Performance performance in performancesList) {
+        final artistes = await getArtistesByPerformance(performance.id);
+        performance.artistes = artistes;
+
+        final scene = await getSceneByPerformance(performance.id);
+        performance.scene = scene;
+      }
+      return performancesList;
+    });
+  }
+
   Future<void> deleteAndRecreateDatabase() async {
     // Get the path to the database file
     final databasesPath = await getDatabasesPath();
@@ -316,16 +382,17 @@ class DatabaseAstrolabe {
   }
 
   Future<int> updateDatabase(
-    List<Artiste> artistes,
-    List<Performance> performances,
-    List<Scene> scenes,
-    List<News> news,
-    List<Partenaire> partenaires,
-    Modifications modifications,
-    Configuration configuration,
-    Map<int, List<int>> artistesPerformances,
-    Map<int, List<int>> artistesRecommandations,
-  ) async {
+      List<Artiste> artistes,
+      List<Performance> performances,
+      List<Scene> scenes,
+      List<News> news,
+      List<Partenaire> partenaires,
+      Modifications modifications,
+      Configuration configuration,
+      List<Tag> tags,
+      Map<int, List<int>> artistesPerformances,
+      Map<int, List<int>> artistesRecommandations,
+      Map<int, List<int>> tagsPerformance) async {
     final db = await database;
 
     // Update or insert MODIFICATIONS
@@ -346,7 +413,6 @@ class DatabaseAstrolabe {
     }
 
     // Update or insert CONFIGURATION
-    print('update config');
     await db?.insert(
       'CONFIGURATION',
       configuration.toJson(),
@@ -354,39 +420,56 @@ class DatabaseAstrolabe {
     );
 
     // Update or insert ARTISTE
-    for (Artiste artiste in artistes) {
-      await db?.insert(
-        'ARTISTE',
-        artiste.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+    if (artistes != []) {
+      for (Artiste artiste in artistes) {
+        await db?.insert(
+          'ARTISTE',
+          artiste.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
     }
-
     // Update or insert SCENE
-    for (Scene scene in scenes) {
-      await db?.insert(
-        'SCENE',
-        scene.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+    if (scenes != []) {
+      for (Scene scene in scenes) {
+        await db?.insert(
+          'SCENE',
+          scene.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
     }
 
     // Update or insert PERFORMANCE
-    for (Performance performance in performances) {
-      await db?.insert(
-        'PERFORMANCE',
-        performance.toJson_database(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+    if (performances != []) {
+      for (Performance performance in performances) {
+        await db?.insert(
+          'PERFORMANCE',
+          performance.toJson_database(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
     }
 
     // Update or insert NEWS
-    for (News newsItem in news) {
-      await db?.insert(
-        'NEWS',
-        newsItem.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+    if (news != []) {
+      for (News newsItem in news) {
+        await db?.insert(
+          'NEWS',
+          newsItem.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+    }
+
+    if (tags != []) {
+      for (Tag tag in tags) {
+        await db?.insert(
+          'TAG',
+          tag.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
     }
 
     // Update or insert PERF_ARTISTE
@@ -411,6 +494,20 @@ class DatabaseAstrolabe {
           {
             'artisteId1': idArtiste1,
             'artisteId2': idArtiste2,
+          },
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+    }
+
+    // Update or insert TAG_PERFORMANCE
+    for (int idTag in tagsPerformance.keys) {
+      for (int idPerformance in tagsPerformance[idTag]!) {
+        await db?.insert(
+          'TAG_PERFORMANCE',
+          {
+            'tagId': idTag,
+            'performanceId': idPerformance,
           },
           conflictAlgorithm: ConflictAlgorithm.replace,
         );

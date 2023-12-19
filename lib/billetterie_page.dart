@@ -17,7 +17,7 @@ class _BilletteriePageState extends State<BilletteriePage> {
         title: const Text('Billetterie'),
       ),
       body: WebView(
-        initialUrl: 'https://www.hoppophop.fr/billetterie/',
+        initialUrl: 'https://www.hoppophop.fr/',
         onWebViewCreated: (controller) {},
         javascriptMode: JavascriptMode.unrestricted, // Active JavaScript
         navigationDelegate: (NavigationRequest request) {

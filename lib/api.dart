@@ -8,6 +8,7 @@ import 'package:festival/models/scene.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/news.dart';
 import 'package:festival/models/modifications.dart';
+import 'package:festival/models/tag.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
@@ -89,7 +90,7 @@ class FestivalApi {
   }
 
   Future<Configuration> getConfiguration() async {
-    final response = await http.get(Uri.parse('$baseUrl/festivals/'));
+    final response = await http.get(Uri.parse('$baseUrl/configuration/'));
     if (response.statusCode == 200) {
       final configuration = jsonDecode(response.body);
       if (configuration[0]['logoFestival'] != null) {
@@ -131,6 +132,16 @@ class FestivalApi {
     }
   }
 
+  Future<List<Tag>> getTags() async {
+    final response = await http.get(Uri.parse('$baseUrl/tags/'));
+    if (response.statusCode == 200) {
+      final tags = jsonDecode(utf8.decode(response.bodyBytes)) as List;
+      return tags.map((json) => Tag.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load tags');
+    }
+  }
+
   Future<Map<int, List<int>>> getArtistesPerformances() async {
     final response = await http.get(Uri.parse('$baseUrl/performances/'));
     if (response.statusCode == 200) {
@@ -166,6 +177,25 @@ class FestivalApi {
       return artistesRecommandations;
     } else {
       throw Exception('Failed to load artistes');
+    }
+  }
+
+  Future<Map<int, List<int>>> getTagsPerformances() async {
+    final response = await http.get(Uri.parse('$baseUrl/tags/'));
+    if (response.statusCode == 200) {
+      final tags = jsonDecode(utf8.decode(response.bodyBytes)) as List;
+      Map<int, List<int>> tagsPerformances = {};
+      for (var tag in tags) {
+        List<dynamic> perfs = tag['performances'];
+        List<int> perfsIds = [];
+        for (var performance in perfs) {
+          perfsIds.add(performance['id']);
+        }
+        tagsPerformances[tag['id']] = perfsIds;
+      }
+      return tagsPerformances;
+    } else {
+      throw Exception('Failed to load tags');
     }
   }
 }

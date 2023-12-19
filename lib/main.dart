@@ -5,6 +5,7 @@ import 'package:festival/models/configuration.dart';
 import 'package:festival/models/modifications.dart';
 import 'package:festival/performance.dart';
 import 'package:festival/performances.dart';
+import 'package:festival/performances_tags.dart';
 import 'package:festival/scenes_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart' show AssetManifest;
 import 'artistes_page.dart';
 import 'billetterie_page.dart';
-import 'calendrier.dart';
 import 'home.dart';
 import 'news_page.dart';
 
@@ -63,9 +63,9 @@ class MyApp extends StatelessWidget {
         '/artistes': (context) => const ArtistesPage(),
         '/news': (context) => const NewsPage(),
         '/billetterie': (context) => const BilletteriePage(),
-        '/calendrier': (context) => const CalendarPage(),
         '/performances': (context) => const PerformancesPage(),
         '/performance/': (context) => const PerformanceDetailsPage(),
+        '/performances_tags': (context) => const PerformancesTagPage(),
         '/scenes': (context) => const ScenesPage(),
       },
     );
