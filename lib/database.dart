@@ -301,6 +301,13 @@ class DatabaseAstrolabe {
     });
   }
 
+  Future<void> setModifications(Modifications modifications) async {
+    final db = database;
+    return db.then((database) async {
+      await database!.update('MODIFICATIONS', modifications.toJson());
+    });
+  }
+
   Future<Artiste> getArtisteById(int idArtiste) {
     final db = database;
     return db.then((database) async {

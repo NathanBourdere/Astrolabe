@@ -69,38 +69,41 @@ class Modifications {
     Configuration configuration;
 
     if (newModifs.date_modif_artiste != modifications.date_modif_artiste) {
-      modifications.date_modif_artiste = newModifs.date_modif_artiste;
       artistes = await festivalApi.getArtistes();
     }
 
     if (newModifs.date_modif_performance !=
         modifications.date_modif_performance) {
-      modifications.date_modif_performance = newModifs.date_modif_performance;
       performances = await festivalApi.getPerformances();
     }
 
     if (newModifs.date_modif_scene != modifications.date_modif_scene) {
-      modifications.date_modif_scene = newModifs.date_modif_scene;
       scenes = await festivalApi.getScenes();
     }
 
     if (newModifs.date_modif_config != modifications.date_modif_config) {
-      modifications.date_modif_config = newModifs.date_modif_config;
       configuration = await festivalApi.getConfiguration();
     } else {
       configuration = await database.getConfiguration();
     }
     if (newModifs.date_modif_tags != modifications.date_modif_tags) {
-      modifications.date_modif_tags = newModifs.date_modif_tags;
       tags = await festivalApi.getTags();
     }
 
     List<News> news = [];
     if (newModifs.date_modif_news != modifications.date_modif_news) {
-      modifications.date_modif_news = newModifs.date_modif_news;
       news = await festivalApi.getNews();
     }
     List<Partenaire> partenaires = await festivalApi.getPartenaires();
+
+    database.setModifications(Modifications(
+      date_modif_artiste: newModifs.date_modif_artiste,
+      date_modif_performance: newModifs.date_modif_performance,
+      date_modif_scene: newModifs.date_modif_scene,
+      date_modif_config: newModifs.date_modif_config,
+      date_modif_news: newModifs.date_modif_news,
+      date_modif_tags: newModifs.date_modif_tags,
+    ));
 
     Map<int, List<int>> artistesPerformances =
         await festivalApi.getArtistesPerformances();
