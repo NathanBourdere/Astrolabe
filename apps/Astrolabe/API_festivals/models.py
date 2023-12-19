@@ -8,7 +8,7 @@ class Artiste(models.Model):
     youtube = models.URLField(null=True, blank=True)
     instagram = models.URLField(null=True, blank=True)
     facebook = models.URLField(null=True, blank=True)
-    image = models.ImageField(upload_to='static/model/artistes/', unique=True,default='static/model/artistes/default.jpg')
+    image = models.ImageField(upload_to='static/model/artistes/', unique=True,default='static/model/default.jpg')
     recommendations = models.ManyToManyField('self',blank=True)
 
     def description_tronquee(self,max_len=60):
@@ -75,7 +75,7 @@ class Tag(models.Model):
 
 class Scene(models.Model):
     nom = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='static/model/scenes/', unique=True,default='static/model/scenes/default.jpg')
+    image = models.ImageField(upload_to='static/model/scenes/', unique=True,default='static/model/default.jpg')
     lieu = models.CharField(max_length=200, default="Astrolabe")
 
     def __str__(self):
@@ -96,7 +96,7 @@ class Modification(models.Model):
 class News(models.Model):
     titre = models.CharField(max_length=254)
     corps = models.TextField(max_length=254)
-    image = models.ImageField(upload_to='static/model/news', max_length=254)
+    image = models.ImageField(upload_to='static/model/news', max_length=254,default="static/model/default.jpg")
     date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
