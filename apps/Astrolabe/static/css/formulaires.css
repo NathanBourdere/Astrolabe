@@ -35,17 +35,22 @@ input, textarea, select {
 }
 
 input[type="submit"] {
-    background: linear-gradient(90deg, rgb(8, 3, 103) 0%, rgb(14, 14, 184) 35%, rgb(0, 234, 255) 100%);
+    background: linear-gradient(90deg, rgb(5, 146, 180) 0%, rgb(109, 155, 255) 35%, rgb(0, 234, 255) 100%);
     color: #fff;
-    cursor: pointer;
-    border: none;
+    border: 0;
+    background-position-x: 0%;
+    background-size: 200%;
     border-radius: 3px;
     padding: 10px 15px;
     font-size: 16px;
+    transition: all 0.25s;
+}
+.card:hover {
+    cursor:pointer;
 }
 
 input::file-selector-button {
-    background : linear-gradient(90deg, rgb(5, 146, 177) 0%, rgb(14, 14, 184) 35%, rgb(0, 234, 255) 100%);
+    background : linear-gradient(90deg, rgb(5, 146, 177) 0%, rgb(109, 155, 255) 35%, rgb(0, 234, 255) 100%);
     background-position-x: 0%;
     background-size: 200%;
     border: 0;
@@ -55,12 +60,17 @@ input::file-selector-button {
     text-shadow: 0 1px 1px #333;
     transition: all 0.25s;
   }
+
+.nolink {
+    all: unset;
+}
+
 input::file-selector-button:hover {
     background-position-x: 100%;
   }
 
 input[type="submit"]:hover {
-    background-color: #4682B4;
+    background-position-x: 100%;
 }
 
 input[type="checkbox"] {

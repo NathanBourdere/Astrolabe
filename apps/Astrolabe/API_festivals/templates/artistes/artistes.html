@@ -12,13 +12,14 @@
 <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for artiste in artistes %}
     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <a class="nolink" href="{% url 'API_festivals:artiste_detail' artiste.id %}">
         <div class="card" style="margin-bottom: 1rem;">
             <img src="/{{ artiste.image }}" class="card-img-top rounded" style="width:100%; height: 150px;" alt="image de l'artiste qui performera">
             <div class="card-body">
               <h5 class="card-title">{{ artiste.nom }}</h5>
               <p class="card-text">{{ artiste.description_tronquee }}</p>
-              <a href="{% url 'API_festivals:artiste_detail' artiste.id %}" class="btn btn-primary">Détails</a>
             </div>
+        </a>
         </div>
         </div>
     {% endfor %}
