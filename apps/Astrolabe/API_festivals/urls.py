@@ -12,6 +12,7 @@ routers.register('configuration', ConfigurationFestivalViewSet, basename='config
 routers.register('partenaires', PartenaireViewSet, basename='partenaires')
 routers.register('modifications', ModificationViewSet, basename='modifications')
 routers.register('news',NewsViewSet,basename="news")
+routers.register('tags', TagsViewSet, basename="tags")
 
 urlpatterns = [
     path('v0/', include(routers.urls)),

@@ -4,37 +4,70 @@
 <img src="/{{logo}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
 {% endblock %}
 {% block content %}
-<h2>Prochaines news du {{ nom_festival }}</h2>
-{% for date, news in news_par_jours.items %}
-<h3>{{date}}</h3>
-{% for nouvelle in news %}
-<div class="col-12 col-sm-6 col-md-4 col-lg-3">
-<div class="card" style="margin-bottom: 1rem;">
-  <img class="card-imge rounded" src="/{{ nouvelle.image }}" alt="{{nouvelle.titre}}" style="width:100%; height: 150px;">
-  <div class="card-body">
-    <h5 class="card-title">{{nouvelle.titre}}</h5>
-    <a href="{% url 'API_festivals:news_detail' id=nouvelle.id %}" class="btn btn-primary">Voir en détails</a>
-  </div>
-</div>
-</div>
-{% endfor %}
-{% endfor %}
-<h2>Prochaines performances du {{ nom_festival }}</h2>
-{% for date, performances in performances_par_jour.items %}
-<h3>{{ date }}</h3>
-<div class="row">
-{% for performance, artiste in performances %}
-<div class="col-12 col-sm-6 col-md-4 col-lg-3">
-<div class="card" style="margin-bottom: 1rem;">
-    <img src="/{{ artiste.image }}" class="card-img-top rounded" style="width:100%; height: 150px;" alt="image de l'artiste qui performera">
-    <div class="card-body">
-      <h5 class="card-title">{{ performance.nom }}</h5>
-      <p class="card-text">de {{ performance.heure_debut }} à {{ performance.heure_fin }}</p>
-      <a href="{% url 'API_festivals:performance_detail' performance.id %}" class="btn btn-primary">Voir en détails</a>
+<script>
+  function switchPage() {
+    let bouton = document.getElementById("boutonSwitch");
+    let corps = document.getElementById("corps");
+    if (bouton.name === "news") {
+      bouton.remove();
+      let contenuCorps = corps.innerHTML;
+      corps.innerHTML = "<button class=\"btn btn-primary\" id=\"boutonSwitch\" name=\"performances\" onclick=\"switchPage()\">Afficher les performances</button>" + contenuCorps;
+      document.getElementById("performances").hidden = true;
+      document.getElementById("news").hidden = false;
+    } else if (bouton.name === "performances") {
+      bouton.remove();
+      let contenuCorps = corps.innerHTML;
+      corps.innerHTML = "<button class=\"btn btn-primary\" id=\"boutonSwitch\" name=\"news\" onclick=\"switchPage()\">Afficher les news</button>" + contenuCorps;
+      document.getElementById("performances").hidden = false;
+      document.getElementById("news").hidden = true;
+    }
+  }
+</script>
+
+<div id="corps">
+  <button class="btn btn-primary" id="boutonSwitch" name="performances" onclick="switchPage()">Afficher les performances</button>
+
+  <div id="performances" hidden>
+    <h2>Prochaines performances du {{ nom_festival }}</h2>
+    {% for date, performances in performances_par_jour.items %}
+    <h3>{{ date }}</h3>
+    <div class="row">
+      {% for performance, artiste in performances %}
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card" style="margin-bottom: 1rem;">
+          <img src="/{{ artiste.image }}" class="card-img-top rounded" style="width:100%; height: 150px;"
+            alt="image de l'artiste qui performera">
+          <div class="card-body">
+            <h5 class="card-title">{{ performance.nom }}</h5>
+            <p class="card-text">de {{ performance.heure_debut }} à {{ performance.heure_fin }}</p>
+            <a href="{% url 'API_festivals:performance_detail' performance.id %}" class="btn btn-primary">Voir en
+              détails</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
     </div>
+    {% endfor %}
+  </div>
+
+  <div id="news">
+    <h2>Prochaines news du {{ nom_festival }}</h2>
+    {% for date, news in news_par_jours.items %}
+    <h3>{{date}}</h3>
+    {% for nouvelle in news %}
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="card" style="margin-bottom: 1rem;">
+        <img class="card-imge rounded" src="/{{ nouvelle.image }}" alt="{{nouvelle.titre}}"
+          style="width:100%; height: 150px;">
+        <div class="card-body">
+          <h5 class="card-title">{{nouvelle.titre}}</h5>
+          <a href="{% url 'API_festivals:news_detail' id=nouvelle.id %}" class="btn btn-primary">Voir en détails</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% endfor %}
+  </div>
+
 </div>
-</div>
-{% endfor %}
-</div>
-{% endfor %}
 {% endblock %}
