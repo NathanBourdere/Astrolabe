@@ -210,6 +210,7 @@ def artistes(request,page):
 
 @configuration_required
 def artiste_create(request):
+    modal = request.GET.get('modal',False)
     logo = ConfigurationFestival.objects.all().first().logoFestival
     if request.method == 'POST':
         artiste_form = ArtisteForm(request.POST, request.FILES)
@@ -219,12 +220,15 @@ def artiste_create(request):
             if Artiste.objects.filter(nom__iexact=nom_lowered).exists():
                 # Si oui, affiche un message d'erreur à l'utilisateur
                 error_message = f"L'artiste '{nom_lowered}' existe déjà. Veuillez enregistrer un artiste avec un nom différent."
+                print(error_message)
                 return render(request, 'artistes/artiste_create.html', {'logo':logo,'form': artiste_form, 'error_message': error_message})
             artiste_form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_artiste = timezone.now()
             modif.save()
-            return redirect('API_festivals:artistes', page=1)
+            if not modal : 
+                return redirect('API_festivals:artistes', page=1)
+            return redirect('API_festivals:performance_create')
     else:
         artiste_form = ArtisteForm()
     return render(request, 'artistes/artiste_create.html', {'form': artiste_form,'logo':logo})
@@ -363,12 +367,16 @@ def partenaire_update(request, id):
 @configuration_required
 def partenaire_delete(request, id):
     partenaire = Partenaire.objects.get(id=id)
-    os.remove(str(partenaire.banniere))
-    partenaire.delete()
+    try :
+        os.remove(str(partenaire.banniere))
+    except FileNotFoundError:
+        pass
+    finally : 
+        partenaire.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_partenaire = timezone.now()
     modif.save()
-    return redirect("API_festivals:accueil")
+    return redirect("API_festivals:partenaires",page=1)
 
 # PERFORMANCES
 @configuration_required
@@ -383,7 +391,7 @@ def performances(request,page):
     performances = performances[(page-1)*limit:]
     render_right_arrow = False
     render_left_arrow = False
-    # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
+    # on affiche les flèches pour la navigation si on a plus de 50 artistes sinon on affiche pas
     if len(Performance.objects.all()) > limit:
         # si on est à la première page, on affiche pas la flèche de gauche
         if page != 1:
@@ -420,7 +428,8 @@ def performance_update(request, id):
             modif.save()
             return redirect('API_festivals:performance_detail', id=id)
     performance_form = PerformanceForm(instance=performance)
-    return render(request, 'performances/performance_update.html', {'logo':logo,'form': performance_form, 'performance': performance})
+    artiste_form = ArtisteForm()
+    return render(request, 'performances/performance_update.html', {'artiste_form':artiste_form,'logo':logo,'form': performance_form, 'performance': performance})
 
 @configuration_required
 def performance_delete(request, id):
@@ -441,8 +450,9 @@ def performance_create(request):
             nom_lowered = nom.lower()
             if Performance.objects.filter(nom__iexact=nom_lowered).exists():
                 # Si oui, affiche un message d'erreur à l'utilisateur
+                artiste_form = ArtisteForm()
                 error_message = f"Le performance '{nom_lowered}' existe déjà. Veuillez enregistrer un performance avec un nom différent."
-                return render(request, 'performances/performance_create.html', {'logo':logo,'form': performance_form, 'error_message': error_message})
+                return render(request, 'performances/performance_create.html', {'artiste_form':artiste_form,'logo':logo,'form': performance_form, 'error_message': error_message})
             performance_form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_performance = timezone.now()
@@ -450,7 +460,8 @@ def performance_create(request):
             return redirect('API_festivals:performances', page=1)
     else:
         performance_form = PerformanceForm()
-    return render(request, 'performances/performance_create.html', {'logo':logo,'form': performance_form})
+    artiste_form = ArtisteForm()
+    return render(request, 'performances/performance_create.html', {'artiste_form':artiste_form,'logo':logo,'form': performance_form})
 
 # SCENES
 @configuration_required

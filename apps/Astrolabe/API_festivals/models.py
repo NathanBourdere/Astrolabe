@@ -8,7 +8,7 @@ class Artiste(models.Model):
     youtube = models.URLField(null=True, blank=True)
     instagram = models.URLField(null=True, blank=True)
     facebook = models.URLField(null=True, blank=True)
-    image = models.ImageField(upload_to='static/model/artistes/', unique=True,default='static/model/default.jpg')
+    image = models.ImageField(upload_to='static/model/artistes/',default='static/model/artistes/default.jpg')
     recommendations = models.ManyToManyField('self',blank=True)
 
     def description_tronquee(self,max_len=60):
@@ -35,7 +35,7 @@ class PoliceEcriture(models.Model):
 
 class ConfigurationFestival(models.Model):
     nomFestival = models.CharField(max_length=200,unique=True)
-    logoFestival = models.ImageField(upload_to="static/model/configuration/logo/",unique=True)
+    logoFestival = models.ImageField(upload_to="static/model/configuration/logo/",default="static/model/default.jpg")
     descriptionFestival = models.TextField(max_length=2500)
     siteWebFestival = models.URLField(max_length=254,unique=True)
     youtubeFestival = models.URLField(max_length=254,unique=True)
@@ -75,7 +75,7 @@ class Tag(models.Model):
 
 class Scene(models.Model):
     nom = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='static/model/scenes/', unique=True,default='static/model/default.jpg')
+    image = models.ImageField(upload_to='static/model/scenes/',default='static/model/scenes/default.jpg')
     lieu = models.CharField(max_length=200, default="Astrolabe")
 
     def __str__(self):
@@ -96,7 +96,7 @@ class Modification(models.Model):
 class News(models.Model):
     titre = models.CharField(max_length=254)
     corps = models.TextField(max_length=254)
-    image = models.ImageField(upload_to='static/model/news', max_length=254,default="static/model/default.jpg")
+    image = models.ImageField(upload_to='static/model/news', max_length=254)
     date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

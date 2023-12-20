@@ -7,7 +7,11 @@
 <form class="persoForm" method="POST">
     {% csrf_token %}
     {{ form.as_p }}
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPartnerModal">
+        Ajouter un nouvel artiste
+    </button>
     <input type="submit" value="Enregistrer">
 </form>
 {{form.errors}}
+{% include '../modal/artistes/artiste_create.html'%}
 {% endblock %}
