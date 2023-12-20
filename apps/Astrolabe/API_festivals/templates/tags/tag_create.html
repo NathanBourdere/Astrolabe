@@ -5,10 +5,17 @@
 <img src="/{{logo}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
 {% endblock %}
 {% block content %}
-<form class="persoForm" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Enregistrer">
-</form>
+<div class="card bg-grey">
+    <div class="card" style="text-align: center; margin-top: 2em; margin-left: 7em; margin-right: 7em;">
+        <h2 class="card-title">Création d'un nouveau tag</h2>
+    </div>
+    <div class="card-body">
+        <form class="persoForm" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Enregistrer">
+        </form>
+    </div>
+</div>
 {{form.errors}}
 {% endblock %}
