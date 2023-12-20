@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyCa3AifK1t9Blr7zNLY5x2H7Upy2Cj5lN0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>688319085109</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.astrolabeUser.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>iut-astrolabe</string>
+	<key>STORAGE_BUCKET</key>
+	<string>iut-astrolabe.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:688319085109:ios:48a187097da7abc28c8f7c</string>
+</dict>
+</plist>

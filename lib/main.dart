@@ -1,5 +1,4 @@
-// ignore_for_file: prefer_const_constructors
-
+import 'package:festival/api/firebase_api.dart';
 import 'package:festival/database.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/modifications.dart';
@@ -8,16 +7,18 @@ import 'package:festival/performance.dart';
 import 'package:festival/performances.dart';
 import 'package:festival/performances_tags.dart';
 import 'package:festival/scenes_page.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:google_fonts/google_fonts.dart';
-// ignore: unused_import
 import 'package:flutter/services.dart' show AssetManifest;
 import 'artistes_page.dart';
 import 'billetterie_page.dart';
 import 'home.dart';
 import 'news_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +37,10 @@ void main() async {
       ),
     ),
   );
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await FirebaseApi().initNotifications();
 }
 
 class MyApp extends StatelessWidget {
