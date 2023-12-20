@@ -11,9 +11,13 @@
         <form class="persoForm" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ configuration_form.as_p }}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPartnerModal">
+                Ajouter un nouveau partenaire
+            </button>
             <input type="submit" value="Enregistrer">
         </form>
         {{ configuration_form.errors }}
     </div>
 </div>
+{% include '../modal/partenaires/partenaire_create.html' %}
 {% endblock %}
