@@ -35,5 +35,6 @@
     </tbody>
 </table>
     <a href="{% url 'API_festivals:scene_update' id=scene.id %}" class="btn btn-warning">Modifier</a>
-    <a href="{% url 'API_festivals:scene_delete' id=scene.id %}" class="btn btn-danger">Supprimer</a>
+    <a href="{% url 'API_festivals:scene_delete' id=scene.id %}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">Supprimer</a>
+    {% include '../modal/scenes/scene_delete.html' %}
 {% endblock %}

@@ -34,25 +34,25 @@ class PoliceEcriture(models.Model):
         return self.nom
 
 class ConfigurationFestival(models.Model):
-    nomFestival = models.CharField(max_length=200,unique=True)
-    logoFestival = models.ImageField(upload_to="static/model/configuration/logo/",default="static/model/default.jpg")
-    descriptionFestival = models.TextField(max_length=2500)
-    siteWebFestival = models.URLField(max_length=254,unique=True)
-    youtubeFestival = models.URLField(max_length=254,unique=True)
-    facebookFestival = models.URLField(max_length=254,unique=True)
-    instagramFestival = models.URLField(max_length=254,unique=True)
-    mentionsLegales = models.TextField(max_length=2500)
-    policeEcriture = models.ForeignKey('PoliceEcriture', on_delete=models.CASCADE)
+    nom = models.CharField(max_length=200,unique=True)
+    logo = models.ImageField(upload_to="static/model/configuration/logo/",default="static/model/default.jpg")
+    description = models.TextField(max_length=2500)
+    site_web = models.URLField(max_length=254,unique=True)
+    youtube = models.URLField(max_length=254,unique=True)
+    facebook = models.URLField(max_length=254,unique=True)
+    instagram = models.URLField(max_length=254,unique=True)
+    mentions_legales = models.TextField(max_length=2500)
+    police_ecriture = models.ForeignKey('PoliceEcriture', on_delete=models.CASCADE)
     #RGB
-    couleurPrincipale = models.CharField(max_length=30)
-    couleurSecondaire = models.CharField(max_length=30)
-    couleurBackground = models.CharField(max_length=30)
+    couleur_principale = models.CharField(max_length=30)
+    couleur_secondaire = models.CharField(max_length=30)
+    couleur_background = models.CharField(max_length=30)
     video_promo = models.FileField(upload_to="static/model/configuration/video/", null=True, blank=True)
     partenaires = models.ManyToManyField(Partenaire)
     mode_festival = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.nomFestival
+        return self.nom
     
 class Performance(models.Model):
     nom = models.CharField(max_length=200)

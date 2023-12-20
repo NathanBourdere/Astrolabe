@@ -41,5 +41,6 @@
     </tbody>
 </table>
     <a href="{% url 'API_festivals:performance_update' id=performance.id %}" class="btn btn-warning">Modifier</a>
-    <a href="{% url 'API_festivals:performance_delete' id=performance.id %}" class="btn btn-danger">Supprimer</a>
+    <a href="{% url 'API_festivals:performance_delete' id=performance.id %}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">Supprimer</a>
+    {% include '../modal/performances/performance_delete.html' %}
 {% endblock %}

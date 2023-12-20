@@ -7,17 +7,17 @@ django.setup()
 from API_festivals.models import *
 
 hellfest = ConfigurationFestival()
-hellfest.nomFestival = "Hellfest"
-hellfest.logoFestival = "static/model/configuration/logo/hellfest.png"
-hellfest.descriptionFestival = "Le Hellfest est un festival de musique français spécialisé dans les musiques extrêmes, annuellement organisé au mois de juin à Clisson en Loire-Atlantique. Il est l'un des plus importants festivals de son genre en Europe et le premier en France."
-hellfest.siteWebFestival = "http://hellfest.fr"
-hellfest.youtubeFestival = "https://www.youtube.com/user/HellfestFestival"
-hellfest.facebookFestival = "https://www.facebook.com/hellfest"
-hellfest.instagramFestival = "https://www.instagram.com/hellfestopenair/"
-hellfest.mentionsLegales = "Hellfest est une marque déposée de Hellfest Productions."
-hellfest.couleurPrincipale = "#000000"
-hellfest.couleurSecondaire = "#FF00FF"
-hellfest.couleurBackground = "#FF0000"
+hellfest.nom = "Hellfest"
+hellfest.logo = "static/model/configuration/logo/hellfest.png"
+hellfest.description = "Le Hellfest est un  de musique français spécialisé dans les musiques extrêmes, annuellement organisé au mois de juin à Clisson en Loire-Atlantique. Il est l'un des plus importants s de son genre en Europe et le premier en France."
+hellfest.siteWeb = "http://hellfest.fr"
+hellfest.youtube = "https://www.youtube.com/user/HellfestFestival"
+hellfest.facebook = "https://www.facebook.com/hellfest"
+hellfest.instagram = "https://www.instagram.com/hellfestopenair/"
+hellfest.mentions_legales = "Hellfest est une marque déposée de Hellfest Productions."
+hellfest.couleur_principale = "#000000"
+hellfest.couleur_secondaire = "#FF00FF"
+hellfest.couleur_background = "#FF0000"
 hellfest.video_promo = "static/model/configuration/video/hellfest.mp4"
 hellfest.mode = True
 
@@ -25,7 +25,7 @@ arial = PoliceEcriture()
 arial.nom = "Roboto"
 arial.save()
 
-hellfest.policeEcriture = arial
+hellfest.police_ecriture = arial
 hellfest.save()
 
 open_sans = PoliceEcriture()
