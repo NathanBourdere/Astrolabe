@@ -21,9 +21,14 @@ form.persoForm {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-input[required], textarea[required], select[required] {
+.champsRequis {
     border: 1px solid #ffffff;
     background-color: #f0f8ff;
+}
+
+.champsInvalide {
+    border: 1px solid #ffffff;
+    background-color: #fff0f0;
 }
 
 input, textarea, select {

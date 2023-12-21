@@ -246,6 +246,11 @@ def artiste_update(request, id):
     if request.method == 'POST':
         artiste_form = ArtisteForm(request.POST, request.FILES, instance=artiste)
         if artiste_form.has_changed() and artiste_form.is_valid():
+            nom_lowered = artiste_form.cleaned_data['nom'].lower()
+            if Artiste.objects.filter(nom__iexact=nom_lowered).exists():
+                # Si oui, affiche un message d'erreur à l'utilisateur
+                error_message = f"L'artiste '{nom_lowered}' existe déjà. Veuillez enregistrer un artiste avec un nom différent."
+                return render(request, 'artistes/artiste_update.html', {'logo':logo,'form': artiste_form, 'artiste': artiste, 'error_message': error_message})
             if "image" in artiste_form.changed_data:
                 os.remove(chemin_image)
             artiste_form.save()
@@ -261,7 +266,6 @@ def artiste_delete(request, id):
     artiste = Artiste.objects.get(id=id)
     perfs = Performance.objects.filter(artistes=artiste)
     confirmation = request.GET.get('confirmation',False)
-    print("here")
     if confirmation:
         for perf in perfs:
             perf.delete()
@@ -320,7 +324,6 @@ def partenaire_create(request):
         print("post")
         partenaire_form = PartenaireForm(request.POST, request.FILES)
         if partenaire_form.is_valid():
-            print("valide")
             nom = partenaire_form.cleaned_data['nom']
             nom_lowered = nom.lower()
             if Partenaire.objects.filter(nom__iexact=nom_lowered).exists():
@@ -354,6 +357,14 @@ def partenaire_update(request, id):
     if request.method == 'POST':
         partenaire_form = PartenaireForm(request.POST, request.FILES, instance=partenaire)
         if partenaire_form.has_changed() and partenaire_form.is_valid():
+            nom = partenaire_form.cleaned_data['nom']
+            nom_lowered = nom.lower()
+            print(Partenaire.objects.filter(nom__iexact=nom_lowered).exists())
+            if Partenaire.objects.filter(nom__iexact=nom_lowered).exists():
+                # Si oui, affiche un message d'erreur à l'utilisateur
+                error_message = f"Le partenaire '{nom_lowered}' existe déjà. Veuillez enregistrer un partenaire avec un nom différent."
+                print(error_message)
+                return render(request, 'partenaires/partenaire_create.html', {'logo':logo,'form': partenaire_form, 'partenaire': partenaire, 'error_message': error_message})
             if "banniere" in partenaire_form.changed_data:
                 os.remove(chemin_banniere)
             partenaire_form.save()
@@ -671,6 +682,12 @@ def tag_update(request, id):
     if request.method == 'POST':
         tags_form = TagsForm(request.POST, request.FILES, instance=tag)
         if tags_form.has_changed() and tags_form.is_valid():
+            nom = tags_form.cleaned_data['nom']
+            nom_lowered = nom.lower()
+            if Tag.objects.filter(nom__iexact=nom_lowered).exists():
+                # Si oui, affiche un message d'erreur à l'utilisateur
+                error_message = f"Le tag '{nom_lowered}' existe déjà. Veuillez enregistrer un tag avec un nom différent."
+                return render(request, 'tags/tag_update.html', {'logo':logo,'form': tags_form, 'tag':tag, 'error_message': error_message})
             tags_form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_tags = timezone.now()
