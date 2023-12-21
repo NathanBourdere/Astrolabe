@@ -390,6 +390,7 @@ def partenaire_delete(request, id):
 def performances(request,page):
     limit = 2
     logo = ConfigurationFestival.objects.all().first().logoFestival
+    performances_artistes = dict()
     performances = Performance.objects.all().order_by('date')
     form = SearchForm(request.GET)
     if form.is_valid():
@@ -407,9 +408,11 @@ def performances(request,page):
         if (len(performances)) > limit:
             render_right_arrow = True
     performances = performances[:limit]
-    
+    for performance in performances:
+        performances_artistes[performance] = Artiste.objects.filter(performance=performance)
 
-    return render(request, 'performances/performances.html',{'logo':logo,"performances": performances,"form":form,
+
+    return render(request, 'performances/performances.html',{'logo':logo,"performances": performances_artistes,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
 @configuration_required
