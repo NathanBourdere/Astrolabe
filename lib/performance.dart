@@ -4,17 +4,16 @@ import 'package:festival/database.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/artiste_page.dart';
 import 'package:festival/scene_page.dart';
-import 'package:provider/provider.dart';
 
 class PerformanceDetailsPage extends StatelessWidget {
-  const PerformanceDetailsPage({Key? key}) : super(key: key);
+  final Configuration configuration;
+  const PerformanceDetailsPage({Key? key, required this.configuration})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)?.settings.arguments;
     final performanceId = arguments as int;
-    Configuration configuration =
-        Provider.of<ValueNotifier<Configuration>>(context).value;
 
     return FutureBuilder<Performance>(
       future: DatabaseAstrolabe.instance.getPerformanceById(performanceId),
@@ -73,6 +72,7 @@ class PerformanceDetailsPage extends StatelessWidget {
                                 builder: (context) => ScenePage(
                                   scene: performance.scene,
                                   performances: performances,
+                                  configuration: configuration,
                                 ),
                               ),
                             );
@@ -111,6 +111,7 @@ class PerformanceDetailsPage extends StatelessWidget {
                                 builder: (context) => PageArtiste(
                                   artiste: artiste,
                                   performances: performances,
+                                  configuration: configuration,
                                 ),
                               ),
                             );

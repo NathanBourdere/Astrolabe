@@ -8,19 +8,21 @@ import 'package:flutter/material.dart';
 import 'package:festival/models/performance.dart';
 import 'package:festival/models/scene.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 class ScenePage extends StatelessWidget {
   final Scene scene;
   final List<Performance> performances;
+  final Configuration configuration;
 
-  const ScenePage({Key? key, required this.scene, required this.performances})
+  const ScenePage(
+      {Key? key,
+      required this.scene,
+      required this.performances,
+      required this.configuration})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Configuration configuration =
-        Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
       appBar: AppBar(title: Text(scene.nom), actions: [
         IconButton(

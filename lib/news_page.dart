@@ -1,61 +1,64 @@
+import 'dart:io';
+
+import 'package:festival/database.dart';
+import 'package:festival/models/news.dart';
 import 'package:flutter/material.dart';
-import 'models/news.dart';
 
-class NewsPage extends StatefulWidget {
-  const NewsPage({super.key});
 
-  @override
-  _NotificationPageState createState() => _NotificationPageState();
-}
+class NewsPage extends StatelessWidget {
 
-class _NotificationPageState extends State<NewsPage> {
   @override
   Widget build(BuildContext context) {
-    List<News> notifications = [
-      News(
-        idNews: 1,
-        titre: 'Titre 1',
-        corps: 'corps 1',
-        image: 'Image 1',
-        isRead: 0,
-      ),
-      News(
-        idNews: 2,
-        titre: 'Titre 2',
-        corps: 'corps 2',
-        image: 'Image 2',
-        isRead: 0,
-      ),
-      News(
-        idNews: 3,
-        titre: 'Titre 3',
-        corps: 'corps 3',
-        image: 'Image 3',
-        isRead: 0,
-      ),
-    ];
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: const Text('Actualités'),
       ),
-      body: Center(
-          // Vous afficherez les notifications ici
-          child: ListView.builder(
-        itemCount: notifications.length,
-        itemBuilder: (context, index) {
-          final notification = notifications[index];
-// Indiquez si la notification a été lue
+      body: FutureBuilder<List<News>>(
+        // Utilisez votre fonction getNews ici
+        future: DatabaseAstrolabe.instance.getNews(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Erreur: ${snapshot.error}'),
+            );
+          } else {
+            // La liste de News récupérée
+            List<News> newsList = snapshot.data!;
 
-          // Déterminez la couleur en fonction de si la notification est lue ou non
+            // Construisez la liste d'éléments ici
+            return ListView.builder(
+              itemCount: newsList.length,
+              itemBuilder: (context, index) {
+                News news = newsList[index];
 
-          return ListTile(
-            title: Text(
-              notification.corps,
-              style: const TextStyle(color: Colors.grey),
-            ),
-          );
+                // Vous pouvez personnaliser cela en fonction de vos besoins
+                return ListTile(
+                  title: Text(news.titre),
+                  subtitle: Text(news.corps),
+                  leading: news.image != ''
+                      ? Image.file(
+                          File(news.image),
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                );
+              },
+            );
+          }
         },
-      )),
+      ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: NewsPage(),
+  ));
 }

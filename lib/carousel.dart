@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:festival/models/configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:festival/database.dart';
@@ -7,7 +8,8 @@ import 'models/artiste.dart';
 import 'package:festival/models/performance.dart';
 
 class CarouselSliderWidget extends StatelessWidget {
-  const CarouselSliderWidget({Key? key}) : super(key: key);
+  final Configuration configuration;
+  const CarouselSliderWidget({Key? key, required this.configuration}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,7 @@ class CarouselSliderWidget extends StatelessWidget {
                             builder: (context) => PageArtiste(
                               artiste: artiste,
                               performances: performances,
+                              configuration: configuration,
                             ),
                           ),
                         );

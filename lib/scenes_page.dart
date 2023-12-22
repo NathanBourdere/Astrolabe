@@ -1,21 +1,18 @@
 import 'package:festival/database.dart';
 import 'package:festival/models/configuration.dart';
 // ignore: unused_import
-import 'package:festival/navbar.dart';
 import 'package:festival/scene_page.dart';
 import 'package:flutter/material.dart';
 import 'package:festival/models/scene.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'dart:io';
 
 class ScenesPage extends StatelessWidget {
-  const ScenesPage({Key? key}) : super(key: key);
+  final Configuration configuration;
+  const ScenesPage({Key? key, required this.configuration}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Configuration configuration =
-        Provider.of<ValueNotifier<Configuration>>(context).value;
     return Scaffold(
         appBar: AppBar(
           title: const Text('Scènes'),
@@ -47,7 +44,7 @@ class ScenesPage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ScenePage(
-                              scene: scene, performances: performances),
+                              scene: scene, performances: performances, configuration: configuration),
                         ),
                       );
                     },

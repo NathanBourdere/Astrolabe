@@ -1,13 +1,15 @@
+import 'package:festival/artistes_page.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'billetterie_page.dart';
 import 'carousel.dart';
 import 'menu_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  final Configuration configuration;
+  const MyHomePage(
+      {super.key, required this.title, required this.configuration});
 
   final String title;
 
@@ -18,18 +20,26 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    const CarouselSliderWidget(),
-    const BilletteriePage(),
-    const Center(child: Text('Likes')),
-    const MenuPage(),
-  ];
+  late List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize _pages here
+    _pages = [
+      CarouselSliderWidget(configuration: widget.configuration),
+      const BilletteriePage(),
+      const Center(child: Text('Likes')),
+      ArtistesPage(configuration: widget.configuration),
+      PerformancesPage(
+        configuration: widget.configuration,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
-    final configuration =
-        Provider.of<ValueNotifier<Configuration>>(context).value;
-
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
@@ -61,9 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: configuration.getBackgroundColor,
-        selectedItemColor: configuration.getMainColor,
-        unselectedItemColor: configuration.getFontColor,
+        backgroundColor: widget.configuration.getBackgroundColor,
+        selectedItemColor: widget.configuration.getMainColor,
+        unselectedItemColor: widget.configuration.getFontColor,
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
@@ -82,6 +92,10 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.heart),
             label: 'Likes',
+          ),
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.artstation),
+            label: 'Artistes',
           ),
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.bars),

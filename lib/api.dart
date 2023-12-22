@@ -83,6 +83,21 @@ class FestivalApi {
     final response = await http.get(Uri.parse('$baseUrl/news/'));
     if (response.statusCode == 200) {
       final news = jsonDecode(utf8.decode(response.bodyBytes)) as List;
+
+      for (var newe in news) {
+        if (newe['image'] != null) {
+          final imageResponse = await http.get(Uri.parse(newe['image']));
+          if (imageResponse.statusCode == 200) {
+            final imageBytes = imageResponse.bodyBytes;
+            final imageUint8List = Uint8List.fromList(imageBytes);
+            final directory = await getApplicationDocumentsDirectory();
+            final imagePath =
+                await File('${directory.path}/new_${newe['id']}.png').create();
+            await imagePath.writeAsBytes(imageUint8List);
+            newe['image'] = imagePath.path;
+          }
+        }
+      }
       return news.map((json) => News.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load news');
@@ -104,6 +119,18 @@ class FestivalApi {
           final imagePath = await File('${directory.path}/logo.png').create();
           await imagePath.writeAsBytes(imageUint8List);
           configuration[0]['logo'] = imagePath.path;
+        }
+
+        // download videoFestival
+        final videoResponse =
+            await http.get(Uri.parse(configuration[0]['video_promo']));
+        if (videoResponse.statusCode == 200) {
+          final videoBytes = videoResponse.bodyBytes;
+          final videoUint8List = Uint8List.fromList(videoBytes);
+          final directory = await getApplicationDocumentsDirectory();
+          final videoPath = await File('${directory.path}/video.mp4').create();
+          await videoPath.writeAsBytes(videoUint8List);
+          configuration[0]['video_promo'] = videoPath.path;
         }
       }
       return Configuration.fromJson_api(configuration[0]);

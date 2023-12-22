@@ -5,21 +5,16 @@ import 'package:festival/database.dart';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/performance.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'dart:io';
 
 class ArtistesPage extends StatelessWidget {
-  const ArtistesPage({Key? key}) : super(key: key);
+  final Configuration configuration;
+  const ArtistesPage({Key? key, required this.configuration}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Configuration configuration =
-        Provider.of<ValueNotifier<Configuration>>(context).value;
     print(configuration.couleurBackground);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Artistes'),
-      ),
       body: FutureBuilder<List<Artiste>>(
         future: DatabaseAstrolabe.instance.getArtistes(),
         builder: (context, snapshot) {
@@ -49,6 +44,7 @@ class ArtistesPage extends StatelessWidget {
                         builder: (context) => PageArtiste(
                           artiste: artiste,
                           performances: performances,
+                          configuration: configuration,
                         ),
                       ),
                     );

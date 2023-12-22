@@ -86,18 +86,17 @@ class Modifications {
     if (newModifs.date_modif_scene != modifications.date_modif_scene) {
       scenes = await festivalApi.getScenes();
     }
-
-    if (newModifs.date_modif_config != modifications.date_modif_config) {
-      configuration = await festivalApi.getConfiguration();
-    } else {
-      configuration = await database.getConfiguration();
-    }
     if (newModifs.date_modif_tags != modifications.date_modif_tags) {
       tags = await festivalApi.getTags();
     }
     if (newModifs.date_modif_partenaire !=
         modifications.date_modif_partenaire) {
       partenaires = await festivalApi.getPartenaires();
+    }
+    if (newModifs.date_modif_config != modifications.date_modif_config) {
+      configuration = await festivalApi.getConfiguration();
+    } else {
+      configuration = await database.getConfiguration();
     }
 
     List<News> news = [];
@@ -121,6 +120,7 @@ class Modifications {
         await festivalApi.getArtistesRecommandations();
     Map<int, List<int>> tagsPerformances =
         await festivalApi.getTagsPerformances();
+    print('Configuration: ${configuration.toJson()}');
 
     await database.updateDatabase(
       artistes,

@@ -5,25 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:festival/database.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 
 class PageArtiste extends StatelessWidget {
   final Artiste artiste;
   final List<Performance> performances;
+  final Configuration configuration;
 
-  const PageArtiste({
-    Key? key,
-    required this.artiste,
-    required this.performances,
-  }) : super(key: key);
+  const PageArtiste(
+      {Key? key,
+      required this.artiste,
+      required this.performances,
+      required this.configuration})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Configuration configuration =
-        Provider.of<ValueNotifier<Configuration>>(context).value;
-
     return FutureBuilder<List<Performance>>(
       future: DatabaseAstrolabe.instance.getPerformancesByArtiste(artiste),
       builder: (context, snapshot) {
@@ -270,6 +268,7 @@ class PageArtiste extends StatelessWidget {
                                           builder: (context) => PageArtiste(
                                             artiste: similarArtist,
                                             performances: performances,
+                                            configuration: configuration,
                                           ),
                                         ),
                                       );

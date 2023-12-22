@@ -12,7 +12,6 @@ import 'package:festival/models/tag.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
-import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'models/news.dart';
 
@@ -293,6 +292,15 @@ class DatabaseAstrolabe {
     });
   }
 
+  Future<void> setConfiguration(Configuration configuration) async {
+    final db = database;
+    return db.then((database) async {
+      await database!.update('CONFIGURATION', configuration.toJson());
+    });
+  }
+
+
+
   Future<Modifications> getModifications() {
     final db = database;
     return db.then((database) async {
@@ -337,11 +345,31 @@ class DatabaseAstrolabe {
     });
   }
 
+  Future<List<Tag>> getTagsVisible() {
+    final db = database;
+    return db.then((database) async {
+      List<Map<String, dynamic>> tags = await database!.query('TAG');
+      List<Tag> tagsObject = tags.map((data) => Tag.fromJson(data)).toList();
+      List<Tag> tagsReturn = [];
+      print(tagsObject);
+      for (Tag tag in tagsObject) {
+        print('tag.visible = ${tag.visible}');
+        if (tag.visible == 1) {
+          tagsReturn.add(tag);
+          print('tag.visible = ${tag.visible}');
+        }
+      }
+      return tagsReturn;
+    });
+  }
+
   Future<List<Tag>> getTags() {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> tags = await database!.query('TAG');
-      return tags.map((data) => Tag.fromJson(data)).toList();
+      List<Tag> tagsList = tags.map((data) => Tag.fromJson(data)).toList();
+      tagsList.add(Tag(idTag: -1, nom: 'Tous', visible: 1));
+      return tagsList;
     });
   }
 
@@ -357,6 +385,9 @@ class DatabaseAstrolabe {
 
   Future<List<Performance>> getPerformancesByTag(int tag) {
     final db = database;
+    if (tag == -1) {
+      return getPerformances();
+    }
     return db.then((database) async {
       final List<Map<String, dynamic>> performances = await database!.rawQuery(
           'SELECT DISTINCT PERFORMANCE.id, PERFORMANCE.nom, PERFORMANCE.date, PERFORMANCE.heure_debut, PERFORMANCE.heure_fin, PERFORMANCE.scene FROM PERFORMANCE INNER JOIN TAG_PERFORMANCE ON PERFORMANCE.id = TAG_PERFORMANCE.performanceId WHERE TAG_PERFORMANCE.tagId = ?',
@@ -374,6 +405,26 @@ class DatabaseAstrolabe {
         performance.scene = scene;
       }
       return performancesList;
+    });
+  }
+
+  Future<String> getArtistImageByTag(Tag tag) {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> artistes = await database!.rawQuery(
+          'SELECT DISTINCT ARTISTE.image FROM ARTISTE INNER JOIN PERF_ARTISTE ON ARTISTE.id = PERF_ARTISTE.artisteId INNER JOIN TAG_PERFORMANCE ON PERF_ARTISTE.performanceId = TAG_PERFORMANCE.performanceId WHERE TAG_PERFORMANCE.tagId = ?',
+          [tag.idTag]);
+      return artistes.first['image'];
+    });
+  }
+
+  Future<String> getArtistImageByPerformance(Performance performance) {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> artistes = await database!.rawQuery(
+          'SELECT DISTINCT ARTISTE.image FROM ARTISTE INNER JOIN PERF_ARTISTE ON ARTISTE.id = PERF_ARTISTE.artisteId WHERE PERF_ARTISTE.performanceId = ?',
+          [performance.id]);
+      return artistes.first['image'];
     });
   }
 
@@ -421,7 +472,8 @@ class DatabaseAstrolabe {
       );
     }
 
-    // Update or insert CONFIGURATION
+    // Delete configuration and insert new one
+    await db?.delete('CONFIGURATION');
     await db?.insert(
       'CONFIGURATION',
       configuration.toJson(),

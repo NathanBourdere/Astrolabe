@@ -99,6 +99,7 @@ class Configuration {
   }
 
   factory Configuration.fromJson_database(Map<String, dynamic> json) {
+    print(json);
     return Configuration(
       nomFestival: json['nomFestival'],
       logoFestival: json['logoFestival'],
