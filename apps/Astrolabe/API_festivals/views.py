@@ -298,7 +298,7 @@ def artiste_delete(request, id):
 # PARTENAIRES
 @configuration_required
 def partenaires(request,page):
-    limit = 2
+    limit = 50
     logo = ConfigurationFestival.objects.all().first().logo
     partenaires = Partenaire.objects.all()
     form = SearchForm(request.GET)
@@ -401,7 +401,7 @@ def partenaire_delete(request, id):
 # PERFORMANCES
 @configuration_required
 def performances(request,page):
-    limit = 2
+    limit = 50
     performances_artistes = dict()
     logo = ConfigurationFestival.objects.all().first().logo
     performances = Performance.objects.all().order_by('date')
@@ -490,7 +490,7 @@ def performance_create(request):
 # SCENES
 @configuration_required
 def scenes(request,page):
-    limit = 2
+    limit = 50
     logo = ConfigurationFestival.objects.all().first().logo
     scenes = Scene.objects.all()
     form = SearchForm(request.GET)
@@ -577,7 +577,7 @@ def scene_create(request):
 # NEWS
 @configuration_required
 def news(request,page):
-    limit = 2
+    limit = 50
     logo = ConfigurationFestival.objects.all().first().logo
     news = News.objects.all()
     form = SearchForm(request.GET)
