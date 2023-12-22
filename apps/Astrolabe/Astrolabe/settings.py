@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     'django_extensions',
     'drf_yasg',
+    'widget_tweaks',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
