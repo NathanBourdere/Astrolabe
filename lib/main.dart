@@ -1,4 +1,3 @@
-import 'package:festival/api.dart';
 import 'package:festival/api/firebase_api.dart';
 import 'package:festival/database.dart';
 import 'package:festival/menu_page.dart';
@@ -67,7 +66,7 @@ class MyApp extends StatelessWidget {
       title: 'Astrolabe',
       theme: ThemeData(
         colorScheme:
-            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 208, 255, 0)),
+            ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 208, 255, 0)),
         scaffoldBackgroundColor: configuration.getBackgroundColor,
         useMaterial3: true,
         textTheme: TextTheme(
@@ -80,7 +79,7 @@ class MyApp extends StatelessWidget {
               configuration: configuration,
             ),
         '/news': (context) => NewsPage(),
-        '/billetterie': (context) => BilletteriePage(),
+        '/billetterie': (context) => const BilletteriePage(),
         '/performances': (context) => PerformancesPage(
               configuration: configuration,
             ),

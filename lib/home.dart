@@ -1,4 +1,6 @@
 import 'package:festival/artistes_page.dart';
+import 'package:festival/database.dart';
+import 'package:festival/like_page.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:flutter/material.dart';
 import 'billetterie_page.dart';
@@ -28,14 +30,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Initialize _pages here
     _pages = [
-      CarouselSliderWidget(configuration: widget.configuration),
-      const BilletteriePage(),
-      const Center(child: Text('Likes')),
-      ArtistesPage(configuration: widget.configuration),
-      PerformancesPage(
-        configuration: widget.configuration,
-      ),
-    ];
+  CarouselSliderWidget(configuration: widget.configuration),
+  const BilletteriePage(),
+  LikedArtistsPage(
+    key: GlobalKey<LikedArtistsPageState>(),
+    likedArtists: DatabaseAstrolabe.instance.getLikedArtistes(),
+    configuration: widget.configuration,
+  ),
+  ArtistesPage(configuration: widget.configuration),
+  PerformancesPage(
+    configuration: widget.configuration,
+  ),
+];
   }
 
   @override

@@ -97,16 +97,12 @@ class _InformationsPageState extends State<InformationsPage> {
                         'Error loading partners: ${partenairesSnapshot.error}');
                   } else {
                     List<Partenaire> partenaires = partenairesSnapshot.data!;
-
-                    // Number of images per row
-                    int imagesPerRow = 2;
-
                     return Container(
                       margin: const EdgeInsets.all(10),
                       child: GridView.builder(
                         shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: imagesPerRow,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // Set the number of items per row
                           crossAxisSpacing:
                               8.0, // Adjust spacing between images
                           mainAxisSpacing: 8.0,
@@ -198,7 +194,7 @@ class _InformationsPageState extends State<InformationsPage> {
               ),
               const SizedBox(height: 8),
               // Display Video
-              Container(
+              SizedBox(
                 height: 300, // Set a fixed height or adjust as needed
                 child: Chewie(controller: _chewieController),
               ),

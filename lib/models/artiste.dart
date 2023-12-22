@@ -10,6 +10,7 @@ class Artiste {
   String instagram;
   String facebook;
   String image;
+  int like;
 
   Artiste({
     required this.id,
@@ -21,6 +22,7 @@ class Artiste {
     required this.instagram,
     required this.facebook,
     required this.image,
+    required this.like,
   });
 
   int get getId => id;
@@ -32,8 +34,13 @@ class Artiste {
   String get getInstagram => instagram;
   String get getFacebook => facebook;
   String get getImage => image;
+  int get getLike => like;
 
   factory Artiste.fromJson(Map<String, dynamic> json) {
+    int likes = 0;
+    if (json['like'] == 1) {
+      likes = 1;
+    }
     return Artiste(
       id: json['id'],
       nom: json['nom'],
@@ -44,6 +51,7 @@ class Artiste {
       instagram: json['instagram'] ?? '',
       facebook: json['facebook'] ?? '',
       image: json['image'] ?? '',
+      like: likes,
     );
   }
 
@@ -57,6 +65,7 @@ class Artiste {
       'instagram': instagram,
       'facebook': facebook,
       'image': image,
+      'like': like,
     };
   }
 

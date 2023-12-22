@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/performance.dart';
@@ -6,24 +7,38 @@ import 'package:festival/database.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
 
-class PageArtiste extends StatelessWidget {
+class PageArtiste extends StatefulWidget {
   final Artiste artiste;
   final List<Performance> performances;
   final Configuration configuration;
 
-  const PageArtiste(
-      {Key? key,
-      required this.artiste,
-      required this.performances,
-      required this.configuration})
-      : super(key: key);
+  const PageArtiste({
+    Key? key,
+    required this.artiste,
+    required this.performances,
+    required this.configuration,
+  }) : super(key: key);
+
+  @override
+  _PageArtisteState createState() => _PageArtisteState();
+}
+
+class _PageArtisteState extends State<PageArtiste> {
+  bool isLiked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Set the initial like status based on artist's like property
+    isLiked = widget.artiste.like == 1;
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Performance>>(
-      future: DatabaseAstrolabe.instance.getPerformancesByArtiste(artiste),
+      future:
+          DatabaseAstrolabe.instance.getPerformancesByArtiste(widget.artiste),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -41,7 +56,7 @@ class PageArtiste extends StatelessWidget {
           final performancesArtiste = snapshot.data!;
 
           return FutureBuilder<List<Artiste>>(
-            future: DatabaseAstrolabe.instance.getArtistesRecos(artiste),
+            future: DatabaseAstrolabe.instance.getArtistesRecos(widget.artiste),
             builder: (context, recommendedArtistsSnapshot) {
               if (recommendedArtistsSnapshot.connectionState ==
                   ConnectionState.waiting) {
@@ -53,9 +68,7 @@ class PageArtiste extends StatelessWidget {
               } else if (recommendedArtistsSnapshot.hasError) {
                 return Scaffold(
                   body: Center(
-                    child: Text(
-                      'Error: ${recommendedArtistsSnapshot.error}',
-                    ),
+                    child: Text('Error: ${recommendedArtistsSnapshot.error}'),
                   ),
                 );
               } else {
@@ -71,7 +84,7 @@ class PageArtiste extends StatelessWidget {
                           children: [
                             Positioned.fill(
                               child: Image.file(
-                                File(artiste.image),
+                                File(widget.artiste.image),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -82,7 +95,7 @@ class PageArtiste extends StatelessWidget {
                                   end: Alignment.bottomCenter,
                                   colors: [
                                     Colors.transparent,
-                                    configuration.getBackgroundColor,
+                                    widget.configuration.getBackgroundColor,
                                   ],
                                 ),
                               ),
@@ -91,7 +104,7 @@ class PageArtiste extends StatelessWidget {
                               bottom: 10,
                               left: 10,
                               child: Text(
-                                artiste.nom,
+                                widget.artiste.nom,
                                 style: const TextStyle(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold,
@@ -118,7 +131,7 @@ class PageArtiste extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: configuration.getMainColor,
+                                  color: widget.configuration.getMainColor,
                                 ),
                               ),
                               ListView.builder(
@@ -133,10 +146,11 @@ class PageArtiste extends StatelessWidget {
                                     subtitle: Text(
                                       '${performance.date} à ${performance.heure_debut} - ${performance.heure_fin}',
                                       style: GoogleFonts.getFont(
-                                        configuration.getpoliceEcriture,
+                                        widget.configuration.getpoliceEcriture,
                                         textStyle: TextStyle(
                                           fontSize: 14,
-                                          color: configuration.getFontColor,
+                                          color:
+                                              widget.configuration.getFontColor,
                                         ),
                                       ),
                                     ),
@@ -172,15 +186,15 @@ class PageArtiste extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
-                                    color: configuration.getMainColor,
+                                    color: widget.configuration.getMainColor,
                                   ),
                                 ),
                               ),
                               Text(
-                                artiste.description,
+                                widget.artiste.description,
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: configuration.getMainColor,
+                                  color: widget.configuration.getMainColor,
                                 ),
                                 textAlign: TextAlign.justify,
                               ),
@@ -199,16 +213,29 @@ class PageArtiste extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: configuration.getMainColor,
+                                  color: widget.configuration.getMainColor,
                                 ),
                               ),
                               Row(
                                 children: [
                                   IconButton(
+                                    icon: Icon(
+                                      isLiked
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: isLiked ? Colors.red : null,
+                                    ),
+                                    onPressed: () {
+                                      // Toggle the like status when the button is pressed
+                                      toggleLikeStatus();
+                                    },
+                                  ),
+                                  IconButton(
                                     icon:
                                         const FaIcon(FontAwesomeIcons.facebook),
                                     onPressed: () {
-                                      Uri url = Uri.parse(artiste.facebook);
+                                      Uri url =
+                                          Uri.parse(widget.artiste.facebook);
                                       launchUrl(url);
                                     },
                                   ),
@@ -216,7 +243,8 @@ class PageArtiste extends StatelessWidget {
                                     icon:
                                         const FaIcon(FontAwesomeIcons.youtube),
                                     onPressed: () {
-                                      Uri url = Uri.parse(artiste.youtube);
+                                      Uri url =
+                                          Uri.parse(widget.artiste.youtube);
                                       launchUrl(url);
                                     },
                                   ),
@@ -224,7 +252,8 @@ class PageArtiste extends StatelessWidget {
                                     icon: const FaIcon(
                                         FontAwesomeIcons.instagram),
                                     onPressed: () {
-                                      Uri url = Uri.parse(artiste.instagram);
+                                      Uri url =
+                                          Uri.parse(widget.artiste.instagram);
                                       launchUrl(url);
                                     },
                                   ),
@@ -245,7 +274,7 @@ class PageArtiste extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: configuration.getMainColor,
+                                  color: widget.configuration.getMainColor,
                                 ),
                               ),
                               GridView.builder(
@@ -267,8 +296,8 @@ class PageArtiste extends StatelessWidget {
                                         MaterialPageRoute(
                                           builder: (context) => PageArtiste(
                                             artiste: similarArtist,
-                                            performances: performances,
-                                            configuration: configuration,
+                                            performances: widget.performances,
+                                            configuration: widget.configuration,
                                           ),
                                         ),
                                       );
@@ -308,5 +337,17 @@ class PageArtiste extends StatelessWidget {
         }
       },
     );
+  }
+
+  void toggleLikeStatus() {
+    // Toggle the like status
+    setState(() {
+      isLiked = !isLiked;
+
+      // Update the like status in the database
+      int newLikeStatus = isLiked ? 1 : 0;
+      widget.artiste.like = newLikeStatus;
+      DatabaseAstrolabe.instance.setLike(widget.artiste, newLikeStatus);
+    });
   }
 }

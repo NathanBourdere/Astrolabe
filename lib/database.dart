@@ -80,7 +80,8 @@ class DatabaseAstrolabe {
         youtube TEXT NOT NULL,
         instagram TEXT NOT NULL,
         facebook TEXT NOT NULL,
-        image TEXT NOT NULL
+        image TEXT NOT NULL,
+        like INT NOT NULL
         );
 
         
@@ -299,8 +300,6 @@ class DatabaseAstrolabe {
     });
   }
 
-
-
   Future<Modifications> getModifications() {
     final db = database;
     return db.then((database) async {
@@ -360,6 +359,28 @@ class DatabaseAstrolabe {
         }
       }
       return tagsReturn;
+    });
+  }
+
+  // put the like of an artiste to 1 or 0
+  Future<void> setLike(Artiste artiste, int like) async {
+    final db = database;
+    return db.then((database) async {
+      await database!.update('ARTISTE', {'like': like},
+          where: 'id = ?', whereArgs: [artiste.id]);
+    });
+  }
+
+  // get liked artists
+  Future<List<Artiste>> getLikedArtistes() {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> artistes = await database!.rawQuery(
+          'SELECT DISTINCT ARTISTE.id, ARTISTE.nom, ARTISTE.description, ARTISTE.site_web, ARTISTE.youtube, ARTISTE.instagram, ARTISTE.facebook, ARTISTE.image, ARTISTE.like FROM ARTISTE WHERE ARTISTE.like = 1');
+      List<Artiste> artistees =
+          artistes.map((data) => Artiste.fromJson(data)).toList();
+      print(artistees);
+      return artistees;
     });
   }
 
