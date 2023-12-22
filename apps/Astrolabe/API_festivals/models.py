@@ -11,7 +11,7 @@ class Artiste(models.Model):
     image = models.ImageField(upload_to='static/model/artistes/', unique=True,default='static/model/artistes/default.jpg')
     recommendations = models.ManyToManyField('self',blank=True)
 
-    def description_tronquee(self,max_len=60):
+    def description_tronquee(self,max_len=55):
         if len(self.description) > max_len:
             return self.description[:max_len] + "..."
         return self.description
