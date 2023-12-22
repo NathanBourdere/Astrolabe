@@ -14,7 +14,13 @@ class ArtisteForm(ModelForm):
         recommendations = self.cleaned_data.get('recommendations')     
         if len(recommendations) > len(set(recommendations)) :
             raise ValidationError("vous recommandez plusieurs fois le même artiste")
-                
+
+    def __init__(self, *args, **kwargs):
+        super(ArtisteForm, self).__init__(*args, **kwargs)
+        self.fields['site_web'].widget.attrs['placeholder'] = 'https://site-web.xyz'
+        self.fields['youtube'].widget.attrs['placeholder'] = 'https://site-web.xyz'
+        self.fields['instagram'].widget.attrs['placeholder'] = 'https://site-web.xyz'
+        self.fields['facebook'].widget.attrs['placeholder'] = 'https://site-web.xyz'
 
 class SearchForm(Form):
     search = CharField(label='Recherche', max_length=100, required=False)   
@@ -24,7 +30,13 @@ class PerformanceForm(ModelForm):
         model = Performance
         fields = '__all__'
     date = DateField(widget=DateInput)
-        
+
+    def __init__(self, *args, **kwargs):
+        super(PerformanceForm, self).__init__(*args, **kwargs)
+        self.fields['date'].widget.attrs['placeholder'] = 'JJ/MM/AAAA'
+        self.fields['heure_debut'].widget.attrs['placeholder'] = 'HH:MM'
+        self.fields['heure_fin'].widget.attrs['placeholder'] = 'HH:MM'
+
     def clean(self):
         date = self.cleaned_data.get('date')
         if self.is_valid():
@@ -101,10 +113,18 @@ class PartenaireForm(ModelForm):
         model = Partenaire
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super(PartenaireForm, self).__init__(*args, **kwargs)
+        self.fields['site'].widget.attrs['placeholder'] = 'https://site-web.xyz'
+
 class NewsForm(ModelForm):
     class Meta:
         model = News
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(NewsForm, self).__init__(*args, **kwargs)
+        self.fields['date'].widget.attrs['placeholder'] = 'JJ/MM/AAAA HH:MM:SS'
 
 class TagsForm(ModelForm):
     class Meta:

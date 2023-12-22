@@ -1,23 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 {% load crispy_forms_tags %}
 {% block title %}Créer une configuration{% endblock %}
 {% block content %}
-<div class="card bg-grey">
-    <div class="card" style="text-align: center; margin-top: 2em; margin-left: 7em; margin-right: 7em;">
-        <h2 class="card-title">Création de la configuration du festival</h2>
-    </div>
-    <div class="card-body">
-        <form class="persoForm" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ configuration_form.as_p }}
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPartnerModal">
-                Ajouter un nouveau partenaire
-            </button>
-            <input type="submit" value="Enregistrer">
-        </form>
-        {{ configuration_form.errors }}
-    </div>
+<div class="container" style="text-align: center;">
+    <h2>Création de la configuration du festival</h2>
 </div>
+<form class="persoForm" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% with WIDGET_ERROR_CLASS='champsInvalide' WIDGET_REQUIRED_CLASS='champsRequis'%}
+        {% for field in configuration_form %}
+            {{ field.label_tag }}
+            {% render_field field %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <p style="color: red;">* {{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endwith %}
+    <input type="submit" value="Enregistrer">
+</form>
 {% include '../modal/partenaires/partenaire_create.html' %}
 {% endblock %}

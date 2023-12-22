@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}Scène{% endblock %}
+{% block title %}Scènes{% endblock %}
 {% block logo %}
 <img src="/{{logo}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
 {% endblock %}
@@ -12,10 +12,18 @@
 <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for scene in scenes %}
     <div class="col">
-        <div class="card" style="margin-bottom: 1rem;">
-            <div class="card-body">
-                <h5 class="card-title" >{{ scene.nom }}</h5>
-                <a href="{% url 'API_festivals:scene_detail' scene.id %}" class="btn btn-primary">Détails</a>
+        <div class="card mb-3" style="max-width: 540px; margin-bottom: 1em;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img class="rounded-start-5 rounded-end-0" src="/{{scene.image}}" alt="{{image.nom}}" style="object-fit: cover; width: 100%; height: 100%;">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h3 class="card-title" >{{ scene.nom }}</h3>
+                        <p class="card-text">{{scene.lieu}}</p>
+                        <a href="{% url 'API_festivals:scene_detail' scene.id %}" class="btn btn-primary">Détails</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
