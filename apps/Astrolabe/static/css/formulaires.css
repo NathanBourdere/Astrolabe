@@ -45,8 +45,14 @@ input[type="submit"] {
     font-size: 16px;
     transition: all 0.25s;
 }
-.card:hover {
-    cursor:pointer;
+
+.entity{
+    transition: all 150ms ease-in-out;
+}
+.entity:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    opacity: 1;
 }
 
 input::file-selector-button {

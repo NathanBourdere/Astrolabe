@@ -69,7 +69,16 @@ class PartenaireForm(ModelForm):
     class Meta:
         model = Partenaire
         fields = '__all__'
-
+        
+    def clean(self):
+        nom = self.cleaned_data.get("nom")
+        query_nom = Partenaire.objects.filter(nom__iexact=nom).all()
+        if len(query_nom) >=1 :
+            for partenaire in query_nom:
+                if partenaire.id != self.cleaned_data.get("id"):
+                    raise ValidationError(f"{nom} existe déjà dans la base de données")
+    
+            
 class NewsForm(ModelForm):
     class Meta:
         model = News

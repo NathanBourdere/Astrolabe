@@ -1,4 +1,7 @@
+import json
+from django.http import HttpResponse, HttpResponseRedirect
 from .serializers import *
+from django.core.serializers import serialize,deserialize
 from .models import *
 from .forms import *
 from rest_framework import viewsets
@@ -316,37 +319,31 @@ def partenaires(request,page):
 
 @configuration_required
 def partenaire_create(request):
-    if ConfigurationFestival.objects.exists():
-        logo = ConfigurationFestival.objects.all().first().logo
-    else : 
-        logo = None
+    logo = ConfigurationFestival.objects.all().first().logo
+    configuration = ConfigurationFestival.objects.all().first()
     modal = request.GET.get('modal',False)
-    print(modal,request.method)
+    partenaire_form = PartenaireForm()
     if request.method == 'POST':
-        print("post")
         partenaire_form = PartenaireForm(request.POST, request.FILES)
         if partenaire_form.is_valid():
-            print("valide")
-            nom = partenaire_form.cleaned_data['nom']
-            nom_lowered = nom.lower()
-            if Partenaire.objects.filter(nom__iexact=nom_lowered).exists():
-                # Si oui, affiche un message d'erreur à l'utilisateur
-                error_message = f"Le partenaire '{nom_lowered}' existe déjà. Veuillez enregistrer un partenaire avec un nom différent."
-                return render(request, 'partenaires/partenaire_create.html', {'logo':logo,'form': partenaire_form, 'error_message': error_message})
             partenaire_form.save()
             try :
                 modif = Modification.objects.all().first()
                 modif.date_modif_partenaire = timezone.now()
                 modif.save()
             except AttributeError :
-                modif
+                pass
+
             if not modal : 
                 return redirect('API_festivals:partenaires', page=1)
-            return redirect('API_festivals:configuration_update')
-    else:
-        partenaire_form = PartenaireForm()    
-    return render(request, 'partenaires/partenaire_create.html', {'logo':logo,'form': partenaire_form})
-
+            configuration_form = ConfigurationFestivalForm(instance=configuration)
+            return render(request, 'configuration/configuration_update.html', {'form': configuration_form, 'partenaire_form':partenaire_form, 'configuration': configuration})
+        
+    if not modal :  
+        return render(request, 'partenaires/partenaire_create.html', {'logo':logo,'form': partenaire_form})
+    configuration_form = ConfigurationFestivalForm(instance=configuration)
+    return render(request, 'configuration/configuration_update.html', {'form': configuration_form, 'partenaire_form':partenaire_form, 'configuration': configuration})
+    
 @configuration_required
 def partenaire_detail(request, id):
     logo = ConfigurationFestival.objects.all().first().logo
@@ -370,7 +367,8 @@ def partenaire_update(request, id):
             modif.date_modif_partenaire = timezone.now()
             modif.save()
             return redirect('API_festivals:partenaire_detail', id=id)
-    partenaire_form = PartenaireForm(instance=partenaire)
+    else : 
+        partenaire_form = PartenaireForm(instance=partenaire)
     return render(request, 'partenaires/partenaire_update.html', {'logo':logo,'form': partenaire_form, 'partenaire': partenaire})
 
 @configuration_required
@@ -454,7 +452,8 @@ def performance_create(request):
     logo = ConfigurationFestival.objects.all().first().logo
     if request.method == 'POST':
         performance_form = PerformanceForm(request.POST)
-        if performance_form.is_valid():#
+        print(performance_form.errors)
+        if performance_form.is_valid():
             nom = performance_form.cleaned_data['nom']
             nom_lowered = nom.lower()
             if Performance.objects.filter(nom__iexact=nom_lowered).exists():
@@ -711,3 +710,52 @@ def tag_delete(request, id):
     modif.date_modif_tags = timezone.now()
     modif.save()
     return redirect("API_festivals:tags")
+
+
+def parse_json(data):
+    for _, json_data in data.items():
+        instances = deserialize('json', json_data)
+        for instance in instances:
+            instance.object.save()
+
+def parametres(request):
+    logo = ConfigurationFestival.objects.all().first().logo
+    try :
+        changement = request.GET.get("changement",False)
+        if changement :
+            if request.method == 'POST' and request.FILES['json_file']:
+                    json_file = request.FILES['json_file']
+                    import_data = json.loads(json_file.read())
+                    parse_json(import_data)
+                    return redirect('API_festivals:parametres')
+            else:
+                artistes = Artiste.objects.all()
+            partenaires = Partenaire.objects.all()
+            policeEcriture = PoliceEcriture.objects.all()
+            configurationFestival = ConfigurationFestival.objects.all()
+            performances = Performance.objects.all()
+            tag = Tag.objects.all()
+            scene = Scene.objects.all()
+            modifications = Modification.objects.all()
+            news = News.objects.all()   
+            data_to_export = {
+            "Artiste": serialize('json', artistes),
+            "Partenaire": serialize('json', partenaires),
+            "PoliceEcriture": serialize('json', policeEcriture),
+            "ConfigurationFestival": serialize('json', configurationFestival),
+            "Performance": serialize('json', performances),
+            "Tag": serialize('json', tag),
+            "Scene": serialize('json', scene),
+            "Modification": serialize('json', modifications),
+            "News": serialize('json', news),
+        }   
+            json_data = json.dumps(data_to_export, indent=8)    
+            response = HttpResponse(json_data, content_type='application/json')
+            response['Content-Disposition'] = 'attachment; filename="data.json"'    
+            return response
+        else :
+            return render(request,"parametres.html",{"logo":logo})
+    except Exception as err:
+        print(err)
+        return redirect('API_festivals:accueil')
+    

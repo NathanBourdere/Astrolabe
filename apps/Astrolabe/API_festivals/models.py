@@ -90,9 +90,6 @@ class Modification(models.Model):
     date_modif_news = models.DateTimeField(default=timezone.now)
     date_modif_tags = models.DateTimeField(default=timezone.now)
 
-    def __str__(self) -> str:
-        return self.date_modif_artiste
-
 class News(models.Model):
     titre = models.CharField(max_length=254)
     corps = models.TextField(max_length=254)
