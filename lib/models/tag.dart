@@ -20,12 +20,9 @@ class Tag {
 
   factory Tag.fromJson(Map<String, dynamic> json) {
     var visible = 1;
-    print(json['visible'].runtimeType);
-    print(json['visible']);
     if (json['visible'] == false || json['visible'] == 0) {
       visible = 0;
     }
-    print(visible);
     return Tag(idTag: json['id'], nom: json['nom'], visible: visible);
   }
 
