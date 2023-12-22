@@ -14,12 +14,18 @@
       corps.innerHTML = "<button class=\"btn btn-primary\" id=\"boutonSwitch\" name=\"performances\" onclick=\"switchPage()\">Afficher les performances</button>" + contenuCorps;
       document.getElementById("performances").hidden = true;
       document.getElementById("news").hidden = false;
+      document.getElementById("performances").classList.add("slide-out");
+      document.getElementById("news").classList.remove("slide-out");
+      document.getElementById("news").classList.add("slide-in");
     } else if (bouton.name === "performances") {
       bouton.remove();
       let contenuCorps = corps.innerHTML;
       corps.innerHTML = "<button class=\"btn btn-primary\" id=\"boutonSwitch\" name=\"news\" onclick=\"switchPage()\">Afficher les news</button>" + contenuCorps;
       document.getElementById("performances").hidden = false;
       document.getElementById("news").hidden = true;
+      document.getElementById("performances").classList.remove("slide-out");
+      document.getElementById("performances").classList.add("slide-in");
+      document.getElementById("news").classList.add("slide-out");
     }
   }
 </script>
@@ -27,7 +33,7 @@
 <div id="corps">
   <button class="btn btn-primary" id="boutonSwitch" name="performances" onclick="switchPage()">Afficher les performances</button>
 
-  <div id="performances" hidden>
+  <div id="performances" class="" hidden>
     <h2>Prochaines performances du {{ nom_festival }}</h2>
     {% for date, performances in performances_par_jour.items %}
     <h3>{{ date }}</h3>
@@ -50,7 +56,7 @@
     {% endfor %}
   </div>
 
-  <div id="news">
+  <div id="news" class="">
     <h2>Prochaines news du {{ nom_festival }}</h2>
     {% for date, news in news_par_jours.items %}
     <h3>{{date}}</h3>
@@ -69,5 +75,33 @@
     {% endfor %}
   </div>
 
+  <style>
+    @keyframes astroslide-out {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(50%);
+    }
+}
+
+@keyframes astroslide-in {
+    0% {
+      transform: translateX(50%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+}
+
+div.slide-out {
+    animation: astroslide-out 0.3s ease-in-out;
+}
+
+div.slide-in {
+    animation: astroslide-in 0.3s ease-in-out;
+}
+
+  </style>
 </div>
 {% endblock %}

@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load widget_tweaks %}
-{% block title %}{{ configuration.nomFestival }}{% endblock %}
+{{ configuration.nom }}{% endblock %}
 {% block logo %}
-<img src="/{{ configuration.logoFestival }}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
+<img src="/{{ configuration.logo }}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
 {% endblock %}
 {% block content %}
 <div class="container" style="text-align: center;">
@@ -28,4 +28,29 @@
     <input type="submit" value="Enregistrer">
 </form>
 {% include '../modal/partenaires/partenaire_create.html' %}
+<script>
+    let submit = document.getElementById("submitBtn");
+    console.log(submit);
+    submit.addEventListener('click', function() {
+        let modal = document.getElementById('createPartnerModal');
+        closeOneModal(modal.id);
+    });
+
+    function closeOneModal(modalId) {
+
+// get modal
+const modal = document.getElementById(modalId);
+
+// change state like in hidden modal
+modal.classList.remove('show');
+modal.setAttribute('aria-hidden', 'true');
+modal.setAttribute('style', 'display: none');
+
+ // get modal backdrop
+ const modalBackdrops = document.getElementsByClassName('modal-backdrop');
+
+ // remove opened modal backdrop
+  document.body.removeChild(modalBackdrops[0]);
+}
+</script>
 {% endblock %}

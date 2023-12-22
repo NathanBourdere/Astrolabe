@@ -50,4 +50,5 @@ urlpatterns = [
     path('tags/update/<int:id>', tag_update, name='tag_update'),
     path('tags/delete/<int:id>', tag_delete, name='tag_delete'),
     path('tags/create', tag_create, name='tag_create'),
+    path('parametres/',parametres, name='parametres'),
 ]

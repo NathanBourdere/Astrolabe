@@ -1,4 +1,3 @@
-
 // Add a click event listener to your navigation links
 document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', function (event) {

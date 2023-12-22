@@ -9,6 +9,7 @@
 <div class="container" style="text-align: center;">
     <h2>Création d'un nouveau partenaire</h2>
 </div>
+
 <form class="persoForm" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {% with WIDGET_ERROR_CLASS='champsInvalide' WIDGET_REQUIRED_CLASS='champsRequis'%}
