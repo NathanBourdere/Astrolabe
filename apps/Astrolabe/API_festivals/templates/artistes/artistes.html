@@ -17,7 +17,6 @@
             <div class="card-body">
                 <h3 class="card-title">{{ artiste.nom }}</h3>
                 <p class="card-text">{{ artiste.description_tronquee }}</p>
-                <a href="{% url 'API_festivals:artiste_detail' artiste.id %}" class="btn btn-primary">Détails</a>
             </div>
             <div class="card-footer d-flex justify-content-center">
                 {% if artiste.site_web != None %}
