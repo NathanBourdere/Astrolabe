@@ -12,14 +12,15 @@
 <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for partenaire in partenaires %}
     <div class="col">
-        <div class="card" style="margin-bottom: 1rem;">
-            <img class="card-img-top rounded" src="/{{partenaire.banniere}}" alt="{{partenaire.nom}}" style="object-fit: cover; width:100%; height: 150px;">
-            <div class="card-body">
-                <h3 class="card-title" >{{ partenaire.nom }}</h3>
-                <p class="card-text"><a href="{{partenaire.site}}" target="_blank">{{partenaire.site}}</a></p>
-                <a href="{% url 'API_festivals:partenaire_detail' partenaire.id %}" class="btn btn-primary">Détails</a>
+        <a class="nolink" href="{% url 'API_festivals:partenaire_detail' partenaire.id %}">
+            <div class="card entity" style="margin-bottom: 1rem;">
+                <img class="card-img-top rounded" src="/{{partenaire.banniere}}" alt="{{partenaire.nom}}" style="object-fit: cover; width:100%; height: 150px;">
+                <div class="card-body">
+                    <h3 class="card-title" >{{ partenaire.nom }}</h3>
+                    <p class="card-text"><a href="{{partenaire.site}}" target="_blank">{{partenaire.site}}</a></p>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
     {% endfor %}
 </div>

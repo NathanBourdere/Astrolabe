@@ -12,22 +12,24 @@
 <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for performance, artistes in performances.items %}
     <div class="col">
-        <div class="card" style="margin-bottom: 1rem;">
-            <img class="card-img-top rounded" src="/{{artistes.0.image}}" alt="{{artistes.0.nom}}" style="object-fit: cover; width:100%; height: 150px;">
-            <div class="card-body">
-                <h3 class="card-title" >{{ performance.nom }}</h3>
-                <div style="margin-top: 2em;">
-                    <p class="card-text">Heure de début : {{performance.heure_debut}}</p>
-                    <p class="card-text">Heure de fin : {{performance.heure_fin}}</p>
-                    <p class="card-text">Scène : {{performance.scene.nom}}</p>
+        <a class="nolink" href="{% url 'API_festivals:performance_detail' performance.id %}">
+            <div class="card entity" style="margin-bottom: 1rem;">
+                <img class="card-img-top rounded" src="/{{artistes.0.image}}" alt="{{artistes.0.nom}}" style="object-fit: cover; width:100%; height: 150px;">
+                <div class="card-body">
+                    <h3 class="card-title" >{{ performance.nom }}</h3>
+                    <div style="margin-top: 2em;">
+                        <p class="card-text">Heure de début : {{performance.heure_debut}}</p>
+                        <p class="card-text">Heure de fin : {{performance.heure_fin}}</p>
+                        <p class="card-text">Scène : {{performance.scene.nom}}</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    {% for artiste in artistes %}
+                    <a class="card-link" href="{% url 'API_festivals:artiste_detail' artiste.id %}">{{artiste.nom}}</a>
+                    {% endfor %}
                 </div>
             </div>
-            <div class="card-footer">
-                {% for artiste in artistes %}
-                <a class="card-link" href="{% url 'API_festivals:artiste_detail' artiste.id %}">{{artiste.nom}}</a>
-                {% endfor %}
-            </div>
-        </div>
+        </a>
     </div>
     {% endfor %}
 </div>
