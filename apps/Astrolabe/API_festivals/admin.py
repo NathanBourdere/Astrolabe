@@ -1,3 +1,7 @@
 from django.contrib import admin
-
-# Register your models here.
+from .models import *
+from django.forms import FileInput
+class MyModelAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.ImageField: {'widget': FileInput },
+    }

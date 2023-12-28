@@ -1,8 +1,5 @@
 from .models import *
-from django.forms import ModelForm, CheckboxSelectMultiple,CharField,ChoiceField,CheckboxInput ,Form, MultipleChoiceField, ValidationError, FileInput,FileField,TextInput, DateField, DateInput
-from datetime import date
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column,Fieldset,Div,Field,ButtonHolder,HTML
+from django.forms import ImageField, ModelForm, CheckboxSelectMultiple,CharField,ChoiceField,CheckboxInput ,Form, MultipleChoiceField, ValidationError, FileInput,FileField,TextInput, DateField, DateInput
 from django.utils import timezone
 
 class ArtisteForm(ModelForm):
@@ -70,11 +67,20 @@ class SceneForm(ModelForm):
     class Meta:
         model = Scene
         fields = '__all__'
+        
+    def clean(self):
+        nom = self.cleaned_data.get("nom")
+        query_nom = Partenaire.objects.filter(nom__iexact=nom).all()
+        if len(query_nom) >=1 :
+            for partenaire in query_nom:
+                if partenaire.id != self.cleaned_data.get("id"):
+                    raise ValidationError(f"{nom} existe déjà dans la base de données")
 
 class ConfigurationFestivalForm(ModelForm):
     class Meta:
         model = ConfigurationFestival
         fields = '__all__'
+    logo = ImageField(widget=FileInput)
 
 
 class PartenaireForm(ModelForm):

@@ -1,13 +1,14 @@
 import json
-from django.http import HttpResponse, HttpResponseRedirect
 from .serializers import *
-from django.core.serializers import serialize,deserialize
+from .views_tools import *
 from .models import *
 from .forms import *
-from rest_framework import viewsets
 from django.shortcuts import redirect, render
 import os
+from datetime import date
 from django.utils import timezone
+from Astrolabe.settings import DELETE_ALL_ON_CONFIGURATION_DELETE
+
 
 # --------------------------------------------------------------- DECORATEURS ---------------------------------------------------------------------
 def configuration_required(view_func):
@@ -24,88 +25,7 @@ def configuration_required(view_func):
 
     return wrapped_view
 
-# --------------------------------------------------------------- VIEWSETS ---------------------------------------------------------------------
-
-class ArtisteViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = ArtisteSerializer
-
-    def get_queryset(self):
-        queryset = Artiste.objects.all()
-        id_artiste = self.request.GET.get("id")
-        if id_artiste is not None:
-            queryset = queryset.filter(id=id_artiste)
-        return queryset
-
-class PerformanceViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = PerformanceSerializer
-
-    def get_queryset(self):
-        queryset =  Performance.objects.all()
-        id_performance = self.request.GET.get("id")
-        if id_performance is not None:
-            queryset = queryset.filter(id=id_performance)
-        return queryset
-
-class SceneViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = SceneSerializer
-
-    def get_queryset(self):
-        queryset =  Scene.objects.all()
-        id_scene = self.request.GET.get("id")
-        if id_scene is not None:
-            queryset = queryset.filter(id=id_scene)
-        return queryset
-
-class ConfigurationFestivalViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = ConfigurationFestivalSerializer
-
-    def get_queryset(self):
-        queryset = ConfigurationFestival.objects.all()
-        id_festival = self.request.GET.get("id")
-        if id_festival :
-            queryset = queryset.filter(id=id_festival)
-        return queryset
-
-class PartenaireViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = PartenaireSerializer
-
-    def get_queryset(self):
-        queryset = Partenaire.objects.all()
-        id_partenaire = self.request.GET.get("id")
-        if id_partenaire :
-            queryset = queryset.filter(id=id_partenaire)
-        return queryset
-
-class ModificationViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = ModificationSerializer
-
-    def get_queryset(self):
-        queryset = Modification.objects.all()
-        id_modification = self.request.GET.get("id")
-        if id_modification :
-            queryset = queryset.filter(id=id_modification)
-        return queryset
-    
-class NewsViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = NewsSerializer
-
-    def get_queryset(self):
-        queryset = News.objects.all()
-        id_news = self.request.GET.get("id")
-        if id_news :
-            queryset = queryset.filter(id=id_news)
-        return queryset
-    
-class TagsViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = TagsSerializer
-
-    def get_queryset(self):
-        queryset = Tag.objects.all()
-        id_tag = self.request.GET.get("id")
-        if id_tag :
-            queryset = queryset.filter(id=id_tag)
-        return queryset
-    
+# --------------------------------------------------------------- CONTROLLEURS ---------------------------------------------------------------------
 
 @configuration_required
 def accueil(request):
@@ -182,6 +102,8 @@ def configuration_delete(request):
         os.remove(str(configuration.video_promo))
     except FileNotFoundError:
         pass
+    if DELETE_ALL_ON_CONFIGURATION_DELETE:
+        return export_data()
     configuration.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_config = timezone.now()
@@ -191,26 +113,13 @@ def configuration_delete(request):
 # ARTISTES
 @configuration_required
 def artistes(request,page):
-    limit = 50
     artistes = Artiste.objects.all()
     logo = ConfigurationFestival.objects.all().first().logo
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
         artistes = artistes.filter(nom__icontains=search_term)
-    artistes = artistes[(page-1)*limit:]
-    render_right_arrow = False
-    render_left_arrow = False
-    # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
-    if len(Artiste.objects.all()) > limit:
-        # si on est à la première page, on affiche pas la flèche de gauche
-        if page != 1:
-            render_left_arrow = True
-        # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
-        if (len(artistes)) > limit:
-            render_right_arrow = True
-    artistes = artistes[:limit]
-
+    render_left_arrow,render_right_arrow,artistes = pagination(artistes,page,Artiste.objects.all())
     return render(request, 'artistes/artistes.html',{"logo":logo,"artistes": artistes,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
@@ -298,27 +207,13 @@ def artiste_delete(request, id):
 # PARTENAIRES
 @configuration_required
 def partenaires(request,page):
-    limit = 50
     logo = ConfigurationFestival.objects.all().first().logo
     partenaires = Partenaire.objects.all()
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
         partenaires = partenaires.filter(nom__icontains=search_term)
-    partenaires = partenaires[(page-1)*limit:]
-    render_right_arrow = False
-    render_left_arrow = False
-    # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
-    if len(Partenaire.objects.all()) > limit:
-        # si on est à la première page, on affiche pas la flèche de gauche
-        if page != 1:
-            render_left_arrow = True
-        # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
-        if (len(partenaires)) > limit:
-            render_right_arrow = True
-    partenaires = partenaires[:limit]
-    
-
+    render_left_arrow,render_right_arrow,partenaires = pagination(partenaires,page,Partenaire.objects.all())
     return render(request, 'partenaires/partenaires.html',{'logo':logo,"partenaires": partenaires,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
@@ -367,7 +262,6 @@ def partenaire_update(request, id):
         if partenaire_form.has_changed() and partenaire_form.is_valid():
             nom = partenaire_form.cleaned_data['nom']
             nom_lowered = nom.lower()
-            print(Partenaire.objects.filter(nom__iexact=nom_lowered).exists())
             if Partenaire.objects.filter(nom__iexact=nom_lowered).exists():
                 # Si oui, affiche un message d'erreur à l'utilisateur
                 error_message = f"Le partenaire '{nom_lowered}' existe déjà. Veuillez enregistrer un partenaire avec un nom différent."
@@ -401,7 +295,6 @@ def partenaire_delete(request, id):
 # PERFORMANCES
 @configuration_required
 def performances(request,page):
-    limit = 50
     performances_artistes = dict()
     logo = ConfigurationFestival.objects.all().first().logo
     performances = Performance.objects.all().order_by('date')
@@ -409,22 +302,9 @@ def performances(request,page):
     if form.is_valid():
         search_term = form.cleaned_data['search']
         performances = performances.filter(nom__icontains=search_term).order_by('date')
-    performances = performances[(page-1)*limit:]
-    render_right_arrow = False
-    render_left_arrow = False
-    # on affiche les flèches pour la navigation si on a plus de 50 artistes sinon on affiche pas
-    if len(Performance.objects.all()) > limit:
-        # si on est à la première page, on affiche pas la flèche de gauche
-        if page != 1:
-            render_left_arrow = True
-        # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
-        if (len(performances)) > limit:
-            render_right_arrow = True
-    performances = performances[:limit]
+    render_left_arrow,render_right_arrow,performances = pagination(performances,page,Performance.objects.all())
     for performance in performances:
         performances_artistes[performance] = Artiste.objects.filter(performance=performance)
-
-
     return render(request, 'performances/performances.html',{'logo':logo,"performances": performances_artistes,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
@@ -443,7 +323,6 @@ def performance_update(request, id):
     performance = Performance.objects.get(id=id)
     if request.method == 'POST':
         performance_form = PerformanceForm(request.POST, instance=performance)
-        print(performance_form.errors)
         if performance_form.has_changed() and performance_form.is_valid():
             performance_form.save()
             modif = Modification.objects.all().first()
@@ -468,15 +347,7 @@ def performance_create(request):
     logo = ConfigurationFestival.objects.all().first().logo
     if request.method == 'POST':
         performance_form = PerformanceForm(request.POST)
-        print(performance_form.errors)
         if performance_form.is_valid():
-            nom = performance_form.cleaned_data['nom']
-            nom_lowered = nom.lower()
-            if Performance.objects.filter(nom__iexact=nom_lowered).exists():
-                # Si oui, affiche un message d'erreur à l'utilisateur
-                artiste_form = ArtisteForm()
-                error_message = f"Le performance '{nom_lowered}' existe déjà. Veuillez enregistrer un performance avec un nom différent."
-                return render(request, 'performances/performance_create.html', {'artiste_form':artiste_form,'logo':logo,'form': performance_form, 'error_message': error_message})
             performance_form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_performance = timezone.now()
@@ -490,25 +361,13 @@ def performance_create(request):
 # SCENES
 @configuration_required
 def scenes(request,page):
-    limit = 50
     logo = ConfigurationFestival.objects.all().first().logo
     scenes = Scene.objects.all()
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
         scenes = scenes.filter(nom__icontains=search_term)
-    scenes = scenes[(page-1)*limit:]
-    render_right_arrow = False
-    render_left_arrow = False
-    # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
-    if len(Scene.objects.all()) > limit:
-        # si on est à la première page, on affiche pas la flèche de gauche
-        if page != 1:
-            render_left_arrow = True
-        # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
-        if (len(scenes)) > limit:
-            render_right_arrow = True
-    scenes = scenes[:limit]
+    render_left_arrow,render_right_arrow,scenes = pagination(scenes,page,Scene.objects.all())
     return render(request, 'scenes/scenes.html',{'logo':logo,"scenes": scenes,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
@@ -577,27 +436,13 @@ def scene_create(request):
 # NEWS
 @configuration_required
 def news(request,page):
-    limit = 50
     logo = ConfigurationFestival.objects.all().first().logo
     news = News.objects.all()
     form = SearchForm(request.GET)
     if form.is_valid():
         search_term = form.cleaned_data['search']
         news = news.filter(titre__icontains=search_term)
-    news = news[(page-1)*limit:]
-    render_right_arrow = False
-    render_left_arrow = False
-    # on affiche les flèches de navig pour la navigation si on a plus de 50 artistes sinon on affiche pas
-    if len(News.objects.all()) > limit:
-        # si on est à la première page, on affiche pas la flèche de gauche
-        if page != 1:
-            render_left_arrow = True
-        # si on est a la dernière page, donc la requête contient moins de 50 artistes, on affiche pas la flèche de droite
-        if (len(news)) > limit:
-            render_right_arrow = True
-    news = news[:limit]
-    
-
+    render_left_arrow,render_right_arrow,news = pagination(news,page,News.objects.all())
     return render(request, 'news/news.html',{'logo':logo,"news": news,"form":form,
      "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
 
@@ -733,51 +578,21 @@ def tag_delete(request, id):
     modif.save()
     return redirect("API_festivals:tags")
 
-
-def parse_json(data):
-    for _, json_data in data.items():
-        instances = deserialize('json', json_data)
-        for instance in instances:
-            instance.object.save()
-
 def parametres(request):
-    logo = ConfigurationFestival.objects.all().first().logo
     try :
+        logo = ConfigurationFestival.objects.all().first().logo
         changement = request.GET.get("changement",False)
+        DELETE_ALL_ON_CONFIGURATION_DELETE = request.GET.get("DELETE_ALL",False)
         if changement :
             if request.method == 'POST' and request.FILES['json_file']:
                     json_file = request.FILES['json_file']
                     import_data = json.loads(json_file.read())
                     parse_json(import_data)
-                    return redirect('API_festivals:parametres')
+                    return render(request,"parametres.html",{"logo":logo,"DELETE_ALL":DELETE_ALL_ON_CONFIGURATION_DELETE})
             else:
-                artistes = Artiste.objects.all()
-            partenaires = Partenaire.objects.all()
-            policeEcriture = PoliceEcriture.objects.all()
-            configurationFestival = ConfigurationFestival.objects.all()
-            performances = Performance.objects.all()
-            tag = Tag.objects.all()
-            scene = Scene.objects.all()
-            modifications = Modification.objects.all()
-            news = News.objects.all()   
-            data_to_export = {
-            "Artiste": serialize('json', artistes),
-            "Partenaire": serialize('json', partenaires),
-            "PoliceEcriture": serialize('json', policeEcriture),
-            "ConfigurationFestival": serialize('json', configurationFestival),
-            "Performance": serialize('json', performances),
-            "Tag": serialize('json', tag),
-            "Scene": serialize('json', scene),
-            "Modification": serialize('json', modifications),
-            "News": serialize('json', news),
-        }   
-            json_data = json.dumps(data_to_export, indent=8)    
-            response = HttpResponse(json_data, content_type='application/json')
-            response['Content-Disposition'] = 'attachment; filename="data.json"'    
-            return response
+                return export_data()
         else :
-            return render(request,"parametres.html",{"logo":logo})
+            return render(request,"parametres.html",{"logo":logo,"DELETE_ALL":DELETE_ALL_ON_CONFIGURATION_DELETE})
     except Exception as err:
         print(err)
         return redirect('API_festivals:accueil')
-    

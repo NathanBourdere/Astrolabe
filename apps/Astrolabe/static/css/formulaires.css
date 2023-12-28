@@ -84,7 +84,7 @@ input[type="submit"]:hover {
     background-position-x: 100%;
 }
 
-input[type="checkbox"] {
+input[type="checkbox"]:not(:checked) {
     appearance: none;
     width: 20px;
     height: 20px;
@@ -101,4 +101,8 @@ input[type="checkbox"]:checked {
     background-image: url("../../static/images/check2.svg");
     background-size: 100% 100%;
     filter: invert(100%);
+}
+
+label > a[href] {
+    display:none;
 }

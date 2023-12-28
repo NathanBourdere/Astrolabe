@@ -17,6 +17,10 @@
     <h2>Export</h2>
     <a class="btn btn-primary" href="{% url 'API_festivals:parametres'%}?changement=True">Exporter les données</a>
 </div>
+<div class="container-fluid mt-4 border">
+    <h2>Supprimer les données (Export automatique) lors de la suppression de la configuration</h2>
+    <a href="{% url 'API_festivals:parametres'%}?DELETE_ALL=True"><input class="btn btn-primary" type="checkbox"></input></a>
+</div>
 <style>
 </style>
 {% endblock %}
