@@ -13,7 +13,7 @@ class ArtisteForm(ModelForm):
     def clean(self):
         recommendations = self.cleaned_data.get('recommendations')     
         if len(recommendations) > len(set(recommendations)) :
-            raise ValidationError("vous recommandez plusieurs fois le même artiste")
+            self.add_error("recommendations","vous recommandez plusieurs fois le même artiste")
 
     def __init__(self, *args, **kwargs):
         super(ArtisteForm, self).__init__(*args, **kwargs)

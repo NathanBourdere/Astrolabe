@@ -25,27 +25,53 @@ def parse_json(data):
             instance.object.save()
             
 def export_data():
-                artistes = Artiste.objects.all()
-                partenaires = Partenaire.objects.all()
-                policeEcriture = PoliceEcriture.objects.all()
-                configurationFestival = ConfigurationFestival.objects.all()
-                performances = Performance.objects.all()
-                tag = Tag.objects.all()
-                scene = Scene.objects.all()
-                modifications = Modification.objects.all()
-                news = News.objects.all()   
-                data_to_export = {
-                "Artiste": serialize('json', artistes),
-                "Partenaire": serialize('json', partenaires),
-                "PoliceEcriture": serialize('json', policeEcriture),
-                "ConfigurationFestival": serialize('json', configurationFestival),
-                "Performance": serialize('json', performances),
-                "Tag": serialize('json', tag),
-                "Scene": serialize('json', scene),
-                "Modification": serialize('json', modifications),
-                "News": serialize('json', news),
-                }   
-                json_data = json.dumps(data_to_export, indent=8)    
-                response = HttpResponse(json_data, content_type='application/json')
-                response['Content-Disposition'] = 'attachment; filename="data.json"'    
-                return response
+    artistes = Artiste.objects.all()
+    partenaires = Partenaire.objects.all()
+    policeEcriture = PoliceEcriture.objects.all()
+    configurationFestival = ConfigurationFestival.objects.all()
+    performances = Performance.objects.all()
+    tag = Tag.objects.all()
+    scene = Scene.objects.all()
+    modifications = Modification.objects.all()
+    news = News.objects.all()   
+    data_to_export = {
+    "Artiste": serialize('json', artistes),
+    "Partenaire": serialize('json', partenaires),
+    "PoliceEcriture": serialize('json', policeEcriture),
+    "ConfigurationFestival": serialize('json', configurationFestival),
+    "Performance": serialize('json', performances),
+    "Tag": serialize('json', tag),
+    "Scene": serialize('json', scene),
+    "Modification": serialize('json', modifications),
+    "News": serialize('json', news),
+    }   
+    json_data = json.dumps(data_to_export, indent=8)    
+    response = HttpResponse(json_data, content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="data.json"'    
+    return response
+
+def set_parameters(**kwargs):
+    for key,value in kwargs.items():
+        with open("static/data/parameters.json","r+") as jsonFile:
+            data = json.load(jsonFile)
+            data[key] = value
+            jsonFile.seek(0)
+            json.dump(data, jsonFile) 
+            jsonFile.truncate()
+            jsonFile.close()
+
+def get_parameters(*args):
+    for param in args:
+        with open("static/data/parameters.json","r") as jsonFile:
+            data = json.load(jsonFile)
+            res = data[param]
+            jsonFile.close()
+            return res
+
+def delete_all_data():
+    Artiste.objects.all().delete()
+    Performance.objects.all().delete()
+    Partenaire.objects.all().delete()
+    Tag.objects.all().delete()
+    Scene.objects.all().delete()
+    News.objects.all().delete()

@@ -7,7 +7,6 @@ from django.shortcuts import redirect, render
 import os
 from datetime import date
 from django.utils import timezone
-from Astrolabe.settings import DELETE_ALL_ON_CONFIGURATION_DELETE
 # --------------------------------------------------------------- DECORATEURS ---------------------------------------------------------------------
 def configuration_required(view_func):
     def wrapped_view(request, *args, **kwargs):
@@ -99,8 +98,9 @@ def configuration_delete(request):
         os.remove(str(configuration.video_promo))
     except FileNotFoundError:
         pass
-    if DELETE_ALL_ON_CONFIGURATION_DELETE:
-        return export_data()
+    if get_parameters("Delete_all_on_configuration_delete") == True:
+        export_data()
+        delete_all_data()
     configuration.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_config = timezone.now()
@@ -546,23 +546,27 @@ def tag_delete(request, id):
     modif.save()
     return redirect("API_festivals:tags")
 
+@configuration_required
 def parametres(request):
-        from Astrolabe.settings import DELETE_ALL_ON_CONFIGURATION_DELETE
         logo = ConfigurationFestival.objects.all().first().logo
         changement = request.GET.get("changement",False)
-        form = BoolForm({"booleen":DELETE_ALL_ON_CONFIGURATION_DELETE})
-        print(form)
+        form = BoolForm({"booleen":get_parameters("Delete_all_on_configuration_delete")})
         if changement :
-            if request.method == 'POST' and request.FILES.get('json_file'):
+            try :
+                if request.method == 'POST' and request.FILES.get('json_file'):
                     json_file = request.FILES['json_file']
                     import_data = json.loads(json_file.read())
                     parse_json(import_data)
                     return render(request,"parametres.html",{"logo":logo,"form":form})
-            else:
-                return export_data()
+                else:
+                    return export_data()
+            except Exception :
+                return redirect("API_festivals:parametres")
         else :
             if request.method == 'POST':
-                print(form)
                 form = BoolForm(request.POST)
-                DELETE_ALL_ON_CONFIGURATION_DELETE = form.cleaned_data
+                if form.data.get("booleen") == "on":
+                    set_parameters(Delete_all_on_configuration_delete=True)
+                else :
+                    set_parameters(Delete_all_on_configuration_delete=False)
             return render(request,"parametres.html",{"logo":logo,"form":form})
