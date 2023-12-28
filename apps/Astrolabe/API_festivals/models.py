@@ -67,8 +67,8 @@ class Performance(models.Model):
 
 class Tag(models.Model):
     nom = models.CharField(max_length=50)
-    visible = models.BooleanField(default=True)
     performances = models.ManyToManyField(Performance)
+    visible = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nom
