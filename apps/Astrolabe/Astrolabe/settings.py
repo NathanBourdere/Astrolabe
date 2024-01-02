@@ -135,13 +135,13 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    os.path.join(BASE_DIR,"static/model"),
-    os.path.join(BASE_DIR,"static/model/artistes"),
-    os.path.join(BASE_DIR,"static/model/configuration/logo"),
-    os.path.join(BASE_DIR,"static/model/configuration/video"),
-    os.path.join(BASE_DIR,"static/model/news"),
-    os.path.join(BASE_DIR,"static/model/partenaires"),
-    os.path.join(BASE_DIR,"static/model/scenes"),
+    os.path.join(BASE_DIR,"static/media"),
+    os.path.join(BASE_DIR,"static/media/artistes"),
+    os.path.join(BASE_DIR,"static/media/configuration/logo"),
+    os.path.join(BASE_DIR,"static/media/configuration/video"),
+    os.path.join(BASE_DIR,"static/media/news"),
+    os.path.join(BASE_DIR,"static/media/partenaires"),
+    os.path.join(BASE_DIR,"static/media/scenes"),
 ]
 
 
@@ -149,3 +149,5 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DELETE_ALL_ON_CONFIGURATION_DELETE = False

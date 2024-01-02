@@ -46,7 +46,7 @@ npm i && cd apps/Astrolabe/Astrolabe/static && npm i
 
 ## Documentations de l'API
 
-- Sous forme JSON : `<host>/swagger.json`
-- Sous forme YAML : `<host>/swagger.yaml`
+- Sous format JSON : `<host>/swagger.json`
+- Sous format YAML : `<host>/swagger.yaml`
 - Vue UI Swagger : `<host>/swagger`
 - Vue ReDoc : `<host>/redoc`

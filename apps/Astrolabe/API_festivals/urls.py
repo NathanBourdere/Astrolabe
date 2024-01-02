@@ -1,5 +1,6 @@
 from django.urls import path, include
 from .views import *
+from .viewsets import *
 from rest_framework import routers
 
 app_name = 'API_festivals'

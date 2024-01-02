@@ -18,3 +18,9 @@ metal.form-check {
 select.form-select {
     background-attachment: fixed;
 }
+
+button.btn.flexe {
+    margin-bottom: 1em;
+    margin-top: 1em;
+    display:flex;
+}
