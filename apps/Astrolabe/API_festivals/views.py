@@ -3,10 +3,11 @@ from .serializers import *
 from .views_tools import *
 from .models import *
 from .forms import *
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 import os
 from datetime import date
 from django.utils import timezone
+
 # --------------------------------------------------------------- DECORATEURS ---------------------------------------------------------------------
 def configuration_required(view_func):
     def wrapped_view(request, *args, **kwargs):
@@ -28,21 +29,34 @@ def configuration_required(view_func):
 def accueil(request):
     festival = ConfigurationFestival.objects.all().first()
     performances_par_jour = dict()
-    performances_jour = Performance.objects.all().order_by('date','heure_debut')
+    performances_jour = Performance.objects.filter(date__gte=timezone.now()).order_by('date', 'heure_debut')
+    tag_form = TagsFilterForm(request.GET)
+    
+    if tag_form.is_valid():
+        tag = tag_form.cleaned_data.get('trier_par_tags')
+        search_term = tag_form.cleaned_data.get('search')
+
+        if tag is not None and search_term is not None:
+            performances_jour = tag.performances.filter(date__gte=timezone.now(),nom__icontains=search_term).order_by('date')
+        elif tag is not None:
+            performances_jour = tag.performances.filter(date__gte=timezone.now()).order_by('date')
+        elif search_term is not None:
+            performances_jour = performances_jour.filter(date__gte=timezone.now(),nom__icontains=search_term).order_by('date')
+
     for perf in performances_jour:
         artistes = Artiste.objects.filter(performance=perf)
         if perf.date not in performances_par_jour.keys():
-            performances_par_jour[perf.date] = [(perf,artistes[0])]
+            performances_par_jour[perf.date] = [(perf,artistes)]
         else :
-            performances_par_jour[perf.date].append((perf,artistes[0]))
+            performances_par_jour[perf.date].append((perf,artistes))
     news_par_jours = dict()
-    news_jour = News.objects.all().order_by('date')
+    news_jour = News.objects.filter(date__gte=timezone.now()).order_by('date')
     for news in news_jour:
         if news.date not in news_par_jours.keys():
             news_par_jours[news.date] = [news]
         else :
             news_par_jours[news.date].append(news)
-    return render(request, 'accueil.html', {'nom_festival':festival.nom,'performances_par_jour':performances_par_jour,'logo':festival.logo, 'news_par_jours':news_par_jours})
+    return render(request, 'accueil.html', {'tag_form':tag_form,'nom_festival':festival.nom,'performances_par_jour':performances_par_jour,'logo':festival.logo, 'news_par_jours':news_par_jours})
 
 # CONFIGURATION
 def configuration(request):
@@ -50,24 +64,24 @@ def configuration(request):
     Renvoyer la création s'il n'y a pas de configuration d'enregistrée dans la base de données
     Renvoyer la page de détail sinon.
     """
+    form = ConfigurationFestivalForm()
+    partenaire_form = PartenaireForm()
     if request.method == "GET":
         configuration = ConfigurationFestival.objects.all()
         if configuration.exists():
             config_instance = configuration.first()
             partenaires = Partenaire.objects.filter(id__in=config_instance.partenaires.all()).all()
             return render(request,'configuration/configuration_detail.html',{'configuration':config_instance,'partenaires':partenaires})
-        configuration_form = ConfigurationFestivalForm()
-        partenaire_form = PartenaireForm()
-        return render(request,'configuration/configuration_create.html',{'configuration_form':configuration_form,'partenaire_form':partenaire_form})
+        return render(request,'configuration/configuration_create.html',{'form':form,'partenaire_form':partenaire_form})
     elif request.method == "POST":
-        configuration_form = ConfigurationFestivalForm(request.POST, request.FILES)
-        if configuration_form.is_valid():
-            configuration_form.save()
+        form = ConfigurationFestivalForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_config = timezone.now()
             modif.save()
             return redirect('API_festivals:configuration')
-    return render(request, 'configuration/configuration_create.html', { 'configuration_form': configuration_form})
+    return render(request,'configuration/configuration_create.html',{'form':form,'partenaire_form':partenaire_form})
 
 @configuration_required
 def configuration_update(request):
@@ -142,7 +156,7 @@ def artiste_create(request):
 def artiste_detail(request, id):
     perf_exist = False
     logo = ConfigurationFestival.objects.all().first().logo
-    artiste = Artiste.objects.get(id=id)
+    artiste = get_object_or_404(Artiste,id=id)
     perfs = Performance.objects.filter(artistes=artiste)
     if perfs.exists():
         perf_exist = True
@@ -153,29 +167,32 @@ def artiste_detail(request, id):
 
 @configuration_required
 def artiste_update(request, id):
-    logo = ConfigurationFestival.objects.all().first().logo
-    artiste = Artiste.objects.get(id=id)
-    chemin_image = str(artiste.image)
-    artiste_form = ArtisteForm(instance=artiste)
-    if request.method == 'POST':
-        artiste_form = ArtisteForm(request.POST, request.FILES, instance=artiste)
-        if artiste_form.has_changed() and artiste_form.is_valid():
-            try : 
-                if "image" in artiste_form.changed_data:
-                    os.remove(chemin_image)
-            except FileNotFoundError :
-                pass
-            finally :
-                artiste_form.save()
-                modif = Modification.objects.all().first()
-                modif.date_modif_artiste = timezone.now()
-                modif.save()
-                return redirect('API_festivals:artiste_detail', id=id)
-    return render(request, 'artistes/artiste_update.html', {'logo':logo,'form': artiste_form, 'artiste': artiste})
+    if Artiste.objects.all().exists():
+        logo = ConfigurationFestival.objects.all().first().logo
+        artiste = get_object_or_404(Artiste,id=id)
+        chemin_image = str(artiste.image)
+        artiste_form = ArtisteForm(instance=artiste)
+        if request.method == 'POST':
+            artiste_form = ArtisteForm(request.POST, request.FILES, instance=artiste)
+            if artiste_form.has_changed() and artiste_form.is_valid():
+                try : 
+                    if "image" in artiste_form.changed_data:
+                        os.remove(chemin_image)
+                except FileNotFoundError :
+                    pass
+                finally :
+                    artiste_form.save()
+                    modif = Modification.objects.all().first()
+                    modif.date_modif_artiste = timezone.now()
+                    modif.save()
+                    return redirect('API_festivals:artiste_detail', id=id)
+        return render(request, 'artistes/artiste_update.html', {'logo':logo,'form': artiste_form, 'artiste': artiste})
+    else :
+        return redirect('API_festivals:artiste_create')
 
 @configuration_required
 def artiste_delete(request, id):
-    artiste = Artiste.objects.get(id=id)
+    artiste = get_object_or_404(Artiste,id=id)
     confirmation = request.GET.get('confirmation',False)
     perfs = Performance.objects.filter(artistes=artiste)
     if confirmation:
@@ -208,7 +225,10 @@ def partenaires(request,page):
 
 @configuration_required
 def partenaire_create(request):
-    logo = ConfigurationFestival.objects.all().first().logo
+    if ConfigurationFestival.objects.all().exists():
+        logo = ConfigurationFestival.objects.all().first().logo
+    else :
+        logo = None
     configuration = ConfigurationFestival.objects.all().first()
     modal = request.GET.get('modal',False)
     partenaire_form = PartenaireForm()
@@ -236,7 +256,7 @@ def partenaire_create(request):
 @configuration_required
 def partenaire_detail(request, id):
     logo = ConfigurationFestival.objects.all().first().logo
-    partenaire = Partenaire.objects.get(id=id)
+    partenaire = get_object_or_404(Partenaire,id=id)
     template = "partenaires/partenaire_detail.html"
     context = {'partenaire': partenaire,'logo':logo}
     return render(request, template, context)
@@ -244,7 +264,7 @@ def partenaire_detail(request, id):
 @configuration_required
 def partenaire_update(request, id):
     logo = ConfigurationFestival.objects.all().first().logo
-    partenaire = Partenaire.objects.get(id=id)
+    partenaire = get_object_or_404(Partenaire,id=id)
     chemin_banniere = str(partenaire.banniere)
     partenaire_form = PartenaireForm(instance=partenaire)
     if request.method == 'POST':
@@ -265,7 +285,7 @@ def partenaire_update(request, id):
 
 @configuration_required
 def partenaire_delete(request, id):
-    partenaire = Partenaire.objects.get(id=id)
+    partenaire = get_object_or_404(Partenaire,id=id)
     try :
         os.remove(str(partenaire.banniere))
     except FileNotFoundError:
@@ -279,24 +299,46 @@ def partenaire_delete(request, id):
 
 # PERFORMANCES
 @configuration_required
-def performances(request,page):
+def performances(request, page):
     performances_artistes = dict()
-    logo = ConfigurationFestival.objects.all().first().logo
+    
+    tag_form = TagsFilterForm(request.GET)
+    
+    logo = ConfigurationFestival.objects.first().logo
+    
     performances = Performance.objects.all().order_by('date')
-    form = SearchForm(request.GET)
-    if form.is_valid():
-        search_term = form.cleaned_data['search']
-        performances = performances.filter(nom__icontains=search_term).order_by('date')
-    render_left_arrow,render_right_arrow,performances = pagination(performances,page,Performance.objects.all())
+    
+    if tag_form.is_valid():
+        tag = tag_form.cleaned_data.get('trier_par_tags')
+        search_term = tag_form.cleaned_data.get('search')
+
+        if tag is not None and search_term is not None:
+            performances = tag.performances.filter(nom__icontains=search_term).order_by('date')
+        elif tag is not None:
+            performances = tag.performances.all().order_by('date')
+        elif search_term is not None:
+            performances = performances.filter(nom__icontains=search_term).order_by('date')
+
+    
+    render_left_arrow, render_right_arrow, performances = pagination(performances, page, Performance.objects.all())
+    
     for performance in performances:
         performances_artistes[performance] = Artiste.objects.filter(performance=performance)
-    return render(request, 'performances/performances.html',{'logo':logo,"performances": performances_artistes,"form":form,
-     "render_right_arrow":render_right_arrow,"render_left_arrow":render_left_arrow, "page_precedente": page-1, "page_suivante": page+1})
+    
+    return render(request, 'performances/performances.html', {
+        'tag_form': tag_form,
+        'logo': logo,
+        'performances': performances_artistes,
+        'render_right_arrow': render_right_arrow,
+        'render_left_arrow': render_left_arrow,
+        'page_precedente': page - 1,
+        'page_suivante': page + 1,
+    })
 
 @configuration_required
 def performance_detail(request, id):
     logo = ConfigurationFestival.objects.all().first().logo
-    performance = Performance.objects.get(id=id)
+    performance = get_object_or_404(Performance,id=id)
     artistes = Artiste.objects.filter(performance=performance)
     template = "performances/performance_detail.html"
     context = {'performance': performance, 'artistes': artistes,'logo':logo}
@@ -305,7 +347,7 @@ def performance_detail(request, id):
 @configuration_required
 def performance_update(request, id):
     logo = ConfigurationFestival.objects.all().first().logo
-    performance = Performance.objects.get(id=id)
+    performance = get_object_or_404(Performance,id=id)
     performance_form = PerformanceForm(instance=performance)
     if request.method == 'POST':
         performance_form = PerformanceForm(request.POST, instance=performance)
@@ -320,7 +362,7 @@ def performance_update(request, id):
 
 @configuration_required
 def performance_delete(request, id):
-    performance = Performance.objects.get(id=id)
+    performance = get_object_or_404(Performance,id=id)
     performance.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_performance = timezone.now()
@@ -358,7 +400,7 @@ def scenes(request,page):
 @configuration_required
 def scene_detail(request, id):
     logo = ConfigurationFestival.objects.all().first().logo
-    scene = Scene.objects.get(id=id)
+    scene = get_object_or_404(Scene,id=id)
     performances = Performance.objects.filter(scene=scene)
     template = "scenes/scene_detail.html"
     context = {'scene': scene,'logo':logo, 'performances': performances}
@@ -367,7 +409,7 @@ def scene_detail(request, id):
 @configuration_required
 def scene_update(request, id):
     logo = ConfigurationFestival.objects.all().first().logo
-    scene = Scene.objects.get(id=id)
+    scene = get_object_or_404(Scene,id=id)
     scene_image = str(scene.image)
     scene_form = SceneForm(instance=scene)
     if request.method == 'POST':
@@ -388,7 +430,7 @@ def scene_update(request, id):
 
 @configuration_required
 def scene_delete(request, id):
-    scene = Scene.objects.get(id=id)
+    scene = get_object_or_404(Scene,id=id)
     try : 
         os.remove(str(scene.image))
     except FileNotFoundError : 
@@ -431,7 +473,7 @@ def news(request,page):
 @configuration_required
 def news_detail(request, id):
     logo = ConfigurationFestival.objects.all().first().logo
-    news = News.objects.get(id=id)
+    news = get_object_or_404(News,id=id)
     template = "news/news_detail.html"
     context = {'news': news,'logo':logo}
     return render(request, template, context)
@@ -439,7 +481,7 @@ def news_detail(request, id):
 @configuration_required
 def news_update(request, id):
     logo = ConfigurationFestival.objects.all().first().logo
-    news = News.objects.get(id=id)
+    news = get_object_or_404(News,id=id)
     news_image = str(news.image)
     news_form = NewsForm(instance=news)
     if request.method == 'POST':
@@ -460,7 +502,7 @@ def news_update(request, id):
 
 @configuration_required
 def news_delete(request, id):
-    news = News.objects.get(id=id)
+    news = get_object_or_404(News,id=id)
     try : 
         os.remove(str(news.image))
     except FileNotFoundError : 
@@ -501,7 +543,7 @@ def tags(request):
 @configuration_required
 def tag_detail(request, id):
     logo = ConfigurationFestival.objects.all().first().logo
-    tag = Tag.objects.get(id=id)
+    tag = get_object_or_404(Tag,id=id)
     performances = Performance.objects.filter(tag=tag)
     template = "tags/tag_detail.html"
     context = {'tag': tag,'logo':logo, 'performances': performances}
@@ -525,7 +567,7 @@ def tag_create(request):
 @configuration_required
 def tag_update(request, id):
     logo = ConfigurationFestival.objects.all().first().logo
-    tag = Tag.objects.get(id=id)
+    tag = get_object_or_404(Tag,id=id)
     tags_form = TagsForm(instance=tag)
     if request.method == 'POST':
         tags_form = TagsForm(request.POST, request.FILES, instance=tag)
@@ -539,7 +581,7 @@ def tag_update(request, id):
 
 @configuration_required
 def tag_delete(request, id):
-    tag = Tag.objects.get(id=id)
+    tag = get_object_or_404(Tag,id=id)
     tag.delete()
     modif = Modification.objects.all().first()
     modif.date_modif_tags = timezone.now()
@@ -570,3 +612,6 @@ def parametres(request):
                 else :
                     set_parameters(Delete_all_on_configuration_delete=False)
             return render(request,"parametres.html",{"logo":logo,"form":form})
+
+def not_found(request,exception):
+    return render(request,"errors/not_found.html",status=404)

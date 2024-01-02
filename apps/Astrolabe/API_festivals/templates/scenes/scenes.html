@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block title %}Scènes{% endblock %}
 {% block logo %}
-<img src="/{{logo}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
+<img src="/{{logo}}" style="width:100%; height: 6vh;" class="rounded" alt="Festival">
 {% endblock %}
 {% block content %}
 <form method="GET">
@@ -16,7 +16,7 @@
             <div class="card mb-3 entity" style="max-width: 540px; margin-bottom: 1em;">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img class="rounded-start-5 rounded-end-0" src="/{{scene.image}}" alt="{{image.nom}}" style="object-fit: cover; width: 100%; height: 100%;">
+                        <img class="rounded-start-5 rounded-end-0" src="/{{scene.image}}" alt="{{image.nom}}" style="object-fit: cover; width: 100%; height: 150px;">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">

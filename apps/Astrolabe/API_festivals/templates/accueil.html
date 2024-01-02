@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Accueil{% endblock %}
 {% block logo %}
-<img src="/{{logo}}" style="width:100%; height: 8vh;" class="rounded" alt="Festival">
+<img src="/{{logo}}" style="width:100%; height: 6vh;" class="rounded" alt="Festival">
 {% endblock %}
 {% block content %}
 <script>
@@ -20,7 +20,7 @@
     } else if (bouton.name === "performances") {
       bouton.remove();
       let contenuCorps = corps.innerHTML;
-      corps.innerHTML = "<button class=\"btn btn-primary\" id=\"boutonSwitch\" name=\"news\" onclick=\"switchPage()\">Afficher les news</button>" + contenuCorps;
+      corps.innerHTML = "<button class=\"btn btn-primary margeux-bottom\" id=\"boutonSwitch\" name=\"news\" onclick=\"switchPage()\">Afficher les news</button>" + contenuCorps;
       document.getElementById("performances").hidden = false;
       document.getElementById("news").hidden = true;
       document.getElementById("performances").classList.remove("slide-out");
@@ -34,27 +34,43 @@
   <button class="btn btn-primary" id="boutonSwitch" name="performances" onclick="switchPage()">Afficher les performances</button>
 
   <div id="performances" class="" hidden>
+    <form id="tagForm" method="get" action="{% url 'API_festivals:performances' page=1 %}">
+      {% csrf_token %}
+      {{ tag_form.as_p }}
+  </form>
     <h2>Prochaines performances du {{ nom_festival }}</h2>
     {% for date, performances in performances_par_jour.items %}
     <h3>{{ date }}</h3>
     <div class="row">
-      {% for performance, artiste in performances %}
-      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-        <div class="card" style="margin-bottom: 1rem;">
-          <img src="/{{ artiste.image }}" class="card-img-top rounded" style="width:100%; height: 150px;"
-            alt="image de l'artiste qui performera">
-          <div class="card-body">
-            <h5 class="card-title">{{ performance.nom }}</h5>
-            <p class="card-text">de {{ performance.heure_debut }} à {{ performance.heure_fin }}</p>
-            <a href="{% url 'API_festivals:performance_detail' performance.id %}" class="btn btn-primary">Voir en
-              détails</a>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for performance, artistes in performances %}
+    <div class="col">
+        <a class="nolink" href="{% url 'API_festivals:performance_detail' performance.id %}">
+            <div class="card entity" style="margin-bottom: 1rem;">
+                <img class="card-img-top rounded" src="/{{artistes.0.image}}" alt="{{artistes.0.nom}}" style="object-fit: cover; width:100%; height: 150px;">
+                <div class="card-body">
+                    <h3 class="card-title" >{{ performance.nom }}</h3>
+                    <div style="margin-top: 2em;">
+                        <p class="card-text">Heure de début : {{performance.heure_debut}}</p>
+                        <p class="card-text">Heure de fin : {{performance.heure_fin}}</p>
+                        <p class="card-text">Scène : {{performance.scene.nom}}</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    {% for artiste in artistes %}
+                    <a class="card-link" href="{% url 'API_festivals:artiste_detail' artiste.id %}">{{artiste.nom}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+    </div>
     </div>
     {% endfor %}
   </div>
+</div>
+
 
   <div id="news" class="">
     <h2>Prochaines news du {{ nom_festival }}</h2>
@@ -62,14 +78,15 @@
     <h3>{{date}}</h3>
     {% for nouvelle in news %}
     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-      <div class="card" style="margin-bottom: 1rem;">
-        <img class="card-imge rounded" src="/{{ nouvelle.image }}" alt="{{nouvelle.titre}}"
-          style="width:100%; height: 150px;">
-        <div class="card-body">
-          <h5 class="card-title">{{nouvelle.titre}}</h5>
-          <a href="{% url 'API_festivals:news_detail' id=nouvelle.id %}" class="btn btn-primary">Voir en détails</a>
+      <a class="nolink" href="{% url 'API_festivals:news_detail' nouvelle.id %}">
+        <div class="card entity" style="margin-bottom: 1rem;">
+            <img class="card-img-top rounded" src="/{{nouvelle.image}}" alt="{{nouvelle.titre}}" style="object-fit: cover; width:100%; height: 150px;">
+            <div class="card-body">
+                <h3 class="card-title" >{{ nouvelle.date }}</h3>
+                <p class="card-text">{{nouvelle.titre}}</p>
+            </div>
         </div>
-      </div>
+    </a>
     </div>
     {% endfor %}
     {% endfor %}
@@ -101,7 +118,11 @@ div.slide-out {
 div.slide-in {
     animation: astroslide-in 0.3s ease-in-out;
 }
+    ul.errorlist {display:none;}
 
+.margeux-bottom {
+  margin-bottom: 2em;
+}
   </style>
 </div>
 {% endblock %}

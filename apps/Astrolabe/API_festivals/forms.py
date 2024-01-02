@@ -1,5 +1,5 @@
 from .models import *
-from django.forms import ImageField, ModelForm, BooleanField,CheckboxSelectMultiple,CharField,ChoiceField,CheckboxInput ,Form, MultipleChoiceField, ValidationError, FileInput,FileField,TextInput, DateField, DateInput
+from django.forms import ChoiceField, ModelChoiceField, ModelForm, BooleanField,CheckboxSelectMultiple,CharField ,Form, FileInput, Select
 from django.utils import timezone
 
 class ArtisteForm(ModelForm):
@@ -10,23 +10,21 @@ class ArtisteForm(ModelForm):
             'recommendations': CheckboxSelectMultiple,
             'image' : FileInput,
         }
-    def clean(self):
+    def clean(self,*args, **kwargs):
+        nom = self.cleaned_data.get("nom")
+        if Artiste.objects.filter(nom__iexact=nom.lower()).all():
+            self.add_error("nom",f"{nom} existe déjà dans la base de données")
         recommendations = self.cleaned_data.get('recommendations')     
         if len(recommendations) > len(set(recommendations)) :
             self.add_error("recommendations","vous recommandez plusieurs fois le même artiste")
+        return super().clean(*args, **kwargs)
 
     def __init__(self, *args, **kwargs):
         super(ArtisteForm, self).__init__(*args, **kwargs)
         self.fields['site_web'].widget.attrs['placeholder'] = 'https://site-web.xyz'
-        self.fields['youtube'].widget.attrs['placeholder'] = 'https://site-web.xyz'
-        self.fields['instagram'].widget.attrs['placeholder'] = 'https://site-web.xyz'
-        self.fields['facebook'].widget.attrs['placeholder'] = 'https://site-web.xyz'
-
-class SearchForm(Form):
-    search = CharField(label='Recherche', max_length=100, required=False)   
-
-class BoolForm(Form):
-    booleen = BooleanField(label="Destruction de toutes les données lors d'une suppression de la configuration (export automatique)",required=False)
+        self.fields['youtube'].widget.attrs['placeholder'] = 'https://youtube.xyz'
+        self.fields['instagram'].widget.attrs['placeholder'] = 'https://instagram.xyz'
+        self.fields['facebook'].widget.attrs['placeholder'] = 'https://facebook.xyz'
 
 class PerformanceForm(ModelForm):
     class Meta:
@@ -43,6 +41,10 @@ class PerformanceForm(ModelForm):
         self.fields['heure_fin'].widget.attrs['placeholder'] = 'HH:MM'
 
     def clean(self, *args, **kwargs):
+        nom = self.cleaned_data.get("nom")
+        if Performance.objects.filter(nom__iexact=nom.lower()).all():
+            self.add_error("nom",f"{nom} existe déjà dans la base de données")
+
         date = self.cleaned_data.get('date')
         if date < timezone.now().date():
             self.add_error("date","Vous ne pouvez pas ajouter une performance dans le passé !")
@@ -68,7 +70,6 @@ class PerformanceForm(ModelForm):
             for perf in perfs:
                 if perf.nom != self.cleaned_data.get("nom"):
                 # on regarde si elles se chevauchent pas
-                    print(self.cleaned_data.get("scene"))
                     if not(heure_debut.hour >= perf.heure_fin.hour or heure_fin.hour <= perf.heure_debut.hour) and perf.scene == scene :
                         self.add_error("scene","La scène est déjà occupée ce jour là (veuillez changer un de ces 4 champs)")
                         self.add_error("heure_fin","La scène est déjà occupée ce jour là (veuillez changer un de ces 4 champs)")
@@ -86,10 +87,11 @@ class SceneForm(ModelForm):
             'image' : FileInput,
         }
         
-    def clean(self):
+    def clean(self,*args, **kwargs):
         nom = self.cleaned_data.get("nom")
         if Scene.objects.filter(nom__iexact=nom.lower()).all():
             self.add_error("nom",f"{nom} existe déjà dans la base de données")
+        return super().clean(*args, **kwargs)
 
 class ConfigurationFestivalForm(ModelForm):
     class Meta:
@@ -98,8 +100,18 @@ class ConfigurationFestivalForm(ModelForm):
         widgets = {
             'logo' : FileInput,
             'partenaires' : CheckboxSelectMultiple,
-            'video_promo' : FileInput
+            'video_promo' : FileInput(attrs={'accept':'video/*'})
         }
+    def __init__(self, *args, **kwargs):
+        super(ConfigurationFestivalForm, self).__init__(*args, **kwargs)
+        self.fields['site_web'].widget.attrs['placeholder'] = 'https://site-web.xyz'
+        self.fields['youtube'].widget.attrs['placeholder'] = 'https://youtube.xyz'
+        self.fields['instagram'].widget.attrs['placeholder'] = 'https://instagram.xyz'
+        self.fields['facebook'].widget.attrs['placeholder'] = 'https://facebook.xyz'
+        self.fields['couleur_principale'].widget.attrs['placeholder'] = '#00AAFF'
+        self.fields['couleur_secondaire'].widget.attrs['placeholder'] = '#00AAFF'
+        self.fields['couleur_background'].widget.attrs['placeholder'] = '#00AAFF'
+
 
 class PartenaireForm(ModelForm):
     class Meta:
@@ -109,10 +121,11 @@ class PartenaireForm(ModelForm):
             'banniere' : FileInput,
         }
         
-    def clean(self):
+    def clean(self,*args, **kwargs):
         nom = self.cleaned_data.get("nom")
-        if Partenaire.objects.filter(nom__iexact=nom.lower()).exists() :
-                self.add_error("nom",f"{nom} existe déjà dans la base de données")
+        if Partenaire.objects.filter(nom__iexact=nom.lower()).all():
+            self.add_error("nom",f"{nom} existe déjà dans la base de données")
+        return super().clean(*args, **kwargs)
 
     def __init__(self, *args, **kwargs):
         super(PartenaireForm, self).__init__(*args, **kwargs)
@@ -129,6 +142,7 @@ class NewsForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(NewsForm, self).__init__(*args, **kwargs)
         self.fields['date'].widget.attrs['placeholder'] = 'JJ/MM/AAAA HH:MM:SS'
+    
 
 class TagsForm(ModelForm):
     class Meta:
@@ -137,3 +151,28 @@ class TagsForm(ModelForm):
         widgets = {
             'performances' : CheckboxSelectMultiple
         }
+    
+    def clean(self,*args, **kwargs):
+        nom = self.cleaned_data.get("nom")
+        if Tag.objects.filter(nom__iexact=nom.lower()).all():
+            self.add_error("nom",f"{nom} existe déjà dans la base de données")
+        return super().clean(*args, **kwargs)
+    
+class TagsFilterForm(Form):
+    search = CharField(label='Recherche', max_length=100, required=False)
+    trier_par_tags = ModelChoiceField(
+        queryset=Tag.objects.all(),
+        empty_label="Trier par tag",  
+        widget=Select(attrs={'onchange': 'this.form.submit();'}),
+        required=False,
+    )
+    def __init__(self, *args, **kwargs):
+        super(TagsFilterForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'   
+
+class SearchForm(Form):
+    search = CharField(label='Recherche', max_length=100, required=False)   
+
+class BoolForm(Form):
+    booleen = BooleanField(label="Destruction de toutes les données lors d'une suppression de la configuration (export automatique)",required=False)
