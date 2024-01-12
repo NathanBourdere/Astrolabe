@@ -40,7 +40,7 @@ class PartenaireSerializer(ModelSerializer):
 
 class ConfigurationFestivalSerializer(ModelSerializer):
     partenaires = PartenaireSerializer(many=True)
-    policeEcriture = PoliceEcritureSerializer()
+    police_ecriture = PoliceEcritureSerializer()
     class Meta:
         model = ConfigurationFestival
         fields = '__all__'
