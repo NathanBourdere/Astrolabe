@@ -110,6 +110,7 @@ class SceneViewSetTest(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.scene_data = {
+            'id': 7,
             'nom': 'Scene Test',
         }
         self.scene = Scene.objects.create(**self.scene_data)
@@ -130,10 +131,16 @@ class SceneViewSetTest(TestCase):
         }
         self.assertEqual(response.data, expected_data)
 
+    def test_delete_scene(self):
+        response = self.client.delete(f'/festivals/v0/scenes/{self.scene.id}/')
+        self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
+        self.assertEqual(Scene.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
+
 class ModificationViewSetTest(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.modification_data = {
+            'id': 2,
             'date_modif_artiste': '2023-09-01',
             'date_modif_performance': '2023-09-01',
             'date_modif_scene': '2023-09-01',
@@ -164,11 +171,17 @@ class ModificationViewSetTest(TestCase):
         }
         self.assertEqual(response.data, expected_data)
 
+    def test_delete_modification(self):
+        response = self.client.delete(f'/festivals/v0/modifications/{self.modification.id}/')
+        self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
+        self.assertEqual(Modification.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
+
 class ConfigurationFestivalViewSetTest(TestCase):
     def setUp(self):
         self.client = APIClient()
-        arial = PoliceEcriture.objects.create(nom="Arial")
+        arial = PoliceEcriture.objects.create(id=2, nom="Arial")
         self.config_data = {
+            'id': 2,
             'nom': 'Festival Test',
             'description': 'Description du festival test',
             'site_web': 'http://festival-test.com',
@@ -214,10 +227,16 @@ class ConfigurationFestivalViewSetTest(TestCase):
         }
         self.assertEqual(response.data, expected_data)
 
+    def test_delete_config_festival(self):
+        response = self.client.delete(f'/festivals/v0/configuration/{self.config_festival.id}/')
+        self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
+        self.assertEqual(ConfigurationFestival.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
+
 class PartenaireViewSetTest(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.partenaire_data = {
+            'id': 2,
             'nom': 'Partenaire Test',
             'banniere': 'banniere.jpg',
             'site': 'http://partenaire-test.com',
@@ -240,10 +259,16 @@ class PartenaireViewSetTest(TestCase):
         }
         self.assertEqual(response.data, expected_data)
 
+    def test_delete_partenaire(self):
+        response = self.client.delete(f'/festivals/v0/partenaires/{self.partenaire.id}/')
+        self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
+        self.assertEqual(Partenaire.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
+
 class NewsViewSetTest(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.news_data = {
+            'id': 2,
             'titre': 'News Test',
             'corps': 'News corps',
             'image': 'image.jpg',
@@ -254,9 +279,9 @@ class NewsViewSetTest(TestCase):
     def test_list_news(self):
         response = self.client.get('/festivals/v0/news/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data),1)  # Il doit y avoir un partenaire dans la base de données
+        self.assertEqual(len(response.data),1)  # Il doit y avoir une news dans la base de données
 
-    def test_retrieve_partenaire(self):
+    def test_retrieve_news(self):
         response = self.client.get(f'/festivals/v0/news/{self.news.id}/')
         self.assertEqual(response.status_code, 200)
         expected_data = {
@@ -268,4 +293,38 @@ class NewsViewSetTest(TestCase):
         }
         self.assertEqual(response.data, expected_data)
 
+    def test_delete_news(self):
+        response = self.client.delete(f'/festivals/v0/news/{self.news.id}/')
+        self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
+        self.assertEqual(News.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
 
+class TagsViewSetTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.tag_data = {
+            'id': 2,
+            'nom': 'Tag de test',
+            'visible': True
+        }
+        self.tag = Tag.objects.create(**self.tag_data)
+    
+    def test_list_tags(self):
+        response = self.client.get('/festivals/v0/tags/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data),1)  # Il doit y avoir un tag dans la base de données
+
+    def test_retrieve_tags(self):
+            response = self.client.get(f'/festivals/v0/tags/{self.tag.id}/')
+            self.assertEqual(response.status_code, 200)
+            expected_data = {
+                'id': 2,
+                'performances': [],
+                'nom': 'Tag de test',
+                'visible': True
+            }
+            self.assertEqual(response.data, expected_data)
+
+    def test_delete_tags(self):
+        response = self.client.delete(f'/festivals/v0/tags/{self.tag.id}/')
+        self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
+        self.assertEqual(Tag.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
