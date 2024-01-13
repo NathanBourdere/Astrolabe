@@ -50,3 +50,17 @@ npm i && cd apps/Astrolabe/Astrolabe/static && npm i
 - Sous format YAML : `<host>/swagger.yaml`
 - Vue UI Swagger : `<host>/swagger`
 - Vue ReDoc : `<host>/redoc`
+
+## Tests
+
+### Tests unitaires Django
+
+Se rendre dans le dossier du projet :
+```sh
+cd apps\Astrolabe\
+```
+
+Lancer les tests unitaires :
+```sh
+python manage.py test
+```
