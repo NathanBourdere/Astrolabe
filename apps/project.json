@@ -41,21 +41,10 @@
       "options": {
         "cwd": "apps/Astrolabe",
         "commands": [
-          {
-            "command": "python3 populate.py"
-          }
-        ]
-      }
-    },
-    "migrate": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "apps/Astrolabe",
-        "commands": [
-          {
-            "command": "python3 manage.py migrate"
-          }
-        ]
+          "python3 manage.py migrate",
+          "python3 populate.py"
+        ],
+        "parallel": false
       }
     }
   },
