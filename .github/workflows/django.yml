@@ -50,7 +50,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: documentation
-        path: apps/Astrolabe/_build/html
+        path: apps/Astrolabe/_build/html/index.html
 
     - name: Cache Dependencies
       uses: actions/cache@v3.3.3
