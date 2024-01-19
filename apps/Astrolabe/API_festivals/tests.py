@@ -7,6 +7,7 @@ class ArtisteViewSetTest(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.artiste_data = {
+            'id': 1,
             'nom': 'Artiste Test',
             'description': 'Description de l\'artiste test',
             'site_web': 'http://artiste-test.com',
@@ -22,7 +23,7 @@ class ArtisteViewSetTest(TestCase):
         response = self.client.get(f'/festivals/v0/artistes/{self.artiste.id}/')
         self.assertEqual(response.status_code, 200)
         expected_data = {
-            'id': 3, 
+            'id': 1, 
             'recommendations': [], 
             'nom': 'Artiste Test', 
             'description': "Description de l'artiste test", 
@@ -39,13 +40,19 @@ class ArtisteViewSetTest(TestCase):
         self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
         self.assertEqual(Artiste.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
 
+    def test_update_artiste(self):
+        response = self.client.post(f'/festivals/v0/artistes/{self.artiste.id}/')
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(Artiste.objects.count(), 1)
+
 class PerformanceViewSetTest(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.scene = Scene.objects.create(nom="Scene de test")
-        self.artiste = Artiste.objects.create(nom="Artiste de test")
+        self.scene = Scene.objects.create(id=2, nom="Scene de test")
+        self.artiste = Artiste.objects.create(id=2, nom="Artiste de test")
         self.performance_data = {
+            'id': 1,
             'nom': 'Performance Test',
             'date': '2023-09-28',
             'heure_debut': '10:00:00',
@@ -66,9 +73,9 @@ class PerformanceViewSetTest(TestCase):
         response = self.client.get(f'/festivals/v0/performances/{self.performance.id}/')
         self.assertEqual(response.status_code, 200)
         expected_data = {
-            'id': 4, 
+            'id': 1, 
             'artistes': [OrderedDict([
-                ('id', 7), 
+                ('id', 2), 
                 ('recommendations', []), 
                 ('nom', 'Artiste de test'), 
                 ('description', ''), 
@@ -79,7 +86,7 @@ class PerformanceViewSetTest(TestCase):
                 ('image', 'http://testserver/static/media/artistes/default.jpg')
             ])], 
             'scene': OrderedDict([
-                ('id', 4), 
+                ('id', 2), 
                 ('nom', 'Scene de test'), 
                 ('image', 'http://testserver/static/media/scenes/default.jpg'), 
                 ('lieu', 'Astrolabe')
@@ -136,6 +143,11 @@ class SceneViewSetTest(TestCase):
         self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
         self.assertEqual(Scene.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
 
+    def test_update_scene(self):
+        response = self.client.post(f'/festivals/v0/scenes/{self.scene.id}/')
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(Scene.objects.count(), 1)
+
 class ModificationViewSetTest(TestCase):
     def setUp(self):
         self.client = APIClient()
@@ -175,6 +187,11 @@ class ModificationViewSetTest(TestCase):
         response = self.client.delete(f'/festivals/v0/modifications/{self.modification.id}/')
         self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
         self.assertEqual(Modification.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
+
+    def test_update_modification(self):
+        response = self.client.post(f'/festivals/v0/modifications/{self.modification.id}/')
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(Modification.objects.count(), 1)
 
 class ConfigurationFestivalViewSetTest(TestCase):
     def setUp(self):
@@ -232,6 +249,11 @@ class ConfigurationFestivalViewSetTest(TestCase):
         self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
         self.assertEqual(ConfigurationFestival.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
 
+    def test_update_config_festival(self):
+        response = self.client.post(f'/festivals/v0/configuration/{self.config_festival.id}/')
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(ConfigurationFestival.objects.count(), 1)
+
 class PartenaireViewSetTest(TestCase):
     def setUp(self):
         self.client = APIClient()
@@ -263,6 +285,11 @@ class PartenaireViewSetTest(TestCase):
         response = self.client.delete(f'/festivals/v0/partenaires/{self.partenaire.id}/')
         self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
         self.assertEqual(Partenaire.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
+
+    def test_update_partenaire(self):
+        response = self.client.post(f'/festivals/v0/partenaires/{self.partenaire.id}/')
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(Partenaire.objects.count(), 1)
 
 class NewsViewSetTest(TestCase):
     def setUp(self):
@@ -298,6 +325,11 @@ class NewsViewSetTest(TestCase):
         self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
         self.assertEqual(News.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
 
+    def test_update_news(self):
+        response = self.client.post(f'/festivals/v0/news/{self.news.id}/')
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(News.objects.count(), 1)
+
 class TagsViewSetTest(TestCase):
     def setUp(self):
         self.client = APIClient()
@@ -328,3 +360,8 @@ class TagsViewSetTest(TestCase):
         response = self.client.delete(f'/festivals/v0/tags/{self.tag.id}/')
         self.assertEqual(response.status_code, 405)  # 405 signifie que la suppression est interdite
         self.assertEqual(Tag.objects.count(), 1)  # Il devrait toujours y avoir un artiste dans la base de données
+
+    def test_update_tags(self):
+        response = self.client.post(f'/festivals/v0/tags/{self.tag.id}/')
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(Tag.objects.count(), 1)
