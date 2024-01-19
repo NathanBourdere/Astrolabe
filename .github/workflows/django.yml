@@ -30,7 +30,7 @@ jobs:
     - name: Install Dependencies
       run: |
         pip install -r requirements.txt
-      working-directory: ~/apps/Astrolabe/
+      working-directory: apps/Astrolabe/
       
 
     - name: Generate Documentation
@@ -38,19 +38,19 @@ jobs:
         pip install sphinx sphinx-rtd-theme
         sphinx-quickstart --quiet --sep --dot=_ --language=fr --suffix=.rst --master=index --ext-autodoc --ext-viewcode --makefile --batch packages
         sphinx-build -b html packages/ packages/_build/html
-      working-directory: ~/apps/Astrolabe/
+      working-directory: apps/Astrolabe/
 
     - name: Save Documentation
       uses: actions/upload-artifact@v3
       with:
         name: documentation
-        path: ~/packages/_build/html
+        path: packages/_build/html
 
     - name: Cache Dependencies
       uses: actions/cache@v3.3.3
       with:
         path: |
-          ~/.cache/pip
+          .cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
@@ -61,12 +61,12 @@ jobs:
         coverage report -m > coverage_report_${{ steps.date.outputs.date }}.txt
         mv coverage_report_${{ steps.date.outputs.date }}.txt reports/
         rm .coverage
-      working-directory: ~/apps/Astrolabe/
+      working-directory: apps/Astrolabe/
       
     - name: Save Artifacts
       uses: actions/upload-artifact@v3
       with:
         name: artifacts
         path: |
-          ~/packages/*
-          ~/apps/Astrolabe/reports
+          packages/*
+          apps/Astrolabe/reports
