@@ -59,7 +59,7 @@ jobs:
       uses: actions/cache@v3.3.3
       with:
         path: |
-          .nx/cache/pip
+          .cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
