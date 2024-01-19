@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["pypy3.9", "pypy3.10", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
     - name: Get current date
@@ -35,7 +35,16 @@ jobs:
 
     - name: Generate Documentation
       run: |
-        # on verra
+        pip install sphinx sphinx-rtd-theme
+        sphinx-quickstart --quiet --sep --dot=_ --language=fr --suffix=.rst --master=index --ext-autodoc --ext-viewcode --makefile --batch packages
+        sphinx-build -b html packages/ packages/_build/html
+      working-directory: ~/apps/Astrolabe/
+
+    - name: Save Documentation
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation
+        path: ~/packages/_build/html
 
     - name: Cache Dependencies
       uses: actions/cache@v3.3.3
