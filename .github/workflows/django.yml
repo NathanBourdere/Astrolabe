@@ -35,13 +35,15 @@ jobs:
       run: |
         pip install -r requirements.txt
       working-directory: apps/Astrolabe/
-      
+    
+    - name: Install make
+      run: |
+        sudo apt-get update
+        sudo apt-get install make
 
     - name: Generate Documentation
       run: |
-        pip install sphinx sphinx-rtd-theme
-        sphinx-quickstart --sep --dot=_ --language=fr --suffix=.rst --master=index --ext-autodoc --ext-viewcode --makefile --batch packages
-        sphinx-build -b html packages/ packages/_build/html
+        make html
       working-directory: apps/Astrolabe/
 
     - name: Save Documentation
