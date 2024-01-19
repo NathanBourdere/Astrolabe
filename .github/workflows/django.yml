@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - hoxfix_CI
 
 jobs:
   build:
@@ -39,7 +40,7 @@ jobs:
     - name: Generate Documentation
       run: |
         pip install sphinx sphinx-rtd-theme
-        sphinx-quickstart --quiet --sep --dot=_ --language=fr --suffix=.rst --master=index --ext-autodoc --ext-viewcode --makefile --batch packages
+        sphinx-quickstart --sep --dot=_ --language=fr --suffix=.rst --master=index --ext-autodoc --ext-viewcode --makefile --batch packages
         sphinx-build -b html packages/ packages/_build/html
       working-directory: apps/Astrolabe/
 
