@@ -1,0 +1,72 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+    - name: Test with environment variables
+      run: echo $TAG_NAME - $RELEASE_NAME
+      
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+          python-version: ${{ matrix.python-version }}
+
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
+      working-directory: ~/apps/Astrolabe/
+      
+
+    - name: Generate Documentation
+      run: |
+        pip install sphinx sphinx-rtd-theme
+        sphinx-quickstart --quiet --sep --dot=_ --language=fr --suffix=.rst --master=index --ext-autodoc --ext-viewcode --makefile --batch packages
+        sphinx-build -b html packages/ packages/_build/html
+      working-directory: ~/apps/Astrolabe/
+
+    - name: Save Documentation
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation
+        path: ~/packages/_build/html
+
+    - name: Cache Dependencies
+      uses: actions/cache@v3.3.3
+      with:
+        path: |
+          ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Generate Coverage Report
+      run: |
+        coverage run manage.py test
+        coverage report -m > coverage_report_${{ steps.date.outputs.date }}.txt
+        mv coverage_report_${{ steps.date.outputs.date }}.txt reports/
+        rm .coverage
+      working-directory: ~/apps/Astrolabe/
+      
+    - name: Save Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: artifacts
+        path: |
+          ~/packages/*
+          ~/apps/Astrolabe/reports
