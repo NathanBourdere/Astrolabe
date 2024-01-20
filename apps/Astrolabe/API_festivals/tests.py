@@ -419,3 +419,15 @@ class ArtisteTestView(TestCase):
         self.assertRedirects(response, reverse("API_festivals:artistes", args=[1]))
 
         self.assertEqual(Artiste.objects.count(), 1)
+
+class TestUnitairesViewTools(TestCase):
+    def test_pagination(self):
+        query = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        query_all = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+        limit = 5
+        page = 2
+
+        render_left_arrow, render_right_arrow, query = pagination(query, page, query_all, limit)
+
+        self.assertTrue(render_left_arrow)
+        self.assertFalse(render_right_arrow)
