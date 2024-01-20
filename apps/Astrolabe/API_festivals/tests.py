@@ -3,6 +3,11 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from .models import *
 from .serializers import *
+from django.urls import reverse
+from .views_tools import *
+
+# Tests d'intégration
+
 class ArtisteViewSetTest(TestCase):
     def setUp(self):
         self.client = APIClient()
@@ -365,3 +370,52 @@ class TagsViewSetTest(TestCase):
         response = self.client.post(f'/festivals/v0/tags/{self.tag.id}/')
         self.assertEqual(response.status_code, 405)
         self.assertEqual(Tag.objects.count(), 1)
+
+class ConfigurationFestivalTestView(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+    def test_create_configuration(self):
+        police_ecriture = PoliceEcriture.objects.create(nom="test")
+        config_festival_data = {
+            "nom": "Configuration test",
+            "description": "Description de la configuration de test",
+            "mentions_legales": "Mentions légales du festival de test",
+            "police_ecriture": police_ecriture,
+            "couleur_principale": "#FFFFFF",
+            "couleur_secondaire": "#FFFFFF",
+            "couleur_background": "#FFFFFF"
+        }
+
+        response = self.client.post(reverse("API_festivals:configuration"), config_festival_data, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+
+class ArtisteTestView(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        police_ecriture = PoliceEcriture.objects.create(nom="test")
+        config_festival_data = {
+            "nom": "Configuration test",
+            "description": "Description de la configuration de test",
+            "mentions_legales": "Mentions légales du festival de test",
+            "police_ecriture": police_ecriture,
+            "couleur_principale": "#FFFFFF",
+            "couleur_secondaire": "#FFFFFF",
+            "couleur_background": "#FFFFFF"
+        }
+        self.config_festival = ConfigurationFestival.objects.create(**config_festival_data)
+        self.modification = Modification.objects.create()
+    
+    def test_create_artiste(self):
+        artiste_data = {
+            "nom": "Artiste test",
+            "description": "Description de l'artiste de test"
+        }
+
+        response = self.client.post(reverse("API_festivals:artiste_create"), artiste_data, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertRedirects(response, reverse("API_festivals:artistes", args=[1]))
+
+        self.assertEqual(Artiste.objects.count(), 1)
