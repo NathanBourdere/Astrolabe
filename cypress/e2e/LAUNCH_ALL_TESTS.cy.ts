@@ -1,0 +1,3 @@
+import './CRUD_ARTISTES_TEST.cy'
+import './CRUD_PERFORMANCES_TEST.cy'
+
