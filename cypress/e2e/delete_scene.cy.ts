@@ -25,10 +25,5 @@ describe('template spec', () => {
 
     //confirme notre choix 
     cy.get('button.btn.btn-danger.rounded-pill a').click();
-
-
-
-
-
   })
 })
