@@ -14,9 +14,11 @@
   
             <!-- Modal Footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger rounded-pill" data-bs-dismiss="modal">
-                  <a href="{% url 'API_festivals:configuration_delete'%}">Supprimer {{configuration.nom}}</a>
-                </button>
+                <a href="{% url 'API_festivals:configuration_delete'%}">
+                    <button type="button" class="btn btn-danger rounded-pill" data-bs-dismiss="modal">
+                        Supprimer {{configuration.nom}}
+                    </button>
+                </a>
                 <button type="button" class="btn btn-primary rounded-pill" data-bs-dismiss="modal">Annuler</button>
             </div>
         </div>
