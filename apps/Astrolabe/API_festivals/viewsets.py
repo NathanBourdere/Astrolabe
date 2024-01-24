@@ -16,7 +16,7 @@ class PerformanceViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PerformanceSerializer
 
     def get_queryset(self):
-        queryset =  Performance.objects.all()
+        queryset =  Performance.objects.filter(date__gte=timezone.now()).order_by('date', 'heure_debut')
         id_performance = self.request.GET.get("id")
         if id_performance is not None:
             queryset = queryset.filter(id=id_performance)
