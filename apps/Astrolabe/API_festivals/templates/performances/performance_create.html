@@ -24,11 +24,10 @@
             {% endif %}
         {% endfor %}
     {% endwith %}
-    <button type="button" class="btn btn-primary flexe" data-bs-toggle="modal" data-bs-target="#createPartnerModal">
+    <button type="button" class="btn btn-primary flexe" data-bs-toggle="modal" data-bs-target="#createArtistModal">
         Ajouter un nouvel artiste
     </button>
     <input type="submit" value="Enregistrer">
 </form>
-{{form.errors}}
 {% include '../modal/artistes/artiste_create.html'%}
 {% endblock %}

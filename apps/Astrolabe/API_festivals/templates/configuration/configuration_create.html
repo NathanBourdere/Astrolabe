@@ -26,7 +26,11 @@
     <button type="button" class="btn btn-primary flexe" data-bs-toggle="modal" data-bs-target="#createPartnerModal">
         Ajouter un nouveau partenaire
     </button>
+    <button type="button" class="btn btn-primary flexe" data-bs-toggle="modal" data-bs-target="#createArtistModal">
+        Ajouter un nouvel artiste
+    </button>
     <input type="submit" value="Enregistrer">
 </form>
 {% include '../modal/partenaires/partenaire_create.html' %}
+{% include '../modal/artistes/artiste_create.html'%}
 {% endblock %}

@@ -11,6 +11,7 @@ class PoliceEcritureSerializer(ModelSerializer):
     class Meta:
         model = PoliceEcriture
         fields = '__all__'
+
 class SceneSerializer(ModelSerializer):
     class Meta:
         model = Scene
@@ -40,6 +41,7 @@ class PartenaireSerializer(ModelSerializer):
 
 class ConfigurationFestivalSerializer(ModelSerializer):
     partenaires = PartenaireSerializer(many=True)
+    artistes = ArtisteSerializer(many=True)
     police_ecriture = PoliceEcritureSerializer()
     class Meta:
         model = ConfigurationFestival

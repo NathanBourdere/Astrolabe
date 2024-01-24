@@ -1,6 +1,10 @@
 from .models import *
 from django.forms import (
     ChoiceField,
+    DateField,
+    DateInput,
+    DateTimeField,
+    DateTimeInput,
     ModelChoiceField,
     ModelForm,
     BooleanField,
@@ -9,7 +13,10 @@ from django.forms import (
     Form,
     FileInput,
     Select,
+    TimeField,
+    TimeInput,
 )
+from Astrolabe.settings import DATE_INPUT_FORMATS
 from django.utils import timezone
 
 
@@ -47,7 +54,10 @@ class PerformanceForm(ModelForm):
     class Meta:
         model = Performance
         fields = "__all__"
-        widgets = {"artistes": CheckboxSelectMultiple}
+        widgets = {"artistes": CheckboxSelectMultiple,
+                   "date": DateTimeInput(format="%d/%m/%Y"),
+                   "heure_debut":TimeInput(format="HH:MM"),
+                   "heure_fin":TimeInput(format="HH:MM")}
 
     def __init__(self, *args, **kwargs):
         super(PerformanceForm, self).__init__(*args, **kwargs)
@@ -152,7 +162,31 @@ class ConfigurationFestivalForm(ModelForm):
             "logo": FileInput,
             "partenaires": CheckboxSelectMultiple,
             "video_promo": FileInput(attrs={"accept": "video/*"}),
+            'date_debut': DateInput(format="%d/%m/%Y"),
+            'date_fin': DateInput(format="%d/%m/%Y"),
+            "artistes": CheckboxSelectMultiple,
         }
+    
+    def clean(self, *args, **kwargs):
+
+        cleaned_data = super().clean(*args,**kwargs)
+        date_debut= cleaned_data.get("date_debut")
+        date_fin = cleaned_data.get("date_fin")
+        if date_debut < timezone.now().date():
+            self.add_error(
+                "date_debut", "Vous ne pouvez pas ajouter une performance dans le passé !"
+            )
+        if date_fin < timezone.now().date():
+            self.add_error(
+                "date_fin", "Vous ne pouvez pas ajouter une performance dans le passé !"
+            )
+        if date_debut > date_fin:
+            self.add_error(
+                "date_debut", "La date de début ne peut pas être après la date de fin."
+            )
+        
+            
+        return cleaned_data
 
     def __init__(self, *args, **kwargs):
         super(ConfigurationFestivalForm, self).__init__(*args, **kwargs)
@@ -163,6 +197,8 @@ class ConfigurationFestivalForm(ModelForm):
         self.fields["couleur_principale"].widget.attrs["placeholder"] = "#00AAFF"
         self.fields["couleur_secondaire"].widget.attrs["placeholder"] = "#00AAFF"
         self.fields["couleur_background"].widget.attrs["placeholder"] = "#00AAFF"
+        self.fields["date_debut"].widget.attrs["placeholder"] = "JJ/MM/AAAA"
+        self.fields["date_fin"].widget.attrs["placeholder"] = "JJ/MM/AAAA"
 
 
 class PartenaireForm(ModelForm):

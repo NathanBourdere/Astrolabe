@@ -1,8 +1,8 @@
-<div class="modal fade" id="createPartnerModal" tabindex="-1" aria-labelledby="createPartnerModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="createArtistModal" tabindex="-1" aria-labelledby="createArtistModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createPartnerModalLabel">Ajouter un nouvel artiste</h5>
+                <h5 class="modal-title" id="createArtistModalLabel">Ajouter un nouvel artiste</h5>
             </div>
             <form method="POST" enctype="multipart/form-data" id="partnerForm" action="{% url 'API_festivals:artiste_create'%}?modal=True">
             <div class="modal-body">

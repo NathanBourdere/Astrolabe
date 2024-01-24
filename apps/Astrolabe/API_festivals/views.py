@@ -66,13 +66,14 @@ def configuration(request):
     """
     form = ConfigurationFestivalForm()
     partenaire_form = PartenaireForm()
+    artiste_form = ArtisteForm()
     if request.method == "GET":
         configuration = ConfigurationFestival.objects.all()
         if configuration.exists():
             config_instance = configuration.first()
             partenaires = Partenaire.objects.filter(id__in=config_instance.partenaires.all()).all()
             return render(request,'configuration/configuration_detail.html',{'configuration':config_instance,'partenaires':partenaires})
-        return render(request,'configuration/configuration_create.html',{'form':form,'partenaire_form':partenaire_form})
+        return render(request,'configuration/configuration_create.html',{'form':form,'partenaire_form':partenaire_form,"artiste_form":artiste_form,})
     elif request.method == "POST":
         form = ConfigurationFestivalForm(request.POST, request.FILES)
         if form.is_valid():
@@ -81,7 +82,7 @@ def configuration(request):
             modif.date_modif_config = timezone.now()
             modif.save()
             return redirect('API_festivals:configuration')
-    return render(request,'configuration/configuration_create.html',{'form':form,'partenaire_form':partenaire_form})
+    return render(request,'configuration/configuration_create.html',{'form':form,'partenaire_form':partenaire_form,"artiste_form":artiste_form})
 
 @configuration_required
 def configuration_update(request):
@@ -102,7 +103,8 @@ def configuration_update(request):
             modif.save()
             return redirect('API_festivals:configuration')
     partenaire_form =PartenaireForm()
-    return render(request, 'configuration/configuration_update.html', {'form': configuration_form, 'partenaire_form':partenaire_form, 'configuration': configuration})
+    artiste_form = ArtisteForm()
+    return render(request, 'configuration/configuration_update.html', {'form': configuration_form, 'partenaire_form':partenaire_form, "artiste_form":artiste_form,'configuration': configuration})
 
 @configuration_required
 def configuration_delete(request):
