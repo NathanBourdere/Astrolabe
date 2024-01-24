@@ -9,7 +9,7 @@
         "cwd": "apps/Astrolabe",
         "commands": [
           {
-            "command": "python3 -m pip install --break-system-packages -r requirements.txt"
+            "command": "python -m pip install --break-system-packages -r requirements.txt"
           }
         ]
       }
@@ -20,7 +20,7 @@
         "cwd": "apps/Astrolabe",
         "commands": [
           {
-            "command": "python3 manage.py runserver 127.0.0.1:3000"
+            "command": "python manage.py runserver 127.0.0.1:3000"
           }
         ]
       }
@@ -31,7 +31,7 @@
         "cwd": "apps/Astrolabe",
         "commands": [
           {
-            "command": "python3 manage.py runserver 127.0.0.1:3000 &"
+            "command": "python manage.py runserver 127.0.0.1:3000 &"
           }
         ]
       }
@@ -41,8 +41,8 @@
       "options": {
         "cwd": "apps/Astrolabe",
         "commands": [
-          "python3 manage.py migrate",
-          "python3 populate.py"
+          "python manage.py migrate",
+          "python populate.py"
         ],
         "parallel": false
       }
