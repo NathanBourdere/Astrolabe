@@ -23,15 +23,17 @@ class ArtisteForm(ModelForm):
         }
 
     def clean(self, *args, **kwargs):
-        nom = self.cleaned_data.get("nom")
-        if Artiste.objects.filter(nom__iexact=nom.lower()).all():
+        cleaned_data = super().clean(*args,**kwargs)
+        nom = cleaned_data.get("nom")
+        instance = self.instance
+        if Artiste.objects.filter(nom__iexact=nom.lower()).exclude(pk=instance.pk).exists():
             self.add_error("nom", f"{nom} existe déjà dans la base de données")
-        recommendations = self.cleaned_data.get("recommendations")
+        recommendations = cleaned_data.get("recommendations")
         if len(recommendations) > len(set(recommendations)):
             self.add_error(
                 "recommendations", "vous recommandez plusieurs fois le même artiste"
             )
-        return super().clean(*args, **kwargs)
+        return cleaned_data
 
     def __init__(self, *args, **kwargs):
         super(ArtisteForm, self).__init__(*args, **kwargs)
@@ -54,33 +56,33 @@ class PerformanceForm(ModelForm):
         self.fields["heure_fin"].widget.attrs["placeholder"] = "HH:MM"
 
     def clean(self, *args, **kwargs):
-        nom = self.cleaned_data.get("nom")
-        print("nom" in self.changed_data)
-        if "nom" in self.changed_data:
-            if Performance.objects.filter(nom__iexact=nom.lower()).all():
+        cleaned_data = super().clean(*args,**kwargs)
+        instance = self.instance
+        nom = cleaned_data.get("nom")
+        if Performance.objects.filter(nom__iexact=nom.lower()).exclude(pk=instance.pk).exists():
                 self.add_error("nom", f"{nom} existe déjà dans la base de données")
 
-        date = self.cleaned_data.get("date")
+        date = cleaned_data.get("date")
         if date < timezone.now().date():
             self.add_error(
                 "date", "Vous ne pouvez pas ajouter une performance dans le passé !"
             )
 
-        heure_debut = self.cleaned_data.get("heure_debut")
+        heure_debut = cleaned_data.get("heure_debut")
         if date == timezone.now().date() and heure_debut < timezone.now().time():
             self.add_error(
                 "heure_debut",
                 "Vous ne pouvez pas ajouter une performance dans le passé !",
             )
 
-        heure_fin = self.cleaned_data.get("heure_fin")
+        heure_fin = cleaned_data.get("heure_fin")
         if date == timezone.now().date() and heure_fin < timezone.now().time():
             self.add_error(
                 "heure_fin",
                 "Vous ne pouvez pas ajouter une performance dans le passé !",
             )
 
-        artistes = self.cleaned_data.get("artistes")
+        artistes = cleaned_data.get("artistes")
         # on vérifie si il n'y a aucun doublon d'artistes
         if len(artistes) > len(set(artistes)):
             self.add_error(
@@ -93,11 +95,11 @@ class PerformanceForm(ModelForm):
                 "heure_fin",
                 "Vous ne pouvez pas ajouter une performance qui finit avant même qu'elle ne commence !",
             )
-        scene = self.cleaned_data.get("scene")
+        scene = cleaned_data.get("scene")
         perfs = Performance.objects.filter(date=date, scene=scene)
         if len(perfs) > 0:
             for perf in perfs:
-                if perf.nom != self.cleaned_data.get("nom"):
+                if perf.nom != cleaned_data.get("nom"):
                     # on regarde si elles se chevauchent pas
                     if (
                         not (
@@ -122,7 +124,7 @@ class PerformanceForm(ModelForm):
                             "date",
                             "La scène est déjà occupée ce jour là (veuillez changer un de ces 4 champs)",
                         )
-        return super().clean(*args, **kwargs)
+        return cleaned_data
 
 
 class SceneForm(ModelForm):
@@ -134,10 +136,12 @@ class SceneForm(ModelForm):
         }
 
     def clean(self, *args, **kwargs):
-        nom = self.cleaned_data.get("nom")
-        if Scene.objects.filter(nom__iexact=nom.lower()).all():
+        cleaned_data = super().clean(*args,**kwargs)
+        nom = cleaned_data.get("nom")
+        instance = self.instance
+        if Scene.objects.filter(nom__iexact=nom.lower()).exclude(pk=instance.pk).exists():
             self.add_error("nom", f"{nom} existe déjà dans la base de données")
-        return super().clean(*args, **kwargs)
+        return cleaned_data
 
 
 class ConfigurationFestivalForm(ModelForm):
@@ -170,10 +174,12 @@ class PartenaireForm(ModelForm):
         }
 
     def clean(self, *args, **kwargs):
-        nom = self.cleaned_data.get("nom")
-        if Partenaire.objects.filter(nom__iexact=nom.lower()).all():
+        cleaned_data = super().clean(*args,**kwargs)
+        nom = cleaned_data.get("nom")
+        instance = self.instance
+        if Partenaire.objects.filter(nom__iexact=nom.lower()).exclude(pk=instance.pk).exists():
             self.add_error("nom", f"{nom} existe déjà dans la base de données")
-        return super().clean(*args, **kwargs)
+        return cleaned_data
 
     def __init__(self, *args, **kwargs):
         super(PartenaireForm, self).__init__(*args, **kwargs)
@@ -200,10 +206,12 @@ class TagsForm(ModelForm):
         widgets = {"performances": CheckboxSelectMultiple}
 
     def clean(self, *args, **kwargs):
-        nom = self.cleaned_data.get("nom")
-        if Tag.objects.filter(nom__iexact=nom.lower()).all():
+        cleaned_data = super().clean(*args,**kwargs)
+        nom = cleaned_data.get("nom")
+        instance = self.instance
+        if Tag.objects.filter(nom__iexact=nom.lower()).exclude(pk=instance.pk).exists():
             self.add_error("nom", f"{nom} existe déjà dans la base de données")
-        return super().clean(*args, **kwargs)
+        return cleaned_data
 
 
 class TagsFilterForm(Form):
