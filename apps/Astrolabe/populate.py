@@ -19,7 +19,9 @@ hellfest.couleur_principale = "#000000"
 hellfest.couleur_secondaire = "#FF00FF"
 hellfest.couleur_background = "#FF0000"
 hellfest.video_promo = "static/media/configuration/video/hellfest.mp4"
-hellfest.mode = True
+hellfest.mode_festival = True
+hellfest.date_debut = "2024-06-15"
+hellfest.date_fin = "2024-06-30"
 
 arial = PoliceEcriture()
 arial.nom = "Roboto"
@@ -171,6 +173,8 @@ cannibal_corpse.recommendations.add(kvelertak,batards)
 slayer.recommendations.add(slipknot,batards)
 kvelertak.recommendations.add(slayer,cannibal_corpse)
 batards.recommendations.add(slipknot,slayer)
+
+hellfest.artistes.add(slipknot,behemoth,cannibal_corpse,slayer,kvelertak,batards)
 
 yeps = Partenaire()
 yeps.nom = "Yeps"

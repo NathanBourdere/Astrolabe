@@ -84,8 +84,12 @@ class ConfigurationFestival(models.Model):
     video_promo = models.FileField(
         upload_to="static/media/configuration/video/", null=True, blank=True
     )
-    partenaires = models.ManyToManyField(Partenaire)
     mode_festival = models.BooleanField(default=True)
+    date_debut = models.DateField(default = timezone.now())
+    date_fin = models.DateField(default = timezone.now() + timezone.timedelta(days=1))
+    partenaires = models.ManyToManyField(Partenaire)
+    artistes = models.ManyToManyField(Artiste)
+
 
     def __str__(self):
         return self.nom

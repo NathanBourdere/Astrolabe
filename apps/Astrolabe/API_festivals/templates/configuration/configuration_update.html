@@ -28,32 +28,36 @@
     <button type="button" class="btn btn-primary flexe" data-bs-toggle="modal" data-bs-target="#createPartnerModal">
         Ajouter un nouveau partenaire
     </button>
+    <button type="button" class="btn btn-primary flexe" data-bs-toggle="modal" data-bs-target="#createArtistModal">
+        Ajouter un nouvel artiste
+    </button>
     <input type="submit" value="Enregistrer">
 </form>
 {% include '../modal/partenaires/partenaire_create.html' %}
+{% include '../modal/artistes/artiste_create.html'%}
 <script>
-    let submit = document.getElementById("submitBtn");
-    console.log(submit);
-    submit.addEventListener('click', function() {
-        let modal = document.getElementById('createPartnerModal');
-        closeOneModal(modal.id);
-    });
+    //let submit = document.getElementById("submitBtn");
+    //console.log(submit);
+    //submit.addEventListener('click', function() {
+    //    let modal = document.getElementById('createPartnerModal');
+    //    closeOneModal(modal.id);
+    //});
 
-    function closeOneModal(modalId) {
+    //function closeOneModal(modalId) {
 
 // get modal
-const modal = document.getElementById(modalId);
+//const modal = document.getElementById(modalId);
 
 // change state like in hidden modal
-modal.classList.remove('show');
-modal.setAttribute('aria-hidden', 'true');
-modal.setAttribute('style', 'display: none');
+//modal.classList.remove('show');
+//modal.setAttribute('aria-hidden', 'true');
+//modal.setAttribute('style', 'display: none');
 
  // get modal backdrop
- const modalBackdrops = document.getElementsByClassName('modal-backdrop');
+ //const modalBackdrops = document.getElementsByClassName('modal-backdrop');
 
  // remove opened modal backdrop
-  document.body.removeChild(modalBackdrops[0]);
-}
+  //ocument.body.removeChild(modalBackdrops[0]);
+//}
 </script>
 {% endblock %}
