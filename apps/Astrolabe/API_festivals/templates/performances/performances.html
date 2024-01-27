@@ -7,8 +7,12 @@
 {% block content %}
 <form id="tagForm" method="get" action="{% url 'API_festivals:performances' page=1 %}">
     {% csrf_token %}
-    {{ tag_form.as_p }}
+    <button type="submit" name="tags" value="-1" class="tag-button btn btn-primary">Tous</button>
+    {% for tag in tag_data %}
+        <button type="submit" name="tags" value="{{ tag.pk }}" class="tag-button btn btn-primary">{{ tag }}</button>
+    {% endfor %}
 </form>
+
 
 <h2 style="margin-top: 2em; margin-bottom: 1em;">Performances</h2>
 <div class="row row-cols-1 row-cols-md-3 g-4">

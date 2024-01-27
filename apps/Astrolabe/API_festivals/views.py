@@ -32,16 +32,12 @@ def accueil(request):
     performances_jour = Performance.objects.filter(date__gte=timezone.now()).order_by('date', 'heure_debut')
     tag_form = TagsFilterForm(request.GET)
     
-    if tag_form.is_valid():
-        tag = tag_form.cleaned_data.get('trier_par_tags')
-        search_term = tag_form.cleaned_data.get('search')
-
-        if tag is not None and search_term is not None:
-            performances_jour = tag.performances.filter(date__gte=timezone.now(),nom__icontains=search_term).order_by('date')
-        elif tag is not None:
+    if 'tags' in request.GET:
+        tag_id = request.GET.getlist('tags')[0]
+        if tag_id != '-1' :
+            tag = Tag.objects.get(pk=tag_id)
             performances_jour = tag.performances.filter(date__gte=timezone.now()).order_by('date')
-        elif search_term is not None:
-            performances_jour = performances_jour.filter(date__gte=timezone.now(),nom__icontains=search_term).order_by('date')
+        
 
     for perf in performances_jour:
         artistes = Artiste.objects.filter(performance=perf)
@@ -56,7 +52,7 @@ def accueil(request):
             news_par_jours[news.date] = [news]
         else :
             news_par_jours[news.date].append(news)
-    return render(request, 'accueil.html', {'tag_form':tag_form,'nom_festival':festival.nom,'performances_par_jour':performances_par_jour,'logo':festival.logo, 'news_par_jours':news_par_jours})
+    return render(request, 'accueil.html', {'tag_form':tag_form,'tag_data': Tag.objects.filter(visible=True),'nom_festival':festival.nom,'performances_par_jour':performances_par_jour,'logo':festival.logo, 'news_par_jours':news_par_jours})
 
 # CONFIGURATION
 def configuration(request):
@@ -304,31 +300,25 @@ def partenaire_delete(request, id):
 def performances(request, page):
     performances_artistes = dict()
     
-    tag_form = TagsFilterForm(request.GET)
     
     logo = ConfigurationFestival.objects.first().logo
     
     performances = Performance.objects.all().order_by('date')
     
-    if tag_form.is_valid():
-        tag = tag_form.cleaned_data.get('trier_par_tags')
-        search_term = tag_form.cleaned_data.get('search')
-
-        if tag is not None and search_term is not None:
-            performances = tag.performances.filter(nom__icontains=search_term).order_by('date')
-        elif tag is not None:
+    if 'tags' in request.GET:
+        tag_id = request.GET.getlist('tags')[0]
+        print(tag_id)
+        if tag_id != '-1' :
+            tag = Tag.objects.get(pk=tag_id)
             performances = tag.performances.all().order_by('date')
-        elif search_term is not None:
-            performances = performances.filter(nom__icontains=search_term).order_by('date')
 
     
     render_left_arrow, render_right_arrow, performances = pagination(performances, page, Performance.objects.all())
-    
     for performance in performances:
         performances_artistes[performance] = Artiste.objects.filter(performance=performance)
     
     return render(request, 'performances/performances.html', {
-        'tag_form': tag_form,
+        'tag_data': Tag.objects.filter(visible=True),
         'logo': logo,
         'performances': performances_artistes,
         'render_right_arrow': render_right_arrow,

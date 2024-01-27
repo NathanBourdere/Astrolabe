@@ -31,12 +31,15 @@
 </script>
 
 <div id="corps">
-  <button class="btn btn-primary" id="boutonSwitch" name="performances" onclick="switchPage()">Afficher les performances</button>
+  <button class="btn btn-primary" id="boutonSwitch" name="news" onclick="switchPage()">Afficher les news</button>
 
-  <div id="performances" class="" hidden>
-    <form id="tagForm" method="get" action="{% url 'API_festivals:performances' page=1 %}">
+  <div id="performances" class="">
+    <form id="tagForm" method="get" action="{% url 'API_festivals:accueil' %}">
       {% csrf_token %}
-      {{ tag_form.as_p }}
+      <button type="submit" name="tags" value="-1" class="tag-button btn btn-primary">Tous</button>
+      {% for tag in tag_data %}
+          <button type="submit" name="tags" value="{{ tag.pk }}" class="tag-button btn btn-primary">{{ tag }}</button>
+      {% endfor %}
   </form>
     <h2>Prochaines performances du {{ nom_festival }}</h2>
     {% for date, performances in performances_par_jour.items %}
@@ -72,7 +75,7 @@
 </div>
 
 
-  <div id="news" class="">
+  <div id="news" class="" hidden>
     <h2>Prochaines news du {{ nom_festival }}</h2>
     {% for date, news in news_par_jours.items %}
     <h3>{{date}}</h3>

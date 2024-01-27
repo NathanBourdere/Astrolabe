@@ -1,5 +1,7 @@
+from django import forms
 from .models import *
 from django.forms import (
+    CheckboxInput,
     ChoiceField,
     DateField,
     DateInput,
@@ -12,12 +14,9 @@ from django.forms import (
     CharField,
     Form,
     FileInput,
-    Select,
-    TimeField,
     TimeInput,
 )
-from Astrolabe.settings import DATE_INPUT_FORMATS
-from django.utils import timezone
+from django.utils import timezone,safestring,html
 
 
 class ArtisteForm(ModelForm):
@@ -248,14 +247,12 @@ class TagsForm(ModelForm):
         if Tag.objects.filter(nom__iexact=nom.lower()).exclude(pk=instance.pk).exists():
             self.add_error("nom", f"{nom} existe déjà dans la base de données")
         return cleaned_data
-
-
+    
 class TagsFilterForm(Form):
-    search = CharField(label="Recherche", max_length=100, required=False)
-    trier_par_tags = ModelChoiceField(
+    #search = CharField(label="Recherche", max_length=100, required=False)
+    tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
-        empty_label="Trier par tag",
-        widget=Select(attrs={"onchange": "this.form.submit();"}),
+        widget=forms.TextInput,
         required=False,
     )
 
