@@ -72,24 +72,26 @@ class PerformanceForm(ModelForm):
                 self.add_error("nom", f"{nom} existe déjà dans la base de données")
 
         date = cleaned_data.get("date")
-        if date < timezone.now().date():
-            self.add_error(
-                "date", "Vous ne pouvez pas ajouter une performance dans le passé !"
-            )
-
         heure_debut = cleaned_data.get("heure_debut")
-        if date == timezone.now().date() and heure_debut < timezone.now().time():
-            self.add_error(
-                "heure_debut",
-                "Vous ne pouvez pas ajouter une performance dans le passé !",
-            )
-
         heure_fin = cleaned_data.get("heure_fin")
-        if date == timezone.now().date() and heure_fin < timezone.now().time():
-            self.add_error(
-                "heure_fin",
-                "Vous ne pouvez pas ajouter une performance dans le passé !",
-            )
+        try :
+            if date < timezone.now().date():
+                self.add_error(
+                "date", "Vous ne pouvez pas ajouter une performance dans le passé !"
+                )
+            if date == timezone.now().date() :
+                    if heure_debut < timezone.now().time():
+                        self.add_error(
+                        "heure_debut",
+                        "Vous ne pouvez pas ajouter une performance dans le passé !",
+                        )  
+                    if heure_fin < timezone.now().time():
+                        self.add_error(
+                        "heure_fin",
+                        "Vous ne pouvez pas ajouter une performance dans le passé !",
+                        )
+        except TypeError:
+            pass #déjà géré
 
         artistes = cleaned_data.get("artistes")
         # on vérifie si il n'y a aucun doublon d'artistes
@@ -98,12 +100,14 @@ class PerformanceForm(ModelForm):
                 "artistes",
                 "Vous ne pouvez pas ajouter deux fois le même artiste pour la même performance ! ",
             )
-
-        if heure_debut.hour >= heure_fin.hour:
-            self.add_error(
+        try :
+            if heure_debut.hour >= heure_fin.hour:
+                self.add_error(
                 "heure_fin",
                 "Vous ne pouvez pas ajouter une performance qui finit avant même qu'elle ne commence !",
             )
+        except AttributeError:
+            pass #déjà géré
         scene = cleaned_data.get("scene")
         perfs = Performance.objects.filter(date=date, scene=scene)
         if len(perfs) > 0:
@@ -171,20 +175,21 @@ class ConfigurationFestivalForm(ModelForm):
         cleaned_data = super().clean(*args,**kwargs)
         date_debut= cleaned_data.get("date_debut")
         date_fin = cleaned_data.get("date_fin")
-        if date_debut < timezone.now().date():
-            self.add_error(
+        try : 
+            if date_debut < timezone.now().date():
+                self.add_error(
                 "date_debut", "Vous ne pouvez pas ajouter une performance dans le passé !"
             )
-        if date_fin < timezone.now().date():
-            self.add_error(
+            if date_fin < timezone.now().date():
+                self.add_error(
                 "date_fin", "Vous ne pouvez pas ajouter une performance dans le passé !"
-            )
-        if date_debut > date_fin:
-            self.add_error(
-                "date_debut", "La date de début ne peut pas être après la date de fin."
-            )
-        
-            
+                )
+            if date_debut > date_fin:
+                    self.add_error(
+                    "date_debut", "La date de début ne peut pas être après la date de fin."
+                )
+        except TypeError:
+            pass #déjà géré   
         return cleaned_data
 
     def __init__(self, *args, **kwargs):

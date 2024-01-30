@@ -5,13 +5,15 @@
 <img src="/{{logo}}" style="width:100%; height: 6vh;" class="rounded" alt="Festival">
 {% endblock %}
 {% block content %}
-<form id="tagForm" method="get" action="{% url 'API_festivals:performances' page=1 %}">
-    {% csrf_token %}
-    <button type="submit" name="tags" value="-1" class="tag-button btn btn-primary">Tous</button>
-    {% for tag in tag_data %}
-        <button type="submit" name="tags" value="{{ tag.pk }}" class="tag-button btn btn-primary">{{ tag }}</button>
-    {% endfor %}
-</form>
+<div class="btn-group" role="group" style="margin-top: 1em;">
+    <form id="tagForm" method="get" action="{% url 'API_festivals:performances' page=1 %}">
+        {% csrf_token %}
+        <button type="submit" name="tags" value="-1" class="tag-button tous">Tous</button>
+        {% for tag in tag_data %}
+            <button type="submit" name="tags" value="{{ tag.pk }}" class="tag-button">{{ tag }}</button>
+        {% endfor %}
+    </form>
+</div>
 
 
 <h2 style="margin-top: 2em; margin-bottom: 1em;">Performances</h2>
