@@ -2,6 +2,7 @@ from .models import *
 from django.core.serializers import serialize,deserialize
 from django.http import HttpResponse
 import json
+from datetime import timedelta
 
 def pagination(query,page,query_all,limit=50):
     query = query[(page-1)*limit:]
@@ -75,3 +76,42 @@ def delete_all_data():
     Tag.objects.all().delete()
     Scene.objects.all().delete()
     News.objects.all().delete()
+
+def generer_tags_date_festival(date_debut, date_fin):
+    print(date_fin-date_debut)
+
+def generer_tags_date_festival(date_debut, date_fin):
+    JOURS_SEMAINE = [
+        "Lundi", 
+        "Mardi", 
+        "Mercredi", 
+        "Jeudi", 
+        "Vendredi", 
+        "Samedi", 
+        "Dimanche"
+    ]
+    MOIS = [
+        "Janvier", 
+        "Février", 
+        "Mars", 
+        "Avril", 
+        "Mai", 
+        "Juin", 
+        "Juillet", 
+        "Aout", 
+        "Septembre", 
+        "Octobre", 
+        "Novembre", 
+        "Décembre"
+    ]
+
+    tags = []
+    delta_jour = timedelta(days=1)
+    date_actuelle = date_debut
+
+    while date_actuelle < date_fin:
+        tags.append(f"{JOURS_SEMAINE[date_actuelle.weekday()]} {date_actuelle.day} {MOIS[date_actuelle.month-1]}")
+        date_actuelle += delta_jour
+
+    for tag in tags:
+        Tag(nom=tag).save()

@@ -73,6 +73,8 @@ def configuration(request):
     elif request.method == "POST":
         form = ConfigurationFestivalForm(request.POST, request.FILES)
         if form.is_valid():
+            Tag.objects.all().delete()
+            generer_tags_date_festival(form.cleaned_data['date_debut'],form.cleaned_data['date_fin'])
             form.save()
             modif = Modification.objects.all().first()
             modif.date_modif_config = timezone.now()
