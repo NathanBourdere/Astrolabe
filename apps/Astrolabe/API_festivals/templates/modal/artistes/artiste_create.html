@@ -4,14 +4,14 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="createArtistModalLabel">Ajouter un nouvel artiste</h5>
             </div>
-            <form method="POST" enctype="multipart/form-data" id="partnerForm" action="{% url 'API_festivals:artiste_create'%}?modal=True">
+            <form method="POST" enctype="multipart/form-data" id="artisteForm" action="{% url 'API_festivals:artiste_create'%}?modal=True">
             <div class="modal-body">
                 {% csrf_token %}
                 {{ artiste_form.as_p }}
                 {{ artiste_form.errors }}
             </div>
             <div class="modal-footer">
-                <input type="submit" id="submitBtn" class="btn btn-primary" form="partnerForm">
+                <input type="submit" id="submitBtn" class="btn btn-primary" form="artisteForm">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
             </div>
         </form>            

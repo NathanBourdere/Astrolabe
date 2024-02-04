@@ -138,6 +138,7 @@ def artistes(request,page):
 def artiste_create(request):
     modal = request.GET.get('modal',False)
     logo = ConfigurationFestival.objects.all().first().logo
+    referer = request.META.get('HTTP_REFERER')
     if request.method == 'POST':
         artiste_form = ArtisteForm(request.POST, request.FILES)
         if artiste_form.is_valid():
@@ -147,7 +148,16 @@ def artiste_create(request):
             modif.save()
             if not modal : 
                 return redirect('API_festivals:artistes', page=1)
-            return redirect('API_festivals:performance_create')
+            elif 'configuration' in referer:
+                if 'update' in referer:
+                    return redirect('API_festivals:configuration_update')
+                elif 'create' in referer :
+                    return redirect('API_festivals:configuration')
+            else : 
+                if 'update' in referer:
+                    return redirect('API_festivals:performance_update')
+                elif 'create' in referer :
+                    return redirect('API_festivals:performance_create')
     else:
         artiste_form = ArtisteForm()
     return render(request, 'artistes/artiste_create.html', {'form': artiste_form,'logo':logo})
@@ -245,13 +255,11 @@ def partenaire_create(request):
 
             if not modal : 
                 return redirect('API_festivals:partenaires', page=1)
-            configuration_form = ConfigurationFestivalForm(instance=configuration)
-            return render(request, 'configuration/configuration_update.html', {'form': configuration_form, 'partenaire_form':partenaire_form, 'configuration': configuration})
+            return redirect('API_festivals:configuration_update')
         
     if not modal :  
         return render(request, 'partenaires/partenaire_create.html', {'logo':logo,'form': partenaire_form})
-    configuration_form = ConfigurationFestivalForm(instance=configuration)
-    return render(request, 'configuration/configuration_update.html', {'form': configuration_form, 'partenaire_form':partenaire_form, 'configuration': configuration})
+    return redirect('API_festivals:configuration_update')
     
 @configuration_required
 def partenaire_detail(request, id):
