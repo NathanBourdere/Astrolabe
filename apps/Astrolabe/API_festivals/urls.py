@@ -52,6 +52,6 @@ urlpatterns = [
     path('tags/delete/<int:id>', tag_delete, name='tag_delete'),
     path('tags/create', tag_create, name='tag_create'),
     path('parametres/',parametres, name='parametres'),
-    path('rechercher_artistes_par_tag/', rechercher_artistes_par_tag, name='rechercher_artistes_par_tag')
-    path('rechercher_artistes/', rechercher_artistes, name='rechercher_artistes')
+    path('rechercher_artistes_par_tag/', rechercher_artistes_par_tag, name='rechercher_artistes_par_tag'),
+    path('rechercher_artistes/', rechercher_artistes, name='rechercher_artistes'),
 ]
