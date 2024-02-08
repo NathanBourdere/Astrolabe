@@ -30,18 +30,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Initialize _pages here
     _pages = [
-  CarouselSliderWidget(configuration: widget.configuration),
-  const BilletteriePage(),
-  LikedArtistsPage(
-    key: GlobalKey<LikedArtistsPageState>(),
-    likedArtists: DatabaseAstrolabe.instance.getLikedArtistes(),
-    configuration: widget.configuration,
-  ),
-  ArtistesPage(configuration: widget.configuration),
-  PerformancesPage(
-    configuration: widget.configuration,
-  ),
-];
+      CarouselSliderWidget(configuration: widget.configuration),
+      const BilletteriePage(),
+      LikedArtistsPage(
+        key: GlobalKey<LikedArtistsPageState>(),
+        likedArtists: DatabaseAstrolabe.instance.getLikedArtistes(),
+        configuration: widget.configuration,
+      ),
+      ArtistesPage(configuration: widget.configuration),
+      PerformancesPage(
+        configuration: widget.configuration,
+      ),
+    ];
   }
 
   @override

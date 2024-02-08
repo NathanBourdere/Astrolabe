@@ -131,7 +131,7 @@ class _PageArtisteState extends State<PageArtiste> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: widget.configuration.getMainColor,
+                                  color: widget.configuration.getFontColor,
                                 ),
                               ),
                               ListView.builder(
@@ -142,7 +142,17 @@ class _PageArtisteState extends State<PageArtiste> {
                                   final performance =
                                       performancesArtiste[index];
                                   return ListTile(
-                                    title: Text(performance.nom),
+                                    title: Text(
+                                        performance.nom,
+                                      style: GoogleFonts.getFont(
+                                        widget.configuration.getpoliceEcriture,
+                                        textStyle: TextStyle(
+                                          fontSize: 18,
+                                          color:
+                                              widget.configuration.getFontColor,
+                                        ),
+                                      )
+                                    ),
                                     subtitle: Text(
                                       '${performance.date} à ${performance.heure_debut} - ${performance.heure_fin}',
                                       style: GoogleFonts.getFont(
@@ -186,7 +196,7 @@ class _PageArtisteState extends State<PageArtiste> {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
-                                    color: widget.configuration.getMainColor,
+                                    color: widget.configuration.getFontColor,
                                   ),
                                 ),
                               ),
@@ -194,7 +204,7 @@ class _PageArtisteState extends State<PageArtiste> {
                                 widget.artiste.description,
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: widget.configuration.getMainColor,
+                                  color: widget.configuration.getFontColor,
                                 ),
                                 textAlign: TextAlign.justify,
                               ),
@@ -213,7 +223,7 @@ class _PageArtisteState extends State<PageArtiste> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: widget.configuration.getMainColor,
+                                  color: widget.configuration.getFontColor,
                                 ),
                               ),
                               Row(
@@ -232,7 +242,7 @@ class _PageArtisteState extends State<PageArtiste> {
                                   ),
                                   IconButton(
                                     icon:
-                                        const FaIcon(FontAwesomeIcons.facebook),
+                                        const FaIcon(FontAwesomeIcons.facebook), color: Colors.blueAccent,
                                     onPressed: () {
                                       Uri url =
                                           Uri.parse(widget.artiste.facebook);
@@ -241,7 +251,7 @@ class _PageArtisteState extends State<PageArtiste> {
                                   ),
                                   IconButton(
                                     icon:
-                                        const FaIcon(FontAwesomeIcons.youtube),
+                                        const FaIcon(FontAwesomeIcons.youtube), color: Colors.red,
                                     onPressed: () {
                                       Uri url =
                                           Uri.parse(widget.artiste.youtube);
@@ -250,7 +260,7 @@ class _PageArtisteState extends State<PageArtiste> {
                                   ),
                                   IconButton(
                                     icon: const FaIcon(
-                                        FontAwesomeIcons.instagram),
+                                        FontAwesomeIcons.instagram), color: Colors.purpleAccent,
                                     onPressed: () {
                                       Uri url =
                                           Uri.parse(widget.artiste.instagram);

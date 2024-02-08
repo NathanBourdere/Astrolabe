@@ -1,9 +1,7 @@
 // ignore_for_file: unused_import, depend_on_referenced_packages
 
 import 'dart:async';
-import 'dart:collection';
 import 'dart:io';
-import 'package:device_calendar/device_calendar.dart';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/modifications.dart';
@@ -16,12 +14,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'models/news.dart';
+import 'dart:collection';
+import 'package:device_calendar/device_calendar.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class DatabaseAstrolabe {
   DatabaseAstrolabe._privateConstructor();
   static final DatabaseAstrolabe instance =
-      DatabaseAstrolabe._privateConstructor();
+  DatabaseAstrolabe._privateConstructor();
 
   static Database? _database;
 
@@ -156,7 +156,7 @@ class DatabaseAstrolabe {
   Future<List<Performance>> getPerformances() async {
     final db = database;
     final List<Map<String, dynamic>> performancesData =
-        await db.then((database) => database!.query('PERFORMANCE'));
+    await db.then((database) => database!.query('PERFORMANCE'));
 
     // Convertir les données des performances en objets Performance
     final List<Performance> performances = performancesData
@@ -177,7 +177,7 @@ class DatabaseAstrolabe {
   Future<List<Performance>> getPerformancesByScene(Scene scene) async {
     final db = database;
     final List<Map<String, dynamic>> performancesData = await db.then(
-        (database) => database!
+            (database) => database!
             .query('PERFORMANCE', where: 'scene = ?', whereArgs: [scene.id]));
 
     // Convertir les données des performances en objets Performance
@@ -199,7 +199,7 @@ class DatabaseAstrolabe {
   Future<Performance> getPerformanceById(int id) async {
     final db = database;
     final List<Map<String, dynamic>> performancesData = await db.then(
-        (database) =>
+            (database) =>
             database!.query('PERFORMANCE', where: 'id = ?', whereArgs: [id]));
 
     // Convertir les données des performances en objets Performance
@@ -246,7 +246,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> artistes =
-          await database!.query('ARTISTE');
+      await database!.query('ARTISTE');
       return artistes.map((data) => Artiste.fromJson(data)).toList();
     });
   }
@@ -291,7 +291,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> configurations =
-          await database!.query('CONFIGURATION');
+      await database!.query('CONFIGURATION');
       return Configuration.fromJson_database(configurations.first);
     });
   }
@@ -307,7 +307,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> modifications =
-          await database!.query('MODIFICATIONS');
+      await database!.query('MODIFICATIONS');
       return Modifications.fromJson(modifications.first);
     });
   }
@@ -342,7 +342,7 @@ class DatabaseAstrolabe {
     final db = database;
     return db.then((database) async {
       final List<Map<String, dynamic>> partenaires =
-          await database!.rawQuery('SELECT DISTINCT * FROM PARTENAIRE');
+      await database!.rawQuery('SELECT DISTINCT * FROM PARTENAIRE');
       return partenaires.map((data) => Partenaire.fromJson(data)).toList();
     });
   }
@@ -392,7 +392,7 @@ class DatabaseAstrolabe {
 
     // Obtenir la liste des calendriers disponibles
     Result<UnmodifiableListView<Calendar>> calendars =
-        await _deviceCalendarPlugin.retrieveCalendars();
+    await _deviceCalendarPlugin.retrieveCalendars();
     // Choisissez le premier calendrier par défaut (vous pouvez ajuster cela selon vos besoins)
     Calendar defaultCalendar = calendars.data![0];
     print('pass');
@@ -405,9 +405,9 @@ class DatabaseAstrolabe {
           performanceDate, tz.getLocation('Europe/Paris'));
       Configuration config = await getConfiguration();
       int reminderMinutes = 1440;
-        if (config.mode_festival == 'festival') {
-          reminderMinutes = 60;
-        }
+      if (config.mode_festival == 'festival') {
+        reminderMinutes = 60;
+      }
 
       // Repeat the process for the end time
       DateTime performanceDateEnd =
@@ -436,6 +436,15 @@ class DatabaseAstrolabe {
     }
   }
 
+  Future<void> getLike(Artiste artiste) async {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> artistes = await database!
+          .query('ARTISTE', where: 'id = ?', whereArgs: [artiste.id]);
+      return artistes.first['like'];
+    });
+  }
+
   // get liked artists
   Future<List<Artiste>> getLikedArtistes() {
     final db = database;
@@ -443,11 +452,22 @@ class DatabaseAstrolabe {
       final List<Map<String, dynamic>> artistes = await database!.rawQuery(
           'SELECT DISTINCT ARTISTE.id, ARTISTE.nom, ARTISTE.description, ARTISTE.site_web, ARTISTE.youtube, ARTISTE.instagram, ARTISTE.facebook, ARTISTE.image, ARTISTE.like FROM ARTISTE WHERE ARTISTE.like = 1');
       List<Artiste> artistees =
-          artistes.map((data) => Artiste.fromJson(data)).toList();
+      artistes.map((data) => Artiste.fromJson(data)).toList();
       print(artistees);
       return artistees;
     });
   }
+
+  Future<List<int>> getLikedArtistIds() async {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> artistes = await database!.rawQuery(
+          'SELECT DISTINCT ARTISTE.id FROM ARTISTE WHERE ARTISTE.like = 1');
+      List<int> artistIds = artistes.map((data) => data['id'] as int).toList();
+      return artistIds;
+    });
+  }
+
 
   Future<List<Tag>> getTags() {
     final db = database;
@@ -545,7 +565,7 @@ class DatabaseAstrolabe {
       'MODIFICATIONS',
       modifications.toJson(),
       conflictAlgorithm:
-          ConflictAlgorithm.replace, // Use replace to update on conflict
+      ConflictAlgorithm.replace, // Use replace to update on conflict
     );
 
     // Update or insert PARTENAIRE
@@ -662,5 +682,15 @@ class DatabaseAstrolabe {
     }
 
     return await Future.value(1);
+  }
+
+  Future<List<Artiste>> searchArtistes(String value) {
+    final db = database;
+    return db.then((database) async {
+      final List<Map<String, dynamic>> artistes = await database!.rawQuery(
+          'SELECT * FROM ARTISTE WHERE nom LIKE ?',
+          ['%$value%']);
+      return artistes.map((data) => Artiste.fromJson(data)).toList();
+    });
   }
 }
