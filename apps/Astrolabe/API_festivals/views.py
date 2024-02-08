@@ -88,6 +88,8 @@ def configuration_update(request):
     configuration = ConfigurationFestival.objects.all().first()
     chemin_logo = str(configuration.logo)
     configuration_form = ConfigurationFestivalForm(instance=configuration)
+    artistes = Artiste.objects.all()
+
     if request.method == 'POST':
         configuration_form = ConfigurationFestivalForm(request.POST, request.FILES, instance=configuration)
         if configuration_form.has_changed() and configuration_form.is_valid():
@@ -103,7 +105,14 @@ def configuration_update(request):
             return redirect('API_festivals:configuration')
     partenaire_form =PartenaireForm()
     artiste_form = ArtisteForm()
-    return render(request, 'configuration/configuration_update.html', {'form': configuration_form, 'partenaire_form':partenaire_form, "artiste_form":artiste_form,'configuration': configuration})
+    return render(request, 'configuration/configuration_update.html', {
+        'tag_data': Tag.objects.all(),
+        'form': configuration_form, 
+        'partenaire_form':partenaire_form, 
+        "artiste_form":artiste_form,
+        'configuration': configuration,
+        'artistes': artistes
+    })
 
 @configuration_required
 def configuration_delete(request):
@@ -310,7 +319,6 @@ def partenaire_delete(request, id):
 @configuration_required
 def performances(request, page):
     performances_artistes = dict()
-    
     
     logo = ConfigurationFestival.objects.first().logo
     
@@ -618,6 +626,25 @@ def parametres(request):
 
 def not_found(request,exception):
     return render(request,"errors/not_found.html",status=404)
+
+def rechercher_artistes_par_tag(request):
+    tag_id = request.GET.get('tag_id', '')
+    if tag_id == '-1':
+        artistes = Artiste.objects.all()
+        artistes_list = [{'id': artiste.id, 'nom': artiste.nom} for artiste in artistes]
+        return JsonResponse({
+            'artistes': artistes_list
+        })
+    else:
+        tag_obj = Tag.objects.get(pk=tag_id)
+        artistes = []
+        for performance in Performance.objects.filter(tag=tag_obj):
+            for artiste in Artiste.objects.filter(performance=performance):
+                artistes.append(artiste)
+        artistes_list = [{'id': artiste.id, 'nom': artiste.nom} for artiste in artistes]
+        return JsonResponse({
+            "artistes": artistes_list
+        })
 
 def rechercher_artistes(request):
     term = request.GET.get('term', '')

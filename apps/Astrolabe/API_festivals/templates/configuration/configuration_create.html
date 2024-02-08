@@ -3,6 +3,37 @@
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
 {% block title %}Créer une configuration{% endblock %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.tag-button').on('click', function () {
+            var tagId = $(this).data('tag-id');
+            $.ajax({
+                url: "{% url 'API_festivals:rechercher_artistes_par_tag' %}",
+                data: {"tag_id": tagId},
+                dataType: 'json',
+                success: function (data) {
+                    let artistesList = $('#id_artistes');
+                    artistesList.empty();
+                    $.each(data.artistes, function (index, artiste) {
+                        let html_a_ajouter = `
+                            <div>
+                                <label for="id_artistes_${artiste.id-1}">
+                                    <input type="checkbox" name="artistes" value="${artiste.id}" class="champsRequis"id="id_artistes_${artiste.id-1}">
+                                    ${artiste.nom}
+                                </label>
+                            </div>
+                        `
+                        artistesList.append(html_a_ajouter);
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
 {% block content %}
 <div class="container" style="text-align: center;">
     <h2>Création de la configuration du festival</h2>
@@ -11,8 +42,20 @@
     {% csrf_token %}
     {% with WIDGET_ERROR_CLASS='champsInvalide' WIDGET_REQUIRED_CLASS='champsRequis'%}
         {% for field in form %}
+            {% if field == form.artistes %}
+            {{ field.label_tag }}
+            <br>
+            <div class="btn-group" role="group" style="margin-top: 1em;">
+                <button type="button" name="tags" data-tag-id="-1" class="tag-button tous">Tous</button>
+                {% for tag in tag_data %}
+                    <button type="button" name="tags" data-tag-id="{{ tag.pk }}" class="tag-button">{{ tag }}</button>
+                {% endfor %}
+            </div>
+            <div id="id_artistes" class="champsRequis"></div>
+            {% else %}
             {{ field.label_tag }}
             {% render_field field %}
+            {% endif %}
             {% if field.errors %}
             {% for error in field.errors %}
                     <p style="color: red;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-diamond" viewBox="0 0 16 16">
