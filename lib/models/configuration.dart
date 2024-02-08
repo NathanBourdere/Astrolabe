@@ -16,6 +16,7 @@ class Configuration {
   String couleurSecondaire;
   String couleurBackground;
   String video_promo;
+  String mode_festival;
 
   Configuration({
     required this.nomFestival,
@@ -31,6 +32,7 @@ class Configuration {
     required this.couleurSecondaire,
     required this.couleurBackground,
     required this.video_promo,
+    required this.mode_festival,
   });
 
   String get nomfestival => nomFestival;
@@ -98,6 +100,11 @@ class Configuration {
     video_promo = value;
   }
 
+  String get modeFestival => mode_festival;
+  set modeFestival(String value) {
+    mode_festival = value;
+  }
+
   factory Configuration.fromJson_database(Map<String, dynamic> json) {
     print(json);
     return Configuration(
@@ -114,6 +121,7 @@ class Configuration {
       couleurSecondaire: json['couleurSecondaire'],
       couleurBackground: json['couleurBackground'],
       video_promo: json['video_promo'] ?? '',
+      mode_festival: 'festival',
     );
   }
 
@@ -132,6 +140,7 @@ class Configuration {
       couleurSecondaire: json['couleurSecondaire'],
       couleurBackground: json['couleurBackground'],
       video_promo: json['video_promo'] ?? '',
+      mode_festival: 'festival',
     );
   }
 

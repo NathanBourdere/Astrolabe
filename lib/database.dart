@@ -1,7 +1,9 @@
 // ignore_for_file: unused_import, depend_on_referenced_packages
 
 import 'dart:async';
+import 'dart:collection';
 import 'dart:io';
+import 'package:device_calendar/device_calendar.dart';
 import 'package:festival/models/artiste.dart';
 import 'package:festival/models/configuration.dart';
 import 'package:festival/models/modifications.dart';
@@ -14,6 +16,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'models/news.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class DatabaseAstrolabe {
   DatabaseAstrolabe._privateConstructor();
@@ -365,10 +368,72 @@ class DatabaseAstrolabe {
   // put the like of an artiste to 1 or 0
   Future<void> setLike(Artiste artiste, int like) async {
     final db = database;
+
+    if (like == 1) {
+      addToCalendar(await getPerformancesByArtiste(artiste));
+    }
     return db.then((database) async {
       await database!.update('ARTISTE', {'like': like},
           where: 'id = ?', whereArgs: [artiste.id]);
     });
+  }
+
+  Future<void> addToCalendar(List<Performance> performances) async {
+    DeviceCalendarPlugin _deviceCalendarPlugin = DeviceCalendarPlugin();
+    await _deviceCalendarPlugin.requestPermissions();
+
+    // Check if permission was granted
+    if (await _deviceCalendarPlugin.hasPermissions() == false) {
+      // Permission was not granted
+      print("Calendar permissions not granted");
+      return;
+    }
+    // Initialiser le calendrier
+
+    // Obtenir la liste des calendriers disponibles
+    Result<UnmodifiableListView<Calendar>> calendars =
+        await _deviceCalendarPlugin.retrieveCalendars();
+    // Choisissez le premier calendrier par défaut (vous pouvez ajuster cela selon vos besoins)
+    Calendar defaultCalendar = calendars.data![0];
+    print('pass');
+
+    for (Performance performance in performances) {
+      // Create TZDateTime for start time
+      DateTime performanceDate =
+      DateTime.parse('${performance.date} ${performance.heure_debut}');
+      final startDateTime = tz.TZDateTime.from(
+          performanceDate, tz.getLocation('Europe/Paris'));
+      Configuration config = await getConfiguration();
+      int reminderMinutes = 1440;
+        if (config.mode_festival == 'festival') {
+          reminderMinutes = 60;
+        }
+
+      // Repeat the process for the end time
+      DateTime performanceDateEnd =
+      DateTime.parse('${performance.date} ${performance.heure_fin}');
+      final endDateTime = tz.TZDateTime.from(
+          performanceDateEnd, tz.getLocation('Europe/Paris'));
+
+      Event event = Event(
+        defaultCalendar.id,
+        title: performance.nom,
+        description: 'Performance de ${performance.artistes[0].nom}',
+        start: startDateTime,
+        end: endDateTime,
+        location: performance.scene.nom,
+        reminders: [
+          Reminder(minutes: reminderMinutes),
+        ],
+      );
+      // Ajoutez l'événement au calendrier
+      try {
+        await _deviceCalendarPlugin.createOrUpdateEvent(event);
+        print('Événement ajouté à l\'agenda avec succès.');
+      } catch (e) {
+        print('Erreur lors de l\'ajout de l\'événement à l\'agenda: $e');
+      }
+    }
   }
 
   // get liked artists

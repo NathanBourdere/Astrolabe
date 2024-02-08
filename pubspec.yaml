@@ -53,6 +53,8 @@ dependencies:
   chewie:
   video_player: 
   connectivity: ^3.0.6
+  device_calendar:
+  timezone:
 
 
 dev_dependencies:
