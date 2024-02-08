@@ -645,3 +645,9 @@ def rechercher_artistes_par_tag(request):
         return JsonResponse({
             "artistes": artistes_list
         })
+
+def rechercher_artistes(request):
+    term = request.GET.get('term', '')
+    artistes = Artiste.objects.filter(nom__icontains=term)
+    artistes_list = [{'id': artiste.id, 'nom': artiste.nom} for artiste in artistes]
+    return JsonResponse({'artistes': artistes_list})
