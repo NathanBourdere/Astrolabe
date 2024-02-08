@@ -7,6 +7,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 import os
 from datetime import date
 from django.utils import timezone
+from django.http import JsonResponse
 
 # --------------------------------------------------------------- DECORATEURS ---------------------------------------------------------------------
 def configuration_required(view_func):
@@ -617,3 +618,9 @@ def parametres(request):
 
 def not_found(request,exception):
     return render(request,"errors/not_found.html",status=404)
+
+def rechercher_artistes(request):
+    term = request.GET.get('term', '')
+    artistes = Artiste.objects.filter(nom__icontains=term)
+    artistes_list = [{'id': artiste.id, 'nom': artiste.nom} for artiste in artistes]
+    return JsonResponse({'artistes': artistes_list})
