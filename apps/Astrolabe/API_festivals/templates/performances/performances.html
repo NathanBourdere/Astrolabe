@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Performances{% endblock %}
+{% block logo %}
+<img src="/{{logo}}" style="width:100%; height: 6vh;" class="rounded" alt="Festival">
+{% endblock %}
+{% block content %}
+<div class="btn-group" role="group" style="margin-top: 1em;">
+    <form id="tagForm" method="get" action="{% url 'API_festivals:performances' page=1 %}">
+        {% csrf_token %}
+        <button type="submit" name="tags" value="-1" class="tag-button tous">Tous</button>
+        {% for tag in tag_data %}
+            <button type="submit" name="tags" value="{{ tag.pk }}" class="tag-button">{{ tag }}</button>
+        {% endfor %}
+    </form>
+</div>
+
+
+<h2 style="margin-top: 2em; margin-bottom: 1em;">Performances</h2>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for performance, artistes in performances.items %}
+    <div class="col">
+        <a class="nolink" href="{% url 'API_festivals:performance_detail' performance.id %}">
+            <div class="card entity" style="margin-bottom: 1rem;">
+                <img class="card-img-top rounded" src="/{{artistes.0.image}}" alt="{{artistes.0.nom}}" style="object-fit: cover; width:100%; height: 150px;">
+                <div class="card-body">
+                    <h3 class="card-title" >{{ performance.nom }}</h3>
+                    <div style="margin-top: 2em;">
+                        <p class="card-text">Heure de début : {{performance.heure_debut}}</p>
+                        <p class="card-text">Heure de fin : {{performance.heure_fin}}</p>
+                        <p class="card-text">Scène : {{performance.scene.nom}}</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    {% for artiste in artistes %}
+                    <a class="card-link" href="{% url 'API_festivals:artiste_detail' artiste.id %}">{{artiste.nom}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+<div>
+    {% if render_left_arrow %}
+    <a href="{% url 'API_festivals:performances' page=page_precedente %}" class="btn btn-secondary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+        </svg>
+    </a>
+    {% else %}
+    <button class="btn btn-secondary" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+        </svg>
+    </button>
+    {% endif %}
+    {% if render_right_arrow %}
+    <a href="{% url 'API_festivals:performances' page=page_suivante %}" class="btn btn-secondary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+        </svg>
+    </a>
+    {% else %}
+    <button class="btn btn-secondary" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+        </svg>
+    </button>
+    {% endif %}
+</div>
+<style>
+    ul.errorlist {display:none;}
+</style>
+{% endblock %}

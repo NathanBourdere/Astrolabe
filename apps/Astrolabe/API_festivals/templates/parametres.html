@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Accueil{% endblock %}
+{% block logo %}
+<img src="/{{logo}}" style="width:100%; height: 6vh;" class="rounded" alt="Festival">
+{% endblock %}
+{% block content %}
+<h1>Paramètres</h1>
+<div class="container-fluid mt-4 border">
+    <h2>Import</h2>
+<form method="post" enctype="multipart/form-data" action="{% url 'API_festivals:parametres'%}?changement=True">
+    {% csrf_token %}
+    <input type="file" style="margin-bottom:2em;" name="json_file">
+    <input type="submit" style="margin-bottom:2em; max-width: 35%;" class="" value="Importer les données de la base de données"></input>
+</form>
+</div>
+<div class="container-fluid mt-4 border">
+    <h2>Export</h2>
+    <a class="btn btn-primary" href="{% url 'API_festivals:parametres'%}?changement=True">Exporter les données</a>
+</div>
+<form id="forme" method="post" enctype="multipart/form-data" action="{% url 'API_festivals:parametres'%}">
+    {% csrf_token %}
+<div class="container-fluid mt-4 border">
+    {{form.as_p}}
+    <input type="submit" value="Enregistrer" form="forme">
+</div>
+</form>
+<style>
+</style>
+{% endblock %}

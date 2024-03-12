@@ -1,0 +1,52 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/Astrolabe",
+  "targets": {
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/Astrolabe",
+        "commands": [
+          {
+            "command": "python -m pip install --break-system-packages -r requirements.txt"
+          }
+        ]
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/Astrolabe",
+        "commands": [
+          {
+            "command": "python manage.py runserver 127.0.0.1:3000"
+          }
+        ]
+      }
+    },
+    "serve-d": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/Astrolabe",
+        "commands": [
+          {
+            "command": "python manage.py runserver 127.0.0.1:3000 &"
+          }
+        ]
+      }
+    },
+    "populate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/Astrolabe",
+        "commands": [
+          "python manage.py migrate",
+          "python populate.py"
+        ],
+        "parallel": false
+      }
+    }
+  },
+  "implicitDependencies": []
+}

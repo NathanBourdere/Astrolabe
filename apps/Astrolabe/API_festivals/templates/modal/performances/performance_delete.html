@@ -1,0 +1,27 @@
+<div class="modal fade" id="myModal"  data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+  
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Attention</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+  
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cette performance ?</p>
+  
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <a href="{% url 'API_festivals:performance_delete' performance.id %}">
+                    <button type="button" class="btn btn-danger rounded-pill" data-bs-dismiss="modal">
+                        Supprimer {{performance.nom}}
+                    </button>
+                </a>
+                </button>
+                <button type="button" class="btn btn-primary rounded-pill" data-bs-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+  </div>

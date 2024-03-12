@@ -1,0 +1,92 @@
+@startuml usecase site admin
+left to right direction
+actor Administrateur as a
+package SiteAdmin {
+    usecase "Gérer la configuration" as uc1
+    usecase "Consulter la configuration" as uc2
+    usecase "Créer une configuration" as uc3
+    usecase "Modifier la configuration" as uc4
+    usecase "Supprimer la configuration" as uc5
+    usecase "Gérer les artistes" as uc6
+    usecase "Consulter les artistes" as uc7
+    usecase "Créer un artiste" as uc8
+    usecase "Consulter un artiste" as uc9
+    usecase "Modifier un artiste" as uc10
+    usecase "Suppimer un artiste" as uc11
+    usecase "Gérer les performances" as uc12
+    usecase "Consulter les performances" as uc13
+    usecase "Consulter une performance" as uc14
+    usecase "Créer une performance" as uc15
+    usecase "Modifier une performance" as uc16
+    usecase "Supprimer une performance" as uc17
+    usecase "Gérer les scènes" as uc18
+    usecase "Consulter les scènes" as uc19
+    usecase "Consulter une scène" as uc20
+    usecase "Créer une scène" as uc21
+    usecase "Modifier une scène" as uc22
+    usecase "Supprimer une scène" as uc23
+    usecase "Gérer les partenaire" as uc24
+    usecase "Consulter les partenaires" as uc25
+    usecase "Consulter un partenaire" as uc26
+    usecase "Créer un partenaire" as uc27
+    usecase "Modifier un partenaire" as uc28
+    usecase "Supprimer un partenaire" as uc29
+    usecase "Gérer les news" as uc30
+    usecase "Consulter les news" as uc31
+    usecase "Consulter une news" as uc32
+    usecase "Créer une news" as uc33
+    usecase "Modifier une news" as uc34
+    usecase "Supprimer une news" as uc35
+    usecase "Gérer les tags" as uc36
+    usecase "Consulter les tags" as uc37
+    usecase "Consulter un tag" as uc38
+    usecase "Créer un tag" as uc39
+    usecase "Modifier un tag" as uc40
+    usecase "Supprimer un tag" as uc41
+    usecase "Importer les données de la base de données" as uc42
+    usecase "Exporter les données de la base de données" as uc43
+}
+
+a -- uc1
+uc1 <|-- uc2
+uc1 <|-- uc3
+uc1 <|-- uc4
+uc1 <|-- uc5
+a -- uc6
+uc6 <|-- uc7
+uc6 <|-- uc8
+uc6 <|-- uc9
+uc6 <|-- uc10
+uc6 <|-- uc11
+a -- uc12
+uc12 <|-- uc13
+uc12 <|-- uc14
+uc12 <|-- uc15
+uc12 <|-- uc16
+uc12 <|-- uc17
+a -- uc18
+uc18 <|-- uc19
+uc18 <|-- uc20
+uc18 <|-- uc21
+uc18 <|-- uc22
+uc18 <|-- uc23
+a -- uc24
+uc24 <|-- uc25
+uc24 <|-- uc26
+uc24 <|-- uc27
+uc24 <|-- uc28
+uc24 <|-- uc29
+a -- uc30
+uc30 <|-- uc31
+uc30 <|-- uc32
+uc30 <|-- uc33
+uc30 <|-- uc34
+uc30 <|-- uc35
+a -- uc36
+uc36 <|-- uc37
+uc36 <|-- uc38
+uc36 <|-- uc39
+uc36 <|-- uc40
+uc36 <|-- uc41
+a -- uc42
+a -- uc43

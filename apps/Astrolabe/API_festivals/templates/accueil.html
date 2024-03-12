@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block title %}Accueil{% endblock %}
+{% block logo %}
+<img src="/{{logo}}" style="width:100%; height: 6vh;" class="rounded" alt="Festival">
+{% endblock %}
+{% block content %}
+<script>
+  function switchPage() {
+    let bouton = document.getElementById("boutonSwitch");
+    let corps = document.getElementById("corps");
+    if (bouton.name === "news") {
+      bouton.remove();
+      let contenuCorps = corps.innerHTML;
+      corps.innerHTML = "<button class=\"btn btn-primary\" id=\"boutonSwitch\" name=\"performances\" onclick=\"switchPage()\">Afficher les performances</button>" + contenuCorps;
+      document.getElementById("performances").hidden = true;
+      document.getElementById("news").hidden = false;
+      document.getElementById("performances").classList.add("slide-out");
+      document.getElementById("news").classList.remove("slide-out");
+      document.getElementById("news").classList.add("slide-in");
+    } else if (bouton.name === "performances") {
+      bouton.remove();
+      let contenuCorps = corps.innerHTML;
+      corps.innerHTML = "<button class=\"btn btn-primary margeux-bottom\" id=\"boutonSwitch\" name=\"news\" onclick=\"switchPage()\">Afficher les news</button>" + contenuCorps;
+      document.getElementById("performances").hidden = false;
+      document.getElementById("news").hidden = true;
+      document.getElementById("performances").classList.remove("slide-out");
+      document.getElementById("performances").classList.add("slide-in");
+      document.getElementById("news").classList.add("slide-out");
+    }
+  }
+</script>
+
+<div id="corps">
+  <button class="btn btn-primary" id="boutonSwitch" name="news" onclick="switchPage()">Afficher les news</button>
+  <div id="performances" class="">
+          <div class="btn-group" role="group" style="margin-top: 1em;">
+              <form id="tagForm" method="get" action="{% url 'API_festivals:accueil' %}">
+                  {% csrf_token %}
+                  <button type="submit" name="tags" value="-1" class="tag-button tous">Tous</button>
+                  {% for tag in tag_data %}
+                      <button type="submit" name="tags" value="{{ tag.pk }}" class="tag-button">{{ tag }}</button>
+                  {% endfor %}
+              </form>
+          </div>
+    <h2>Prochaines performances du {{ nom_festival }}</h2>
+    {% for date, performances in performances_par_jour.items %}
+    <h3>{{ date }}</h3>
+    <div class="row">
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for performance, artistes in performances %}
+    <div class="col">
+        <a class="nolink" href="{% url 'API_festivals:performance_detail' performance.id %}">
+            <div class="card entity" style="margin-bottom: 1rem;">
+                <img class="card-img-top rounded" src="/{{artistes.0.image}}" alt="{{artistes.0.nom}}" style="object-fit: cover; width:100%; height: 150px;">
+                <div class="card-body">
+                    <h3 class="card-title" >{{ performance.nom }}</h3>
+                    <div style="margin-top: 2em;">
+                        <p class="card-text">Heure de début : {{performance.heure_debut}}</p>
+                        <p class="card-text">Heure de fin : {{performance.heure_fin}}</p>
+                        <p class="card-text">Scène : {{performance.scene.nom}}</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    {% for artiste in artistes %}
+                    <a class="card-link" href="{% url 'API_festivals:artiste_detail' artiste.id %}">{{artiste.nom}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+    </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+  <div id="news" class="" hidden>
+    <h2>Prochaines news du {{ nom_festival }}</h2>
+    {% for date, news in news_par_jours.items %}
+    <h3>{{date}}</h3>
+    {% for nouvelle in news %}
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <a class="nolink" href="{% url 'API_festivals:news_detail' nouvelle.id %}">
+        <div class="card entity" style="margin-bottom: 1rem;">
+            <img class="card-img-top rounded" src="/{{nouvelle.image}}" alt="{{nouvelle.titre}}" style="object-fit: cover; width:100%; height: 150px;">
+            <div class="card-body">
+                <h3 class="card-title" >{{ nouvelle.date }}</h3>
+                <p class="card-text">{{nouvelle.titre}}</p>
+            </div>
+        </div>
+    </a>
+    </div>
+    {% endfor %}
+    {% endfor %}
+  </div>
+
+  <style>
+    @keyframes astroslide-out {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(50%);
+    }
+}
+
+@keyframes astroslide-in {
+    0% {
+      transform: translateX(50%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+}
+
+div.slide-out {
+    animation: astroslide-out 0.3s ease-in-out;
+}
+
+div.slide-in {
+    animation: astroslide-in 0.3s ease-in-out;
+}
+    ul.errorlist {display:none;}
+
+.margeux-bottom {
+  margin-bottom: 2em;
+}
+
+  </style>
+</div>
+{% endblock %}

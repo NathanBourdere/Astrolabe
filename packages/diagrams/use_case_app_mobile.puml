@@ -1,0 +1,48 @@
+@startuml use case app mobile
+left to right direction
+actor Festivalier as f
+actor API_festival as api
+package AppMobile {
+    usecase "Consulter les artistes" as uc1
+    usecase "Consulter un artiste" as uc2
+    usecase "Ajouter un artiste à sa liste de favoris" as uc3
+    usecase "Consulter la liste des artistes favoris" as uc4
+    usecase "Consulter les performances" as uc5
+    usecase "Consulter une performance" as uc6
+    usecase "Consulter les scènes" as uc7
+    usecase "Consulter une scène" as uc8
+    usecase "Consulter les partenaires" as uc9
+    usecase "Consulter un partenaire" as uc10
+    usecase "Consulter les news" as uc11
+    usecase "Consulter une news" as uc12
+    usecase "Consulter les tags" as uc13
+    usecase "Accèder à la billletterie" as uc14
+}
+
+f -- uc1
+f -- uc2
+f -- uc3
+f -- uc4
+f -- uc5
+f -- uc6
+f -- uc7
+f -- uc8
+f -- uc9
+f -- uc10
+f -- uc11
+f -- uc12
+f -- uc13
+f -- uc14
+uc1 -- api
+uc2 -- api
+uc3 -- api
+uc4 -- api
+uc5 -- api
+uc6 -- api
+uc7 -- api
+uc8 -- api
+uc9 -- api
+uc10 -- api
+uc11 -- api
+uc12 -- api
+uc13 -- api

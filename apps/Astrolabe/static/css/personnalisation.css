@@ -1,0 +1,67 @@
+label.form-check-label {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.form-check-label {
+    margin-bottom: .5rem;
+}
+
+.mb-3 {
+    margin-top: 1em;
+}
+
+metal.form-check {
+    padding-left: 0em;
+}
+
+select.form-select {
+    background-attachment: fixed;
+}
+
+button.btn.flexe {
+    margin-bottom: 1em;
+    margin-top: 1em;
+    display:flex;
+}
+
+#performances {
+    text-align: center;
+}
+
+#tagForm {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.tag-button {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 2px solid #3498db;
+    background-color: #41b1fb;
+    color: #ffffff;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.2s;
+    cursor: pointer;
+}
+
+.tous {
+  background-color: #2cee53;
+  border: 2px solid #4dbd27;
+}
+.tag-button:hover {
+    background-color: #ffffff;
+    color: #3498db;
+    border-color: #3498db;
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .tag-button {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}

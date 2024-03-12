@@ -1,0 +1,114 @@
+form, input, textarea, select {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+form.persoForm {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.champsRequis {
+    border: 1px solid #ffffff;
+    background-color: #f0f8ff;
+}
+
+.champsInvalide {
+    border: 1px solid #ffffff;
+    background-color: #fff0f0;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+input[type="submit"] {
+    background: linear-gradient(90deg, rgb(5, 146, 180) 0%, rgb(109, 155, 255) 35%, rgb(0, 234, 255) 100%);
+    color: #fff;
+    border: 0;
+    background-position-x: 0%;
+    background-size: 200%;
+    border-radius: 3px;
+    padding: 10px 15px;
+    font-size: 16px;
+    transition: all 0.25s;
+}
+
+.entity{
+    transition: all 150ms ease-in-out;
+}
+
+.entity:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+input::file-selector-button {
+    background : linear-gradient(90deg, rgb(5, 146, 177) 0%, rgb(109, 155, 255) 35%, rgb(0, 234, 255) 100%);
+    background-position-x: 0%;
+    background-size: 200%;
+    border: 0;
+    border-radius: 8px;
+    color: #fff;
+    padding: 1rem 1.25rem;
+    text-shadow: 0 1px 1px #333;
+    transition: all 0.25s;
+  }
+
+.nolink {
+    all: unset;
+}
+
+input::file-selector-button:hover {
+    background-position-x: 100%;
+  }
+
+input[type="submit"]:hover {
+    background-position-x: 100%;
+}
+
+input[type="checkbox"]:not(:checked) {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #00aaff;
+    background-color: #fff;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #00aaff;
+    width: 20px;
+    border-radius: 4px;
+    height: 20px;
+    border: 2px solid #00aaff;
+    background-image: url("../../static/images/check2.svg");
+}
+
+input:not(input[type="checkbox"]){
+    margin-bottom: 1em !important;
+    margin-top: 1em !important;
+}
+label > a[href] {
+    display:none;
+}
